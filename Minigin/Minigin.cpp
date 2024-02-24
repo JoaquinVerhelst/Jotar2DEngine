@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "WorldTimeManager.h"
 
 SDL_Window* g_window{};
 
@@ -82,13 +83,34 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	auto& time = WorldTimeManager::GetInstance();
 
-	// todo: this update loop could use some work.
+
+	//Game loop
 	bool doContinue = true;
+	auto lastTime = std::chrono::high_resolution_clock::now();
+	float lag = 0.0f;
+
+	float fixedTimeStep = 0.02f;
+
 	while (doContinue)
 	{
+		time.Update();
+
 		doContinue = input.ProcessInput();
+
+		lag += time.GetDeltaTime();
+
 		sceneManager.Update();
+
+		while (lag >= fixedTimeStep)
+		{
+			sceneManager.FixedUpdate();
+			lag -= fixedTimeStep;
+		}
+
+		sceneManager.LateUpdate();
+
 		renderer.Render();
 	}
 }

@@ -13,6 +13,8 @@ namespace dae
 		void RemoveAll();
 
 		void Update();
+		void FixedUpdate();
+		void LateUpdate();
 		void Render() const;
 
 		~Scene();
@@ -24,8 +26,10 @@ namespace dae
 	private: 
 		explicit Scene(const std::string& name);
 
-		std::string m_name;
-		std::vector < std::shared_ptr<GameObject>> m_objects{};
+		void CleanUpDestroyedObjects();
+
+		std::string m_Name;
+		std::vector < std::shared_ptr<GameObject>> m_pObjects{};
 
 		static unsigned int m_idCounter; 
 	};

@@ -3,22 +3,69 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+dae::GameObject::GameObject(Scene* pScene, const std::string& name)
+	: m_pComponents{}
+	, m_Name{name}
+	, m_pScene{pScene}
+	, m_IsDestroyed{ false }
+	, m_Transform{}
+{
+}
+
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update(){}
+void dae::GameObject::Update()
+{
+
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->Update();
+	}
+}
+
+void dae::GameObject::FixedUpdate()
+{
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->FixedUpdate();
+	}
+}
+
+void dae::GameObject::LateUpdate()
+{
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->LateUpdate();
+	}
+}
 
 void dae::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->Render();
+	}
+
 }
 
-void dae::GameObject::SetTexture(const std::string& filename)
+
+void dae::GameObject::OnDestroy()
 {
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->OnDestroy();
+	}
+
+	m_pComponents.clear();
+}
+
+
+void dae::GameObject::Destroy()
+{
+	m_IsDestroyed = true;
 }
 
 void dae::GameObject::SetPosition(float x, float y)
 {
-	m_transform.SetPosition(x, y, 0.0f);
+	m_Transform.SetPosition(x, y, 0.0f);
 }
