@@ -16,6 +16,8 @@ namespace dae
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
+		std::shared_ptr<GameObject> CreateGameObject(std::string objectName);
+		void CleanUpDestroyedObjects();
 
 		~Scene();
 		Scene(const Scene& other) = delete;
@@ -23,10 +25,10 @@ namespace dae
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
+
 	private: 
 		explicit Scene(const std::string& name);
 
-		void CleanUpDestroyedObjects();
 
 		std::string m_Name;
 		std::vector < std::shared_ptr<GameObject>> m_pObjects{};

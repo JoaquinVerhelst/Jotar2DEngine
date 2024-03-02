@@ -18,7 +18,7 @@ void dae::TextureComponent::SetTexture(const std::string& filePath)
 
 void dae::TextureComponent::Render() const
 {
-	const auto& pos = GetOwner()->GetPosition().GetPosition();
+	const auto& pos = GetOwner()->GetTransform()->GetLocalPosition();
 
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }

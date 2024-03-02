@@ -24,14 +24,11 @@ namespace dae
 		virtual void OnDestroy() {};
 
 	protected:
-		friend GameObject;
 
 		explicit Component(GameObject* pOwner);
 		GameObject* GetOwner() const { return m_pOwner; }
 
 	private:
-
-		void SetOwner(GameObject* newOwner);
 
 		GameObject* m_pOwner{};
 

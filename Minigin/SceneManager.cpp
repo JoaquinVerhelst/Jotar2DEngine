@@ -33,6 +33,14 @@ void dae::SceneManager::Render()
 	}
 }
 
+void dae::SceneManager::CleanUpDestroyedObjects()
+{
+	for (const auto& scene : m_scenes)
+	{
+		scene->CleanUpDestroyedObjects();
+	}
+}
+
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));

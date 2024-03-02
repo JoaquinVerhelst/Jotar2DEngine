@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "Component.h"
 #include "Texture2D.h"
 #include <SDL_pixels.h>
@@ -34,7 +34,6 @@ namespace dae
 	private:
 
 		std::shared_ptr<TextComponent> m_TextComponent{};
-		bool m_HasRenderComponent;
 
 		float m_Count;
 		float m_TimeToUpdate;

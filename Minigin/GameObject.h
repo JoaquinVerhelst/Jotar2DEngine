@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "Component.h"
 
 #include <vector>
@@ -11,7 +11,7 @@ namespace dae
 {
 	class Scene;
 
-	class GameObject final
+	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
 	public:
 
@@ -35,8 +35,8 @@ namespace dae
 		bool IsDestroyed() { return m_IsDestroyed; }
 
 		//void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
-		Transform GetPosition() { return m_Transform; }
+
+		std::shared_ptr<TransformComponent> GetTransform() { return m_pTransform; }
 
 
 		const std::string& GetName() const { return m_Name; };
@@ -54,14 +54,39 @@ namespace dae
 		template <typename T>
 		bool HasComponent() const;
 
+		// scenegraph
+
+		std::shared_ptr<GameObject> CreateChildGameObject(const std::string& name);
+
+		void SetParent(std::shared_ptr<GameObject> parent, bool keepWorldPosition);
+		std::shared_ptr<GameObject> GetParent() const { return m_pParent; }
+
+
+		size_t GetChildCount() const { return m_pChildren.size(); }
+		std::shared_ptr<GameObject> GetChildAt(unsigned int index) const;
+
+
+
+		std::vector<std::shared_ptr<GameObject>> GetChildren() const { return m_pChildren; }
+
 
 	private:
+
+		void RemoveChild(std::shared_ptr<GameObject> child);
+
+
 		std::vector<std::shared_ptr<Component>> m_pComponents;
-		Transform m_Transform;
+
+		std::shared_ptr<TransformComponent> m_pTransform{};
+
+
 		bool m_IsDestroyed;
 
 		std::string m_Name{};
 		Scene* m_pScene{};
+
+		std::vector<std::shared_ptr<GameObject>> m_pChildren;
+		std::shared_ptr<GameObject> m_pParent;
 	};
 
 

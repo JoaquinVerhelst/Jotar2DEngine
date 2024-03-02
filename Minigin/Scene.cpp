@@ -11,7 +11,15 @@ Scene::Scene(const std::string& name) : m_Name(name) {}
 
 
 
-Scene::~Scene() = default;
+Scene::~Scene()
+{
+	for (const auto& pGameObject : m_pObjects)
+	{
+		pGameObject->OnDestroy();
+	}
+}
+
+
 
 void Scene::Add(std::shared_ptr<GameObject> object)
 {
@@ -52,7 +60,6 @@ void dae::Scene::LateUpdate()
 		object->LateUpdate();
 	}
 
-	CleanUpDestroyedObjects();
 }
 
 void Scene::Render() const
@@ -63,6 +70,16 @@ void Scene::Render() const
 	}
 }
 
+std::shared_ptr<GameObject> dae::Scene::CreateGameObject(std::string objectName)
+{
+
+	auto gameObject = std::make_shared<dae::GameObject>(this, objectName);
+
+	Add(gameObject);
+
+	return gameObject;
+}
+
 void dae::Scene::CleanUpDestroyedObjects()
 {
 	for (size_t i = 0; i < m_pObjects.size(); i++)
@@ -70,7 +87,7 @@ void dae::Scene::CleanUpDestroyedObjects()
 		if (m_pObjects[i]->IsDestroyed())
 		{
 			m_pObjects[i]->OnDestroy();
-			m_pObjects.erase(m_pObjects.begin() + i);
+			Remove(m_pObjects[i]);
 		}
 	}
 
