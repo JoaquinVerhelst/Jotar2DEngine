@@ -29,7 +29,7 @@ void dae::TextComponent::Update()
 
 void dae::TextComponent::Render() const
 {
-	const auto& pos = GetOwner()->GetPosition().GetPosition();
+	const auto& pos = GetOwner()->GetTransform()->GetLocalPosition();
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }
 

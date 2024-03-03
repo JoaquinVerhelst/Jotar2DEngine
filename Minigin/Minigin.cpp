@@ -88,7 +88,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	//Game loop
 	bool doContinue = true;
-	auto lastTime = std::chrono::high_resolution_clock::now();
+	
+	time.Init();
+
 	float lag = 0.0f;
 
 	float fixedTimeStep = 0.02f;
@@ -112,5 +114,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		sceneManager.LateUpdate();
 
 		renderer.Render();
+
+		sceneManager.CleanUpDestroyedObjects();
 	}
+
+	sceneManager.Destroy();
 }

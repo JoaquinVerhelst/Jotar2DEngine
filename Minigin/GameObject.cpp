@@ -2,17 +2,25 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "Scene.h"
+
+#include <algorithm>
 
 dae::GameObject::GameObject(Scene* pScene, const std::string& name)
 	: m_pComponents{}
 	, m_Name{name}
 	, m_pScene{pScene}
 	, m_IsDestroyed{ false }
-	, m_Transform{}
+	, m_pParent{nullptr}
+	, m_pChildren{}
 {
+	m_pTransform = AddComponent<TransformComponent>();
 }
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject()
+{
+	m_pChildren.clear();
+}
 
 void dae::GameObject::Update()
 {
@@ -20,6 +28,11 @@ void dae::GameObject::Update()
 	for (const auto& pComponent : m_pComponents)
 	{
 		pComponent->Update();
+	}
+
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->Update();
 	}
 }
 
@@ -29,6 +42,12 @@ void dae::GameObject::FixedUpdate()
 	{
 		pComponent->FixedUpdate();
 	}
+
+
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->FixedUpdate();
+	}
 }
 
 void dae::GameObject::LateUpdate()
@@ -36,6 +55,12 @@ void dae::GameObject::LateUpdate()
 	for (const auto& pComponent : m_pComponents)
 	{
 		pComponent->LateUpdate();
+	}
+
+
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->LateUpdate();
 	}
 }
 
@@ -46,6 +71,10 @@ void dae::GameObject::Render() const
 		pComponent->Render();
 	}
 
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->Render();
+	}
 }
 
 
@@ -56,16 +85,111 @@ void dae::GameObject::OnDestroy()
 		pComponent->OnDestroy();
 	}
 
-	m_pComponents.clear();
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->OnDestroy();
+		
+	}
 }
 
 
 void dae::GameObject::Destroy()
 {
 	m_IsDestroyed = true;
+
+	for (const auto& child : m_pChildren)
+	{
+		child->Destroy();
+	}
 }
 
-void dae::GameObject::SetPosition(float x, float y)
+
+std::shared_ptr<dae::GameObject> dae::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition)
 {
-	m_Transform.SetPosition(x, y, 0.0f);
+	auto pGameObject{ std::make_shared<GameObject>(m_pScene, name) };
+
+	//pGameObject->GetTransform()->SetPositionDirty();
+
+	pGameObject->SetParent(this, keepWorldPosition);
+
+	return pGameObject;
 }
+
+void dae::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
+{
+	// choek if valid
+	if (newParent == this|| m_pParent == newParent)
+		return;
+
+	for (size_t i = 0; i < GetChildCount(); i++)
+	{
+		if (m_pChildren[i].get() == newParent)
+			return;
+	}
+
+	if (m_pParent)
+	{
+		m_pParent->RemoveChild(shared_from_this());
+	}
+
+	m_pParent = newParent;
+
+	if (m_pParent)
+	{
+		m_pParent->m_pChildren.emplace_back(shared_from_this());
+	}
+
+
+	if (newParent == nullptr)
+	{
+		GetTransform()->SetPosition(GetTransform()->GetWorldPosition());
+		m_pScene->Add(shared_from_this());
+	}
+	else
+	{
+		if (keepWorldPosition)
+			GetTransform()->SetPosition(GetTransform()->GetLocalPosition() - newParent->GetTransform()->GetWorldPosition());
+		GetTransform()->SetPositionDirty();
+
+
+		if (!m_pParent)
+		{
+			m_pScene->RemoveGameObjectFromRoot(this);
+		}
+	}
+
+
+}
+
+
+
+std::shared_ptr<dae::GameObject> dae::GameObject::GetChildAt(unsigned int index) const
+{
+	if (index >= static_cast<int>(m_pChildren.size()))
+	{
+		throw std::runtime_error("Error: GameObject with the name: " + m_Name + "is getting a child out of index");
+	}
+
+	return m_pChildren[index];
+}
+
+void dae::GameObject::RemoveChild(std::shared_ptr<GameObject> childToRemove)
+{
+
+	if (!childToRemove)
+		return;
+
+	if (const auto child = std::ranges::find_if(m_pChildren, [childToRemove](const std::shared_ptr<GameObject>& check)
+		{
+			return check == childToRemove;
+		});
+		child != m_pChildren.end())
+	{
+		std::shared_ptr<GameObject> removedChild = std::move(*child);
+		m_pChildren.erase(child);
+
+		removedChild->m_pParent = nullptr;
+		removedChild->GetTransform()->SetPosition(removedChild->GetTransform()->GetWorldPosition());
+	}
+}
+
