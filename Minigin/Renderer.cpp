@@ -2,7 +2,8 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
-
+#include "GLSDLManager.h"
+#include "glad\glad.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -18,9 +19,11 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void dae::Renderer::Init(SDL_Window* window)
+void dae::Renderer::Init()
 {
-	m_Window = window;
+	SDL_Window* window = GLSDLManager::GetInstance().GetSDLWindow();
+
+
 	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED);
 	if (m_Renderer == nullptr) 
 	{
@@ -29,27 +32,50 @@ void dae::Renderer::Init(SDL_Window* window)
 
 	ImguiWindowProperties properties{};
 
-	m_ImguiRenderer = std::make_unique<dae::ImguiRenderer>();
+	//m_ImguiRenderer = std::make_unique<ImguiRenderer>();
 
-	m_ImguiRenderer->Init(window, properties);
+	ImguiRenderer::GetInstance().Init(window, properties);
+
+	SetWireFrameOn(false);
 }
 
 void dae::Renderer::Render() const
 {
+
+	// open gl ///////////////////////////
+
+	//BeginRender();
+
+
+	//SceneManager::GetInstance().Render();
+
+
+	//EndRender();
+
+
+
+
+	//SDL RENDER //////////////////
+
+
+
+	SDL_RenderClear(m_Renderer);
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	SDL_RenderClear(m_Renderer);
+	
 
 	SceneManager::GetInstance().Render();
-	
-	m_ImguiRenderer->Render();
+	//m_ImguiRenderer->Render();
 
-	SDL_RenderPresent(m_Renderer);
+	//SDL_RenderPresent(m_Renderer);
+
 }
 
 void dae::Renderer::Destroy()
 {
-	m_ImguiRenderer->Destroy();
+	//m_ImguiRenderer->Destroy();
+
+	//SDL_DestroyTexture(m_GameTexture);
 
 	if (m_Renderer != nullptr)
 	{
@@ -58,11 +84,23 @@ void dae::Renderer::Destroy()
 	}
 }
 
+void dae::Renderer::BeginRender() const
+{
+	Clear();
+}
+
+void dae::Renderer::EndRender() const
+{
+	SDL_RenderPresent(m_Renderer);
+	//SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
+}
+
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
+	//SDL_SetRenderTarget(m_Renderer, m_GameTexture);
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
@@ -74,7 +112,28 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
+	//SDL_SetRenderTarget(m_Renderer, m_GameTexture);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }
+
+void dae::Renderer::SetWireFrameOn(bool on)
+{
+	if (on)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+}
+
+
+
+void dae::Renderer::Clear() const
+{
+	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}

@@ -1,8 +1,10 @@
 #pragma once
-#include <SDL.h>
 #include "Singleton.h"
 #include "ImguiRenderer.h"
+#include "SDL.h"
 #include <memory>
+#include <stack>
+#include "FrameBuffer.h"
 
 namespace dae
 {
@@ -13,23 +15,39 @@ namespace dae
 	 */
 	class Renderer final : public Singleton<Renderer>
 	{
-		SDL_Renderer* m_Renderer{};
-		SDL_Window* m_Window{};
-		SDL_Color m_ClearColor{};	
+		friend class PushFrameBuffer;
+		friend class PopFrameBuffer;
 
-		std::unique_ptr<ImguiRenderer> m_ImguiRenderer;
 	public:
-		void Init(SDL_Window* window);
+		void Init();
 		void Render() const;
 		void Destroy();
+
 
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 
+		void SetWireFrameOn(bool on);
+
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
+
+		void EndRender() const;
+	private:
+
+
+		void Clear() const;
+
+		void BeginRender() const;
+	
+
+
+		SDL_Renderer* m_Renderer{};
+		SDL_Color m_ClearColor{};
+
+		std::unique_ptr<ImguiRenderer> m_ImguiRenderer;
 	};
 }
 

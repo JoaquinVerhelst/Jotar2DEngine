@@ -19,12 +19,27 @@
     <Filter Include="Engine\ImGUI">
       <UniqueIdentifier>{700fef85-6c7c-4a6b-81e6-d5a493de4f52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Renderers">
+      <UniqueIdentifier>{5377d8a3-e6a2-4208-9a5f-74966fe1c550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ImGUI\Glad">
+      <UniqueIdentifier>{0816f9a7-10eb-4b71-8635-5c6acd71d85a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GL&amp;SDL">
+      <UniqueIdentifier>{4d56d8e8-6849-40fa-a1cd-5abc1136b8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29">
+      <UniqueIdentifier>{6e87a317-da56-470b-8493-444256f88fc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Buffers">
+      <UniqueIdentifier>{b5df5592-e9fd-4922-8e89-6255d79bd383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Shader">
+      <UniqueIdentifier>{6ac68f5a-571d-405e-9344-613703719cab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
@@ -96,8 +111,38 @@
     <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h">
       <Filter>Engine\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
     <ClInclude Include="ImguiRenderer.h">
+      <Filter>Engine\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSDLManager.h">
+      <Filter>Engine\GL&amp;SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh2DComponent.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GlFrameBuffer.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderComponent.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GLBuffer.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTexture2D.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imgui_plot.h">
+      <Filter>Engine\ImGUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +159,6 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Minigin.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -173,8 +215,41 @@
     <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp">
       <Filter>Engine\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
     <ClCompile Include="ImguiRenderer.cpp">
+      <Filter>Engine\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSDLManager.cpp">
+      <Filter>Engine\GL&amp;SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Engine\GL&amp;SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh2DComponent.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="GlFrameBuffer.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderComponent.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GLBuffer.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTexture2D.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp">
+      <Filter>Engine\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
