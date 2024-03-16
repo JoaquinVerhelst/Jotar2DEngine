@@ -3,8 +3,8 @@
 #include "WorldTimeManager.h"
 
 
-dae::RotatorComponent::RotatorComponent(GameObject* owner, const glm::vec2& center, float radius, float speed)
-    : dae::Component(owner)
+Jotar::RotatorComponent::RotatorComponent(GameObject* owner, const glm::vec2& center, float radius, float speed)
+    : Jotar::Component(owner)
     , m_Center(center)
     , m_Radius(radius)
     , m_Speed(speed)
@@ -13,20 +13,20 @@ dae::RotatorComponent::RotatorComponent(GameObject* owner, const glm::vec2& cent
 }
 
 
-void dae::RotatorComponent::Update()
+void Jotar::RotatorComponent::Update()
 {
     RotatorLogic();
 }
 
-void dae::RotatorComponent::Render() const
+void Jotar::RotatorComponent::Render() const
 {
 }
 
-void dae::RotatorComponent::Init()
+void Jotar::RotatorComponent::Init()
 {
 }
 
-void dae::RotatorComponent::RotatorLogic()
+void Jotar::RotatorComponent::RotatorLogic()
 {
     m_Angle += m_Speed * WorldTimeManager::GetInstance().GetDeltaTime();
 

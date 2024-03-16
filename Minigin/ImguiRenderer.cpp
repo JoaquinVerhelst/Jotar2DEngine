@@ -7,7 +7,7 @@
 #include <vector>
 #include <chrono>
 
-dae::ImguiRenderer::ImguiRenderer()
+Jotar::ImguiRenderer::ImguiRenderer()
 	:m_Window{}
 	, m_AmountOfIntegerSamples{10}
 	, m_AmountOfGameObjectSamples{10}
@@ -17,11 +17,11 @@ dae::ImguiRenderer::ImguiRenderer()
 {
 }
 
-dae::ImguiRenderer::~ImguiRenderer() = default;
+Jotar::ImguiRenderer::~ImguiRenderer() = default;
 
 
 
-void dae::ImguiRenderer::Init(SDL_Window* window, const ImguiWindowProperties& properties)
+void Jotar::ImguiRenderer::Init(SDL_Window* window, const ImguiWindowProperties& properties)
 {
 	m_Window = window;
 
@@ -38,7 +38,7 @@ void dae::ImguiRenderer::Init(SDL_Window* window, const ImguiWindowProperties& p
 	ImGui_ImplOpenGL3_Init();
 }
 
-void dae::ImguiRenderer::Render()
+void Jotar::ImguiRenderer::Render()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
@@ -62,7 +62,7 @@ void dae::ImguiRenderer::Render()
 	}
 }
 
-void dae::ImguiRenderer::Destroy()
+void Jotar::ImguiRenderer::Destroy()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
@@ -71,7 +71,7 @@ void dae::ImguiRenderer::Destroy()
 
 
 
-void dae::ImguiRenderer::InitializeProperties(const ImguiWindowProperties& properties)
+void Jotar::ImguiRenderer::InitializeProperties(const ImguiWindowProperties& properties)
 {
 	ImGuiIO& IO = ImGui::GetIO();
 	IO.ConfigWindowsMoveFromTitleBarOnly = properties.MoveFromTitleBarOnly;
@@ -87,7 +87,7 @@ void dae::ImguiRenderer::InitializeProperties(const ImguiWindowProperties& prope
 }
 
 // Game Texture here was here / will be here to render the game on to IMGUI to make a scene window
-void dae::ImguiRenderer::RenderImgui(/*SDL_Texture* gameTexture*/)
+void Jotar::ImguiRenderer::RenderImgui(/*SDL_Texture* gameTexture*/)
 {
 	ImGui::Begin("Exercise 1");
 
@@ -138,7 +138,7 @@ void dae::ImguiRenderer::RenderImgui(/*SDL_Texture* gameTexture*/)
 }
 
 
-void dae::ImguiRenderer::TrashTheCacheExercise1(int amountOfSamples)
+void Jotar::ImguiRenderer::TrashTheCacheExercise1(int amountOfSamples)
 {
 	const int size = 10000000;
 	int* numbers = new int[size] {};
@@ -186,7 +186,7 @@ void dae::ImguiRenderer::TrashTheCacheExercise1(int amountOfSamples)
 
 }
 
-void dae::ImguiRenderer::TrashTheCacheExercise2GO(int amountOfSamples)
+void Jotar::ImguiRenderer::TrashTheCacheExercise2GO(int amountOfSamples)
 {
 	const int size = 10000000;
 
@@ -235,7 +235,7 @@ void dae::ImguiRenderer::TrashTheCacheExercise2GO(int amountOfSamples)
 	matrix = nullptr;
 }
 
-void dae::ImguiRenderer::TrashTheCacheExercise2GOAlt(int amountOfSamples)
+void Jotar::ImguiRenderer::TrashTheCacheExercise2GOAlt(int amountOfSamples)
 {
 	const int size = 10000000;
 
@@ -286,7 +286,7 @@ void dae::ImguiRenderer::TrashTheCacheExercise2GOAlt(int amountOfSamples)
 
 
 
-void dae::ImguiRenderer::DrawIntegerGraph()
+void Jotar::ImguiRenderer::DrawIntegerGraph()
 {
 	static ImU32 colors[3] = { ImColor(0, 255, 0), ImColor(255, 0, 0), ImColor(0, 0, 255) };
 	static uint32_t selection_start = 0, selection_length = 0;
@@ -313,7 +313,7 @@ void dae::ImguiRenderer::DrawIntegerGraph()
 	ImGui::Plot("Integers", conf);
 }
 
-void dae::ImguiRenderer::DrawGOGraph()
+void Jotar::ImguiRenderer::DrawGOGraph()
 {
 	static ImU32 colors[3] = { ImColor(0, 255, 0), ImColor(255, 0, 0), ImColor(0, 0, 255) };
 	static uint32_t selection_start = 0, selection_length = 0;
@@ -340,7 +340,7 @@ void dae::ImguiRenderer::DrawGOGraph()
 	ImGui::Plot("GameObject", conf);
 }
 
-void dae::ImguiRenderer::DrawGOAltGraph()
+void Jotar::ImguiRenderer::DrawGOAltGraph()
 {
 	static ImU32 colors[3] = { ImColor(0, 255, 0), ImColor(255, 0, 0), ImColor(0, 0, 255) };
 	static uint32_t selection_start = 0, selection_length = 0;
@@ -367,7 +367,7 @@ void dae::ImguiRenderer::DrawGOAltGraph()
 	ImGui::Plot("GameObject Alt", conf);
 }
 
-void dae::ImguiRenderer::DrawCombination()
+void Jotar::ImguiRenderer::DrawCombination()
 {
 	static ImU32 colors[3] = { ImColor(0, 255, 0), ImColor(255, 0, 0), ImColor(0, 0, 255) };
 	static uint32_t selection_start = 0, selection_length = 0;

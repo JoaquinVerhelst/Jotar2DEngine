@@ -6,7 +6,7 @@
 #include <SDL_pixels.h>
 
 
-namespace dae
+namespace Jotar
 {
     class Texture2D;
     class string;

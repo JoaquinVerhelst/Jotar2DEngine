@@ -1,6 +1,6 @@
 #pragma once
 
-namespace dae
+namespace Jotar
 {
 	//class VertexBuffer
 	//{
@@ -31,5 +31,4 @@ namespace dae
 
 	//	unsigned int m_BufferID;
 	//};
-
 }

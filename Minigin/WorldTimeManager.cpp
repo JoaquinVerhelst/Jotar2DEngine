@@ -2,7 +2,7 @@
 
 
 
-namespace dae
+namespace Jotar
 {
     void WorldTimeManager::Init()
     {

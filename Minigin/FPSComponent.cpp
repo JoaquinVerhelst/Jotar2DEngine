@@ -6,7 +6,7 @@
 #include <string>
 
 
-dae::FPSComponent::FPSComponent(GameObject* owner, const std::shared_ptr<Font>& pFont, const SDL_Color& color, float timeToUpdate)
+Jotar::FPSComponent::FPSComponent(GameObject* owner, const std::shared_ptr<Font>& pFont, const SDL_Color& color, float timeToUpdate)
 	: Component(owner),
 	m_Count{ 0.5f },
 	m_TimeToUpdate{ timeToUpdate },
@@ -17,7 +17,7 @@ dae::FPSComponent::FPSComponent(GameObject* owner, const std::shared_ptr<Font>& 
 
 
 
-void dae::FPSComponent::Update()
+void Jotar::FPSComponent::Update()
 {
 	m_Count += WorldTimeManager::GetInstance().GetDeltaTime();
 

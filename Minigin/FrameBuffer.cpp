@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 
-dae::FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
+Jotar::FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 	: m_TextureId{}
 	, m_FBO{}
 	, m_BufferId{}
@@ -14,7 +14,7 @@ dae::FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 
 }
 
-dae::FrameBuffer::~FrameBuffer()
+Jotar::FrameBuffer::~FrameBuffer()
 {
 	glDeleteFramebuffers(1, &m_FBO);
 	m_FBO = 0;
@@ -22,7 +22,7 @@ dae::FrameBuffer::~FrameBuffer()
 	m_BufferId = 0;
 }
 
-//dae::FrameBuffer& dae::FrameBuffer::Create(float , float )
+//Jotar::FrameBuffer& Jotar::FrameBuffer::Create(float , float )
 //{
 //	
 //}

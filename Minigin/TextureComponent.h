@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-namespace dae
+namespace Jotar
 {
     class Texture2D;
     class string;

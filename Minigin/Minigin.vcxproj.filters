@@ -132,7 +132,7 @@
     <ClInclude Include="ShaderComponent.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="GLBuffer.h">
+    <ClInclude Include="GLBuffers.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="GLTexture2D.h">
@@ -143,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="..\3rdParty\imgui\imgui_plot.h">
       <Filter>Engine\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffers.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,7 +242,7 @@
     <ClCompile Include="ShaderComponent.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="GLBuffer.cpp">
+    <ClCompile Include="GLBuffers.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="GLTexture2D.cpp">
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp">
       <Filter>Engine\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffers.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 #include <memory>
 
 
-namespace dae
+namespace Jotar
 {
 	class FrameBuffer;
 

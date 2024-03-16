@@ -3,7 +3,7 @@
 #include "Singleton.h"
 
 
-namespace dae
+namespace Jotar
 {
     class WorldTimeManager final : public Singleton<WorldTimeManager>
     {

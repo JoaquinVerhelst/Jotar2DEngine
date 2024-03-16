@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-void dae::GLSDLManager::Init()
+void Jotar::GLSDLManager::Init()
 {
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -60,12 +60,12 @@ void dae::GLSDLManager::Init()
 
 }
 
-SDL_Window* dae::GLSDLManager::GetSDLWindow()
+SDL_Window* Jotar::GLSDLManager::GetSDLWindow()
 {
 	return m_Window;
 }
 
-void dae::GLSDLManager::Destroy()
+void Jotar::GLSDLManager::Destroy()
 {
 	SDL_GL_DeleteContext(m_GLContext);
 	SDL_DestroyWindow(m_Window);
@@ -75,7 +75,7 @@ void dae::GLSDLManager::Destroy()
 
 
 
-void dae::GLSDLManager::PrintSDLVersion()
+void Jotar::GLSDLManager::PrintSDLVersion()
 {
 	SDL_version version{};
 	SDL_VERSION(&version);

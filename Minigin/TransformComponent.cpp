@@ -2,19 +2,19 @@
 #include "GameObject.h"
 
 
-dae::TransformComponent::TransformComponent(GameObject* owner)
+Jotar::TransformComponent::TransformComponent(GameObject* owner)
 	:Component(owner)
 	, m_IsPositionDirty{false}
 {
 }
 
 
-const glm::vec2& dae::TransformComponent::GetLocalPosition() const
+const glm::vec2& Jotar::TransformComponent::GetLocalPosition() const
 {
 	return m_LocalPosition;
 }
 
-const glm::vec2& dae::TransformComponent::GetWorldPosition()
+const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 {
 	if (m_IsPositionDirty)
 		UpdateWorldPosition();
@@ -22,7 +22,7 @@ const glm::vec2& dae::TransformComponent::GetWorldPosition()
 	return m_WorldPosition;
 }
 
-void dae::TransformComponent::SetPosition(float x, float y)
+void Jotar::TransformComponent::SetPosition(float x, float y)
 {
 	m_LocalPosition.x = x;
 	m_LocalPosition.y = y;
@@ -30,7 +30,7 @@ void dae::TransformComponent::SetPosition(float x, float y)
 	SetPositionDirty();
 }
 
-void dae::TransformComponent::SetPosition(const glm::vec2& position)
+void Jotar::TransformComponent::SetPosition(const glm::vec2& position)
 {
 	m_LocalPosition = position;
 
@@ -38,7 +38,7 @@ void dae::TransformComponent::SetPosition(const glm::vec2& position)
 }
 
 
-void dae::TransformComponent::SetPositionDirty()
+void Jotar::TransformComponent::SetPositionDirty()
 {
 	const auto pChildren = GetOwner()->GetChildren();
 
@@ -50,7 +50,7 @@ void dae::TransformComponent::SetPositionDirty()
 	m_IsPositionDirty = true;
 }
 
-void dae::TransformComponent::UpdateWorldPosition()
+void Jotar::TransformComponent::UpdateWorldPosition()
 {
 	if (m_IsPositionDirty)
 	{

@@ -8,7 +8,7 @@
 #include "Texture2D.h"
 
 
-dae::TextComponent::TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color, bool needUpdating)
+Jotar::TextComponent::TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color, bool needUpdating)
 	: Component(owner),
 	m_NeedsUpdate(needUpdating),
 	m_Text(text),
@@ -19,7 +19,7 @@ dae::TextComponent::TextComponent(GameObject* owner, const std::string& text, co
 	UpdateText();
 }
 
-void dae::TextComponent::Update()
+void Jotar::TextComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{
@@ -27,13 +27,13 @@ void dae::TextComponent::Update()
 	}
 }
 
-void dae::TextComponent::Render() const
+void Jotar::TextComponent::Render() const
 {
 	const auto& pos = GetOwner()->GetTransform()->GetLocalPosition();
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }
 
-void dae::TextComponent::SetText(const std::string& text, const std::shared_ptr<Font>& font, bool needUpdating)
+void Jotar::TextComponent::SetText(const std::string& text, const std::shared_ptr<Font>& font, bool needUpdating)
 {
 	m_Text = text;
 	m_Font = font;
@@ -41,13 +41,13 @@ void dae::TextComponent::SetText(const std::string& text, const std::shared_ptr<
 	UpdateText();
 }
 
-void dae::TextComponent::SetText(const std::string& text)
+void Jotar::TextComponent::SetText(const std::string& text)
 {
 	m_Text = text;
 	UpdateText();
 }
 
-void dae::TextComponent::UpdateText()
+void Jotar::TextComponent::UpdateText()
 {
 	if (m_Text.empty()) return;
 

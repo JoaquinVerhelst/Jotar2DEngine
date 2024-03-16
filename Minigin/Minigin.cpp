@@ -12,7 +12,7 @@
 #include "ImguiRenderer.h"
 
 
-dae::Minigin::Minigin(const std::string &dataPath)
+Jotar::Minigin::Minigin(const std::string &dataPath)
 {
 
 	GLSDLManager::GetInstance().Init();
@@ -22,13 +22,13 @@ dae::Minigin::Minigin(const std::string &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+Jotar::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
 	GLSDLManager::GetInstance().Destroy();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
+void Jotar::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
@@ -36,7 +36,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 	auto& time = WorldTimeManager::GetInstance();
-	auto& imgui = ImguiRenderer::GetInstance();
+	//auto& imgui = ImguiRenderer::GetInstance();
 
 	//Game loop
 	bool doContinue = true;
@@ -67,13 +67,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	
 		renderer.Render();
 
-		imgui.Render();
+		//imgui.Render();
 
-		renderer.EndRender();
+		//renderer.EndRender();
 
 		sceneManager.CleanUpDestroyedObjects();
 	}
 
 	sceneManager.Destroy();
-	imgui.Destroy();
+	//imgui.Destroy();
 }

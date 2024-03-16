@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-dae::Texture2D::Texture2D(SDL_Texture* texture)
+Jotar::Texture2D::Texture2D(SDL_Texture* texture)
 	: m_pTexture{ texture },
 	m_Width{},
 	m_Height{}
@@ -14,7 +14,7 @@ dae::Texture2D::Texture2D(SDL_Texture* texture)
 }
 
 
-dae::Texture2D::Texture2D(std::string filePath)
+Jotar::Texture2D::Texture2D(std::string filePath)
 	: m_pTexture{ nullptr },
 	m_Width{},
 	m_Height{}
@@ -22,12 +22,12 @@ dae::Texture2D::Texture2D(std::string filePath)
 	LoadTexture(filePath);
 }
 
-dae::Texture2D::~Texture2D()
+Jotar::Texture2D::~Texture2D()
 {
 	SDL_DestroyTexture(m_pTexture);
 }
 
-glm::ivec2 dae::Texture2D::GetSize() const
+glm::ivec2 Jotar::Texture2D::GetSize() const
 {
 	SDL_Rect dst;
 	SDL_QueryTexture(GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
@@ -35,7 +35,7 @@ glm::ivec2 dae::Texture2D::GetSize() const
 }
 
 
-SDL_Texture* dae::Texture2D::GetSDLTexture() const
+SDL_Texture* Jotar::Texture2D::GetSDLTexture() const
 {
 	return m_pTexture;
 }
@@ -43,7 +43,7 @@ SDL_Texture* dae::Texture2D::GetSDLTexture() const
 
 
 
-void dae::Texture2D::LoadTexture(std::string filePath)
+void Jotar::Texture2D::LoadTexture(std::string filePath)
 {
 	SDL_Texture* texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), filePath.c_str());
 

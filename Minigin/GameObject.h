@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <algorithm>
 
-namespace dae
+namespace Jotar
 {
 	class Scene;
 

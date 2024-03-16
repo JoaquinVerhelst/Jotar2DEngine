@@ -3,10 +3,10 @@
 #include <stdexcept>
 
 
-dae::ShaderComponent::ShaderComponent(GameObject* owner, const std::string& vertex, const std::string& fragment)
+Jotar::ShaderComponent::ShaderComponent(GameObject* owner, const std::string& vertex, const std::string& fragment)
 	:Component(owner)
 {
-	m_ShaderProgram = glCreateProgram();
+	m_ShaderProgramID = glCreateProgram();
 
 	// vertex shader 
 	unsigned int vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -27,7 +27,7 @@ dae::ShaderComponent::ShaderComponent(GameObject* owner, const std::string& vert
 		return;
 	}
 
-	glAttachShader(m_ShaderProgram, vertexShaderID);
+	glAttachShader(m_ShaderProgramID, vertexShaderID);
 
 
 	// fragment Shader
@@ -50,19 +50,19 @@ dae::ShaderComponent::ShaderComponent(GameObject* owner, const std::string& vert
 		return;
 	}
 
-	glAttachShader(m_ShaderProgram, fragmentShaderID);
+	glAttachShader(m_ShaderProgramID, fragmentShaderID);
 
 
 	// Shader Program
 
-	glLinkProgram(m_ShaderProgram);
-	glValidateProgram(m_ShaderProgram);
-	glGetProgramiv(m_ShaderProgram, GL_LINK_STATUS, &status);
+	glLinkProgram(m_ShaderProgramID);
+	glValidateProgram(m_ShaderProgramID);
+	glGetProgramiv(m_ShaderProgramID, GL_LINK_STATUS, &status);
 	if (status != GL_TRUE)
 	{
 		char errorLog[512];
-		glGetProgramInfoLog(m_ShaderProgram, sizeof(errorLog), nullptr, errorLog);
-		glDeleteProgram(m_ShaderProgram);
+		glGetProgramInfoLog(m_ShaderProgramID, sizeof(errorLog), nullptr, errorLog);
+		glDeleteProgram(m_ShaderProgramID);
 
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);
@@ -71,58 +71,58 @@ dae::ShaderComponent::ShaderComponent(GameObject* owner, const std::string& vert
 	}
 
 
-	glDetachShader(m_ShaderProgram, vertexShaderID);
-	glDetachShader(m_ShaderProgram, fragmentShaderID);
+	glDetachShader(m_ShaderProgramID, vertexShaderID);
+	glDetachShader(m_ShaderProgramID, fragmentShaderID);
 
 }
 
-dae::ShaderComponent::~ShaderComponent()
+Jotar::ShaderComponent::~ShaderComponent()
 {
 	glUseProgram(0);
-	glDeleteProgram(m_ShaderProgram);
+	glDeleteProgram(m_ShaderProgramID);
 }
 
-void dae::ShaderComponent::Bind()
+void Jotar::ShaderComponent::Bind()
 {
-	glUseProgram(m_ShaderProgram);
+	glUseProgram(m_ShaderProgramID);
 }
 
-void dae::ShaderComponent::Unbind()
+void Jotar::ShaderComponent::Unbind()
 {
 	glUseProgram(0);
 }
 
-void dae::ShaderComponent::SetUniformInt(const std::string& name, int val)
+void Jotar::ShaderComponent::SetUniformInt(const std::string& name, int val)
 {
-	glUseProgram(m_ShaderProgram);
+	glUseProgram(m_ShaderProgramID);
 	glUniform1i(GetUniformLocation(name), val);
 }
 
-void dae::ShaderComponent::SetUniformFloat(const std::string& name, float val)
+void Jotar::ShaderComponent::SetUniformFloat(const std::string& name, float val)
 {
 	glUniform1f(GetUniformLocation(name), val);
 }
 
-void dae::ShaderComponent::SetUniformFloat2(const std::string& name, float val1, float val2)
+void Jotar::ShaderComponent::SetUniformFloat2(const std::string& name, float val1, float val2)
 {
 	glUniform2f(GetUniformLocation(name), val1, val2);
 }
 
-void dae::ShaderComponent::SetUniformFloat3(const std::string& name, float val1, float val2, float val3)
+void Jotar::ShaderComponent::SetUniformFloat3(const std::string& name, float val1, float val2, float val3)
 {
 	glUniform3f(GetUniformLocation(name), val1, val2, val3);
 }
-void dae::ShaderComponent::SetUniformFloat4(const std::string& name, float val1, float val2, float val3, float val4)
+void Jotar::ShaderComponent::SetUniformFloat4(const std::string& name, float val1, float val2, float val3, float val4)
 {
 	glUniform4f(GetUniformLocation(name), val1, val2, val3, val4);
 }
 
-int dae::ShaderComponent::GetUniformLocation(const std::string& name)
+int Jotar::ShaderComponent::GetUniformLocation(const std::string& name)
 {
 	auto it = m_UniformLocations.find(name);
 	if (it == m_UniformLocations.end())
 	{
-		m_UniformLocations[name] = glGetUniformLocation(m_ShaderProgram, name.c_str());
+		m_UniformLocations[name] = glGetUniformLocation(m_ShaderProgramID, name.c_str());
 	}
 
 	return m_UniformLocations[name];

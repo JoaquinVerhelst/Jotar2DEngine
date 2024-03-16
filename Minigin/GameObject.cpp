@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-dae::GameObject::GameObject(Scene* pScene, const std::string& name)
+Jotar::GameObject::GameObject(Scene* pScene, const std::string& name)
 	: m_pComponents{}
 	, m_Name{name}
 	, m_pScene{pScene}
@@ -17,12 +17,12 @@ dae::GameObject::GameObject(Scene* pScene, const std::string& name)
 	m_pTransform = AddComponent<TransformComponent>();
 }
 
-dae::GameObject::~GameObject()
+Jotar::GameObject::~GameObject()
 {
 	m_pChildren.clear();
 }
 
-void dae::GameObject::Update()
+void Jotar::GameObject::Update()
 {
 
 	for (const auto& pComponent : m_pComponents)
@@ -36,7 +36,7 @@ void dae::GameObject::Update()
 	}
 }
 
-void dae::GameObject::FixedUpdate()
+void Jotar::GameObject::FixedUpdate()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
@@ -50,7 +50,7 @@ void dae::GameObject::FixedUpdate()
 	}
 }
 
-void dae::GameObject::LateUpdate()
+void Jotar::GameObject::LateUpdate()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
@@ -64,7 +64,7 @@ void dae::GameObject::LateUpdate()
 	}
 }
 
-void dae::GameObject::Render() const
+void Jotar::GameObject::Render() const
 {
 	for (const auto& pComponent : m_pComponents)
 	{
@@ -78,7 +78,7 @@ void dae::GameObject::Render() const
 }
 
 
-void dae::GameObject::OnDestroy()
+void Jotar::GameObject::OnDestroy()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
@@ -93,7 +93,7 @@ void dae::GameObject::OnDestroy()
 }
 
 
-void dae::GameObject::Destroy()
+void Jotar::GameObject::Destroy()
 {
 	m_IsDestroyed = true;
 
@@ -104,7 +104,7 @@ void dae::GameObject::Destroy()
 }
 
 
-std::shared_ptr<dae::GameObject> dae::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition)
+std::shared_ptr<Jotar::GameObject> Jotar::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition)
 {
 	auto pGameObject{ std::make_shared<GameObject>(m_pScene, name) };
 
@@ -115,7 +115,7 @@ std::shared_ptr<dae::GameObject> dae::GameObject::CreateChildGameObject(const st
 	return pGameObject;
 }
 
-void dae::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
+void Jotar::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 {
 	// choek if valid
 	if (newParent == this|| m_pParent == newParent)
@@ -163,7 +163,7 @@ void dae::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 
 
 
-std::shared_ptr<dae::GameObject> dae::GameObject::GetChildAt(unsigned int index) const
+std::shared_ptr<Jotar::GameObject> Jotar::GameObject::GetChildAt(unsigned int index) const
 {
 	if (index >= static_cast<int>(m_pChildren.size()))
 	{
@@ -173,7 +173,7 @@ std::shared_ptr<dae::GameObject> dae::GameObject::GetChildAt(unsigned int index)
 	return m_pChildren[index];
 }
 
-void dae::GameObject::RemoveChild(std::shared_ptr<GameObject> childToRemove)
+void Jotar::GameObject::RemoveChild(std::shared_ptr<GameObject> childToRemove)
 {
 
 	if (!childToRemove)

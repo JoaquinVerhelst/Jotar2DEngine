@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include "Singleton.h"
 
-namespace dae
+namespace Jotar
 {
 	// credit: https://www.youtube.com/watch?v=lID9X5TT774
 

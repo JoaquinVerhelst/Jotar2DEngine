@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-void dae::SceneManager::Update()
+void Jotar::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)
 	{
@@ -9,7 +9,7 @@ void dae::SceneManager::Update()
 	}
 }
 
-void dae::SceneManager::FixedUpdate()
+void Jotar::SceneManager::FixedUpdate()
 {
 	for (auto& scene : m_scenes)
 	{
@@ -17,7 +17,7 @@ void dae::SceneManager::FixedUpdate()
 	}
 }
 
-void dae::SceneManager::LateUpdate()
+void Jotar::SceneManager::LateUpdate()
 {
 	for (auto& scene : m_scenes)
 	{
@@ -25,7 +25,7 @@ void dae::SceneManager::LateUpdate()
 	}
 }
 
-void dae::SceneManager::Render()
+void Jotar::SceneManager::Render()
 {
 	for (const auto& scene : m_scenes)
 	{
@@ -33,7 +33,7 @@ void dae::SceneManager::Render()
 	}
 }
 
-void dae::SceneManager::CleanUpDestroyedObjects()
+void Jotar::SceneManager::CleanUpDestroyedObjects()
 {
 	for (const auto& scene : m_scenes)
 	{
@@ -41,14 +41,14 @@ void dae::SceneManager::CleanUpDestroyedObjects()
 	}
 }
 
-dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
+Jotar::Scene& Jotar::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
 	m_scenes.push_back(scene);
 	return *scene;
 }
 
-void dae::SceneManager::Destroy()
+void Jotar::SceneManager::Destroy()
 {
 	for (auto& scene : m_scenes)
 	{

@@ -19,7 +19,7 @@ int GetOpenGLDriverIndex()
 	return openglIndex;
 }
 
-void dae::Renderer::Init()
+void Jotar::Renderer::Init()
 {
 	SDL_Window* window = GLSDLManager::GetInstance().GetSDLWindow();
 
@@ -30,27 +30,27 @@ void dae::Renderer::Init()
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
 
-	ImguiWindowProperties properties{};
+	//ImguiWindowProperties properties{};
 
 	//m_ImguiRenderer = std::make_unique<ImguiRenderer>();
 
-	ImguiRenderer::GetInstance().Init(window, properties);
+	//ImguiRenderer::GetInstance().Init(window, properties);
 
 	SetWireFrameOn(false);
 }
 
-void dae::Renderer::Render() const
+void Jotar::Renderer::Render() const
 {
 
 	// open gl ///////////////////////////
 
-	//BeginRender();
+	BeginRender();
 
 
-	//SceneManager::GetInstance().Render();
+	SceneManager::GetInstance().Render();
 
 
-	//EndRender();
+	EndRender();
 
 
 
@@ -59,19 +59,19 @@ void dae::Renderer::Render() const
 
 
 
-	SDL_RenderClear(m_Renderer);
-	const auto& color = GetBackgroundColor();
-	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	
+	//SDL_RenderClear(m_Renderer);
+	//const auto& color = GetBackgroundColor();
+	//SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	//
 
-	SceneManager::GetInstance().Render();
+	//SceneManager::GetInstance().Render();
 	//m_ImguiRenderer->Render();
 
 	//SDL_RenderPresent(m_Renderer);
 
 }
 
-void dae::Renderer::Destroy()
+void Jotar::Renderer::Destroy()
 {
 	//m_ImguiRenderer->Destroy();
 
@@ -84,18 +84,18 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::BeginRender() const
+void Jotar::Renderer::BeginRender() const
 {
 	Clear();
 }
 
-void dae::Renderer::EndRender() const
+void Jotar::Renderer::EndRender() const
 {
-	SDL_RenderPresent(m_Renderer);
-	//SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
+	//SDL_RenderPresent(m_Renderer);
+	SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void Jotar::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -105,7 +105,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void Jotar::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -116,9 +116,9 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }
+SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
-void dae::Renderer::SetWireFrameOn(bool on)
+void Jotar::Renderer::SetWireFrameOn(bool on)
 {
 	if (on)
 	{
@@ -132,7 +132,7 @@ void dae::Renderer::SetWireFrameOn(bool on)
 
 
 
-void dae::Renderer::Clear() const
+void Jotar::Renderer::Clear() const
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "GameObject.h"
 
-dae::TextureComponent::TextureComponent(GameObject* owner, const std::string& filePath)
+Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& filePath)
 	: Component(owner),
 	m_Texture{ nullptr }
 {
@@ -10,13 +10,13 @@ dae::TextureComponent::TextureComponent(GameObject* owner, const std::string& fi
 }
 
 
-void dae::TextureComponent::SetTexture(const std::string& filePath)
+void Jotar::TextureComponent::SetTexture(const std::string& filePath)
 {
 	m_Texture->LoadTexture(filePath);
 }
 
 
-void dae::TextureComponent::Render() const
+void Jotar::TextureComponent::Render() const
 {
 	const auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
 

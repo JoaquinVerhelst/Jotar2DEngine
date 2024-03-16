@@ -4,7 +4,7 @@
 
 
 struct SDL_Texture;
-namespace dae
+namespace Jotar
 {
 	/**
 	 * Simple RAII wrapper for an SDL_Texture

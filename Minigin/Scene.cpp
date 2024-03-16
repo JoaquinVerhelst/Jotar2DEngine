@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-using namespace dae;
+using namespace Jotar;
 
 unsigned int Scene::m_idCounter = 0;
 
@@ -38,7 +38,7 @@ void Scene::Update()
 	}
 }
 
-void dae::Scene::FixedUpdate()
+void Jotar::Scene::FixedUpdate()
 {
 	for (auto& object : m_pObjects)
 	{
@@ -46,7 +46,7 @@ void dae::Scene::FixedUpdate()
 	}
 }
 
-void dae::Scene::LateUpdate()
+void Jotar::Scene::LateUpdate()
 {
 
 	for (auto& object : m_pObjects)
@@ -64,17 +64,17 @@ void Scene::Render() const
 	}
 }
 
-std::shared_ptr<GameObject> dae::Scene::CreateGameObject(std::string objectName)
+std::shared_ptr<GameObject> Jotar::Scene::CreateGameObject(std::string objectName)
 {
 
-	auto gameObject = std::make_shared<dae::GameObject>(this, objectName);
+	auto gameObject = std::make_shared<Jotar::GameObject>(this, objectName);
 
 	Add(gameObject);
 
 	return gameObject;
 }
 
-void dae::Scene::RemoveGameObjectFromRoot(GameObject* object)
+void Jotar::Scene::RemoveGameObjectFromRoot(GameObject* object)
 {
 	auto foundObj = std::find_if(m_pObjects.begin(), m_pObjects.end(), [&](const auto& p) { return p.get() == object; });
 
@@ -85,14 +85,14 @@ void dae::Scene::RemoveGameObjectFromRoot(GameObject* object)
 }
 
 
-//void dae::Scene::AddGameObjectToRoot(GameObject* GO)
+//void Jotar::Scene::AddGameObjectToRoot(GameObject* GO)
 //{
 //}
 //
 
 
 
-void dae::Scene::CleanUpDestroyedObjects()
+void Jotar::Scene::CleanUpDestroyedObjects()
 {
 	for (size_t i = 0; i < m_pObjects.size(); i++)
 	{

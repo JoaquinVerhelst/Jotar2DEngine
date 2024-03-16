@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include "GameObject.h"
 
-namespace dae
+namespace Jotar
 {
 
 	class GameObject;

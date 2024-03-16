@@ -6,7 +6,7 @@
 #include <SDL_pixels.h>
 #include <memory>
 
-namespace dae
+namespace Jotar
 {
 	class Font;
 	class TextComponent;

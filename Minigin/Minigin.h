@@ -6,7 +6,7 @@
 
 
 
-namespace dae
+namespace Jotar
 {
 	class Minigin
 	{

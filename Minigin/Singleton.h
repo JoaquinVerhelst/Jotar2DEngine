@@ -1,5 +1,5 @@
 #pragma once
-namespace dae
+namespace Jotar
 {
 	template <typename T>
 	class Singleton

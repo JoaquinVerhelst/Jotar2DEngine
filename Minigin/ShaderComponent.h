@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-namespace dae
+namespace Jotar
 {
 	class ShaderComponent : public Component
 	{
@@ -28,7 +28,7 @@ namespace dae
 
 		int GetUniformLocation(const std::string& name);
 
-		unsigned int m_ShaderProgram;
+		unsigned int m_ShaderProgramID;
 		std::unordered_map<std::string, int> m_UniformLocations;
 	};
 

@@ -6,7 +6,7 @@
 #include <stack>
 #include "FrameBuffer.h"
 
-namespace dae
+namespace Jotar
 {
 	class Texture2D;
 
