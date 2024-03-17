@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 
 namespace Jotar
 {
@@ -9,6 +8,4 @@ namespace Jotar
 		virtual void Execute() = 0;
 		virtual ~Command() {}
 	};
-
-
 }

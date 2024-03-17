@@ -38,6 +38,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 	auto& time = WorldTimeManager::GetInstance();
 	//auto& imgui = ImguiRenderer::GetInstance();
 
+
 	//Game loop
 	bool doContinue = true;
 	
@@ -60,6 +61,8 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 			sceneManager.FixedUpdate();
 			lag -= fixedTimeStep;
 		}
+
+
 		sceneManager.Update();
 
 		sceneManager.LateUpdate();
@@ -72,6 +75,8 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 		//renderer.EndRender();
 
 		sceneManager.CleanUpDestroyedObjects();
+
+		input.ClearFrameEvents();
 	}
 
 	sceneManager.Destroy();

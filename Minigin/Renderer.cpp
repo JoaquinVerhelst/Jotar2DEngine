@@ -42,15 +42,15 @@ void Jotar::Renderer::Init()
 void Jotar::Renderer::Render() const
 {
 
-	// open gl ///////////////////////////
+	// open gl testing ///////////////////////////
 
-	BeginRender();
-
-
-	SceneManager::GetInstance().Render();
+	//BeginRender();
 
 
-	EndRender();
+	//SceneManager::GetInstance().Render();
+
+
+	//EndRender();
 
 
 
@@ -59,15 +59,15 @@ void Jotar::Renderer::Render() const
 
 
 
-	//SDL_RenderClear(m_Renderer);
-	//const auto& color = GetBackgroundColor();
-	//SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	//
+	SDL_RenderClear(m_Renderer);
+	const auto& color = GetBackgroundColor();
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	
 
-	//SceneManager::GetInstance().Render();
+	SceneManager::GetInstance().Render();
 	//m_ImguiRenderer->Render();
 
-	//SDL_RenderPresent(m_Renderer);
+	SDL_RenderPresent(m_Renderer);
 
 }
 
@@ -91,7 +91,6 @@ void Jotar::Renderer::BeginRender() const
 
 void Jotar::Renderer::EndRender() const
 {
-	//SDL_RenderPresent(m_Renderer);
 	SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
 }
 

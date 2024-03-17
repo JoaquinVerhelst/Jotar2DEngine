@@ -7,6 +7,11 @@
 #include <stdexcept>
 
 
+
+
+// this design is credit: https://www.youtube.com/watch?v=rkxrw8dNrvI&list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT&index=44
+// For now Im following this tutorial, until I understand how it works and will probably refactor  a lot
+
 namespace Jotar
 {
 	enum class ShaderDataType

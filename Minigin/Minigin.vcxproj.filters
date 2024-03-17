@@ -37,15 +37,18 @@
     <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Shader">
       <UniqueIdentifier>{6ac68f5a-571d-405e-9344-613703719cab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Input">
+      <UniqueIdentifier>{b2b183b0-8f0a-47e4-8abd-e9887e6d945d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Command">
+      <UniqueIdentifier>{631becbc-a566-4946-a99a-44730a93656a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
@@ -138,14 +141,29 @@
     <ClInclude Include="GLTexture2D.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
     </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\3rdParty\imgui\imgui_plot.h">
       <Filter>Engine\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="Buffers.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerInput.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementCommand.h">
+      <Filter>Engine\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Engine\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardInput.h">
+      <Filter>Engine\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,9 +171,6 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
@@ -248,14 +263,26 @@
     <ClCompile Include="GLTexture2D.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp">
       <Filter>Engine\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="Buffers.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerInput.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardInput.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementCommand.cpp">
+      <Filter>Engine\Command</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
