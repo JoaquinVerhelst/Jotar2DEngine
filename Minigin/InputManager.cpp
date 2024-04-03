@@ -12,7 +12,7 @@ namespace Jotar
 		m_KeyboardInput = std::make_unique<KeyboardInput>();
 	}
 
-	bool InputManager::ProcessInput()
+	bool InputManager::ProcessInput() const
 	{
 		//Controllers Update
 		for (const auto& controller : m_pControllers)
@@ -29,7 +29,7 @@ namespace Jotar
 		return !IsGameQuit();
 	}
 
-	void InputManager::ControllersHandler()
+	void InputManager::ControllersHandler() const
 	{
 		for (const auto& controllerBind: m_pControllerBinds)
 		{
@@ -53,7 +53,7 @@ namespace Jotar
 		}
 	}
 
-	void InputManager::KeyboardHandler()
+	void InputManager::KeyboardHandler() const
 	{
 		for (const auto& keyboardBinds : m_pKeyboardBinds)
 		{
@@ -99,27 +99,27 @@ namespace Jotar
 		m_pKeyboardBinds.emplace_back(std::pair(key, std::move(pCommand)));
 	}
 
-	bool InputManager::IsMouseButtonDown()
+	bool InputManager::IsMouseButtonDown() const
 	{
 		return m_KeyboardInput->IsMouseButtonDown();
 	}
 
-	bool InputManager::IsMouseButtonUp()
+	bool InputManager::IsMouseButtonUp() const
 	{
 		return m_KeyboardInput->IsMouseButtonUp();
 	}
 
-	bool InputManager::IsGameQuit()
+	bool InputManager::IsGameQuit() const
 	{
 		return m_KeyboardInput->GetIsGameQuit();
 	}
 
-	glm::ivec2 InputManager::GetMouseLocation()
+	glm::ivec2 InputManager::GetMouseLocation() const
 	{
 		return m_KeyboardInput->GetMouseLocation();
 	}
 
-	void InputManager::ClearFrameEvents()
+	void InputManager::ClearFrameEvents() 
 	{
 		m_KeyboardInput->ClearFrameEvents();
 	}

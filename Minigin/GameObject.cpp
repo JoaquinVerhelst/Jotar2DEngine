@@ -22,6 +22,19 @@ Jotar::GameObject::~GameObject()
 	m_pChildren.clear();
 }
 
+void Jotar::GameObject::Start()
+{
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->Start();
+	}
+
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->Start();
+	}
+}
+
 void Jotar::GameObject::Update()
 {
 
@@ -129,6 +142,8 @@ void Jotar::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 
 	if (m_pParent)
 	{
+		GetTransform()->SetPosition(GetTransform()->GetWorldPosition());
+
 		m_pParent->RemoveChild(shared_from_this());
 	}
 

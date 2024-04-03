@@ -11,6 +11,9 @@
 #include "GLSDLManager.h"
 #include "ImguiRenderer.h"
 
+#include "SteamAchievements.h"
+
+#include <steam_api.h>
 
 Jotar::Minigin::Minigin(const std::string &dataPath)
 {
@@ -18,6 +21,8 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 	GLSDLManager::GetInstance().Init();
 
 	Renderer::GetInstance().Init();
+
+	//CSteamAchievements::GetInstance().Init(g_Achievements, 4);
 
 	ResourceManager::GetInstance().Init(dataPath);
 }
@@ -48,13 +53,20 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 
 	float fixedTimeStep = 0.02f;
 
+
+
+	sceneManager.Start();
+
 	while (doContinue)
 	{
+
 		time.Update();
 
 		doContinue = input.ProcessInput();
 
 		lag += time.GetDeltaTime();
+
+
 
 		while (lag >= fixedTimeStep)
 		{
@@ -69,6 +81,8 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 
 	
 		renderer.Render();
+
+		SteamAPI_RunCallbacks();
 
 		//imgui.Render();
 

@@ -15,6 +15,7 @@ namespace Jotar
 	{
 	public:
 
+		void Start();
 		void Update();
 		void FixedUpdate();
 		void LateUpdate();
@@ -36,17 +37,17 @@ namespace Jotar
 
 		//void SetTexture(const std::string& filename);
 
-		std::shared_ptr<TransformComponent> GetTransform() { return m_pTransform; }
+		TransformComponent* GetTransform() { return m_pTransform; }
 
 
 		const std::string& GetName() const { return m_Name; };
 
 		//Component System
 		template <typename T, typename...TArgs>
-		std::shared_ptr<T> AddComponent(TArgs&&... mArgs);
+		T* AddComponent(TArgs&&... mArgs);
 
 		template <typename T>
-		T& GetComponent() const;
+		T* GetComponent() const;
 
 		template <typename T>
 		void RemoveComponent();
@@ -77,7 +78,7 @@ namespace Jotar
 
 		std::vector<std::shared_ptr<Component>> m_pComponents;
 
-		std::shared_ptr<TransformComponent> m_pTransform{};
+		TransformComponent* m_pTransform{};
 
 
 		bool m_IsDestroyed;
@@ -92,7 +93,7 @@ namespace Jotar
 
 
 	template<typename T, typename...TArgs>
-	std::shared_ptr<T> GameObject::AddComponent(TArgs&&... mArgs)
+	T* GameObject::AddComponent(TArgs&&... mArgs)
 	{
 		static_assert(std::is_base_of<Component, T>(), "Error: The class needs to be inherited from the Component class");
 
@@ -104,12 +105,12 @@ namespace Jotar
 		m_pComponents.emplace_back(newComponent);
 		newComponent->Init();
 
-		return newComponent;
+		return newComponent.get();
 	}
 
 
 	template<typename T>
-	T& GameObject::GetComponent() const
+	T* GameObject::GetComponent() const
 	{
 
 		static_assert(std::is_base_of<Component, T>(), "Error: The class needs to be inherited from the Component class");
@@ -119,10 +120,11 @@ namespace Jotar
 			return dynamic_cast<T*>(component.get()) != nullptr;
 			});
 
-		// If the component is found, return a reference to it
+		// If the component is found, return a pointer to it
 		if (it != m_pComponents.end()) {
-			return dynamic_cast<T&>(**it);
+			return dynamic_cast<T*>(it->get());
 		}
+
 
 		// If the component is not found, throw an exception
 		throw std::runtime_error("No component of this type: " + std::string(typeid(T).name()) + "is in this gameobject");

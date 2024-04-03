@@ -13,10 +13,6 @@ namespace Jotar
 			, m_Dir{ dir }
 		{
 		}
-		virtual ~MovementCommand()
-		{
-			//if (m_pMovement) delete m_pMovement;
-		}
 		void Execute() override
 		{
 			if (m_pMovement) m_pMovement->Move(glm::vec3{ m_Dir.r,m_Dir.g,0 });

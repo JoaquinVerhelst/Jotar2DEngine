@@ -15,7 +15,7 @@ namespace Jotar
 	{
 	public:
 
-		explicit FPSComponent(GameObject* owner, const std::shared_ptr<Font>& pFont, const SDL_Color& color, float timeToUpdate = 0.5f);
+		explicit FPSComponent(GameObject* owner, float timeToUpdate = 0.5f);
 		~FPSComponent() = default;
 
 		virtual void Update() override;
@@ -33,7 +33,7 @@ namespace Jotar
 		void SetUpdateTime(float time) { m_TimeToUpdate = time; }
 	private:
 
-		std::shared_ptr<TextComponent> m_TextComponent{};
+		TextComponent* m_pTextComponent;
 
 		float m_Count;
 		float m_TimeToUpdate;

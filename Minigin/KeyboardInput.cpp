@@ -24,14 +24,14 @@ namespace Jotar
 
 		void Update();
 
-		glm::ivec2 GetMouseLocation();
-		bool IsMouseButtonUsed(SDL_EventType inputType);
-		bool IsKeyUsed(SDL_KeyCode key, SDL_EventType inputType);
-		bool IsKeyPressed(SDL_KeyCode key);
+		glm::ivec2 GetMouseLocation() const;
+		bool IsMouseButtonUsed(SDL_EventType inputType) const;
+		bool IsKeyUsed(SDL_KeyCode key, SDL_EventType inputType) const;
+		bool IsKeyPressed(SDL_KeyCode key) const;
 
 		void ClearFrameEvents();
 
-		bool GetIsGameQuit();
+		bool GetIsGameQuit() const;
 
 	private:
 		std::vector<SDL_Event> m_SDLFrameKeyEvents;
@@ -73,7 +73,7 @@ namespace Jotar
 		}
 	}
 
-	glm::ivec2 KeyboardInput::KeyboardInputImpl::GetMouseLocation()
+	glm::ivec2 KeyboardInput::KeyboardInputImpl::GetMouseLocation() const
 	{
 		for (size_t i = 0; i < m_SDLFrameMouseEvents.size(); i++)
 		{
@@ -86,7 +86,7 @@ namespace Jotar
 		return glm::ivec2{ 0,0 };
 	}
 
-	bool KeyboardInput::KeyboardInputImpl::IsMouseButtonUsed(SDL_EventType inputType)
+	bool KeyboardInput::KeyboardInputImpl::IsMouseButtonUsed(SDL_EventType inputType) const
 	{
 		for (size_t i = 0; i < m_SDLFrameMouseEvents.size(); i++)
 		{
@@ -99,7 +99,7 @@ namespace Jotar
 		return false;
 	}
 
-	bool KeyboardInput::KeyboardInputImpl::IsKeyUsed(SDL_KeyCode key, SDL_EventType inputType)
+	bool KeyboardInput::KeyboardInputImpl::IsKeyUsed(SDL_KeyCode key, SDL_EventType inputType) const
 	{
 		for (size_t i = 0; i < m_SDLFrameKeyEvents.size(); i++)
 		{
@@ -115,7 +115,7 @@ namespace Jotar
 		return false;
 	}
 
-	bool KeyboardInput::KeyboardInputImpl::IsKeyPressed(SDL_KeyCode key)
+	bool KeyboardInput::KeyboardInputImpl::IsKeyPressed(SDL_KeyCode key) const
 	{
 		SDL_Scancode scanCode = SDL_GetScancodeFromKey(key);
 
@@ -135,7 +135,7 @@ namespace Jotar
 		m_SDLFrameMouseEvents.clear();
 	}
 
-	bool KeyboardInput::KeyboardInputImpl::GetIsGameQuit()
+	bool KeyboardInput::KeyboardInputImpl::GetIsGameQuit() const
 	{
 		return m_IsGameQuit;
 	}
@@ -161,38 +161,38 @@ namespace Jotar
 	}
 
 
-	glm::ivec2 KeyboardInput::GetMouseLocation()
+	glm::ivec2 KeyboardInput::GetMouseLocation() const
 	{
 		return pImpl->GetMouseLocation();
 	}
 
-	bool KeyboardInput::IsMouseButtonDown()
+	bool KeyboardInput::IsMouseButtonDown() const
 	{
 		return pImpl->IsMouseButtonUsed(SDL_EventType::SDL_MOUSEBUTTONDOWN);
 	}
 
-	bool KeyboardInput::IsMouseButtonUp()
+	bool KeyboardInput::IsMouseButtonUp() const
 	{
 		return pImpl->IsMouseButtonUsed(SDL_EventType::SDL_MOUSEBUTTONUP);
 	}
 
 
-	bool KeyboardInput::IsKeyUp(KeyboardButton button)
+	bool KeyboardInput::IsKeyUp(KeyboardButton button) const
 	{
 		return pImpl->IsKeyUsed(static_cast<SDL_KeyCode>(button), SDL_EventType::SDL_KEYUP);
 	}
 
-	bool KeyboardInput::IsKeyDown(KeyboardButton button)
+	bool KeyboardInput::IsKeyDown(KeyboardButton button) const
 	{
 		return pImpl->IsKeyUsed(static_cast<SDL_KeyCode>(button), SDL_EventType::SDL_KEYDOWN);
 	}
 
-	bool KeyboardInput::IsKeyPressed(KeyboardButton button)
+	bool KeyboardInput::IsKeyPressed(KeyboardButton button) const
 	{
 		return pImpl->IsKeyPressed(static_cast<SDL_KeyCode>(button));
 	}
 
-	bool KeyboardInput::GetIsGameQuit()
+	bool KeyboardInput::GetIsGameQuit() const
 	{
 		return pImpl->GetIsGameQuit();
 	}

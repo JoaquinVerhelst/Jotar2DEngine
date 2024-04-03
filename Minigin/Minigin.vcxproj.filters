@@ -43,6 +43,18 @@
     <Filter Include="Engine\Command">
       <UniqueIdentifier>{631becbc-a566-4946-a99a-44730a93656a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Observer">
+      <UniqueIdentifier>{b0d5f36e-65a9-45ed-80e5-ea5c769cb849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Observer\Events">
+      <UniqueIdentifier>{00662ec3-63aa-4467-990e-c167c6ad54ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Observer\Steam">
+      <UniqueIdentifier>{7e2c1d14-6f2a-41f3-ac8c-df1017b564a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Components\PlayerComponents">
+      <UniqueIdentifier>{a2254aca-9c5e-44fd-9930-e3f222a931e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h">
@@ -165,6 +177,57 @@
     <ClInclude Include="KeyboardInput.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Engine\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Engine\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Engine\Observer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventPlayerDamage.h">
+      <Filter>Engine\Observer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="TempCommand.h">
+      <Filter>Engine\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="EventAddScore.h">
+      <Filter>Engine\Observer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamAchievements.h">
+      <Filter>Engine\Observer\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthDisplayComponent.h">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreDisplayComponent.h">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaceBombComponent.h">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="BombComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaceBombCommand.h">
+      <Filter>Engine\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -281,8 +344,44 @@
     <ClCompile Include="KeyboardInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="MovementCommand.cpp">
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EventPlayerDamage.cpp">
+      <Filter>Engine\Observer\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EventAddScore.cpp">
+      <Filter>Engine\Observer\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="SteamAchievements.cpp">
+      <Filter>Engine\Observer\Steam</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthDisplayComponent.cpp">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreDisplayComponent.cpp">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaceBombComponent.cpp">
+      <Filter>Engine\Components\PlayerComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="BombComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaceBombCommand.cpp">
       <Filter>Engine\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionComponent.cpp">
+      <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

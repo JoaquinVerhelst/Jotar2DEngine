@@ -12,6 +12,7 @@ namespace Jotar
 	public:
 		Scene& CreateScene(const std::string& name);
 
+		void Start();
 		void Update();
 		void FixedUpdate();
 		void LateUpdate();
@@ -19,6 +20,11 @@ namespace Jotar
 		void CleanUpDestroyedObjects();
 
 		void Destroy();
+
+
+		Scene& GetScene(int SceneIndex) const;
+
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

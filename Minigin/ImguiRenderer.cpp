@@ -146,6 +146,7 @@ void Jotar::ImguiRenderer::TrashTheCacheExercise1(int amountOfSamples)
 	std::vector<float> averageDurations{};
 	averageDurations.resize(11, 0);
 
+
 	int index = 0;
 
 	for (int i = 0; i < amountOfSamples; i++)

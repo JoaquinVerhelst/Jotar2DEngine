@@ -18,16 +18,16 @@ namespace Jotar
 
 		void Update();
 
-		glm::ivec2 GetMouseLocation();
-		bool IsMouseButtonDown();
-		bool IsMouseButtonUp();
+		glm::ivec2 GetMouseLocation() const;
+		bool IsMouseButtonDown() const;
+		bool IsMouseButtonUp() const;
 
-		bool IsKeyUp(KeyboardButton button);
-		bool IsKeyDown(KeyboardButton button);
-		bool IsKeyPressed(KeyboardButton button);
+		bool IsKeyUp(KeyboardButton button) const;
+		bool IsKeyDown(KeyboardButton button) const;
+		bool IsKeyPressed(KeyboardButton button) const;
 
 
-		bool GetIsGameQuit();
+		bool GetIsGameQuit() const;
 		void ClearFrameEvents();
 	};
 }

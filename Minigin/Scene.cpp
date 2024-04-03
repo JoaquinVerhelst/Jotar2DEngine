@@ -30,6 +30,14 @@ void Scene::RemoveAll()
 	m_pObjects.clear();
 }
 
+void Jotar::Scene::Start()
+{
+	for (auto& object : m_pObjects)
+	{
+		object->Start();
+	}
+}
+
 void Scene::Update()
 {
 	for(auto& object : m_pObjects)

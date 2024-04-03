@@ -36,21 +36,17 @@ namespace Jotar
 		virtual void Init();
 		virtual void Render() const;
 
-		void SetLayout(const BufferLayout& layout);
-		const BufferLayout& GetLayout() const;
+		//void SetLayout(const BufferLayout& layout);
+		//const BufferLayout& GetLayout() const;
 
 		void Bind() const;
 		void Unbind() const;
 
 	private:
-		BufferLayout m_Layout;
 
-		std::unique_ptr<GLVertexBuffer> m_VertexBuffer;
-		std::unique_ptr<GLIndexBuffer> m_IndexBuffer;
-
+		std::unique_ptr<GLVertexArray> m_pVertexArray;
 
 		unsigned int m_VertexCount;
-		unsigned int m_VertexArray;
 	
 		ShaderComponent* m_ShaderComponent;
 	};

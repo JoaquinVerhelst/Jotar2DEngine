@@ -44,13 +44,13 @@ void Jotar::Renderer::Render() const
 
 	// open gl testing ///////////////////////////
 
-	//BeginRender();
+	BeginRender();
 
 
-	//SceneManager::GetInstance().Render();
+	SceneManager::GetInstance().Render();
 
 
-	//EndRender();
+	EndRender();
 
 
 
@@ -59,15 +59,15 @@ void Jotar::Renderer::Render() const
 
 
 
-	SDL_RenderClear(m_Renderer);
-	const auto& color = GetBackgroundColor();
-	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	
+	//SDL_RenderClear(m_Renderer);
+	//const auto& color = GetBackgroundColor();
+	//SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	//
 
-	SceneManager::GetInstance().Render();
-	//m_ImguiRenderer->Render();
+	//SceneManager::GetInstance().Render();
+	////m_ImguiRenderer->Render();
 
-	SDL_RenderPresent(m_Renderer);
+	//SDL_RenderPresent(m_Renderer);
 
 }
 
@@ -94,6 +94,8 @@ void Jotar::Renderer::EndRender() const
 	SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
 }
 
+
+
 void Jotar::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst{};
@@ -114,6 +116,18 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const float x, con
 	//SDL_SetRenderTarget(m_Renderer, m_GameTexture);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
+
+
+void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& src, const glm::ivec4& dst) const
+{
+	SDL_Rect dstRect{ dst.x, dst.y, dst.w, dst.a };
+	SDL_Rect srcRect{ src.x, src.y, src.w, src.a };
+
+
+	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dstRect);
+}
+
+
 
 SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
 

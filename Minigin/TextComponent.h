@@ -15,7 +15,7 @@ namespace Jotar
     class TextComponent final : public Component {
     public:
 
-        explicit TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color, bool needUpdating = false);
+        explicit TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color = SDL_Color{ 255, 255, 255, 255 }, bool needUpdating = false);
         virtual ~TextComponent() override = default;
 
 

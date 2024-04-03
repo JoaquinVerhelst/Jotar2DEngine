@@ -109,25 +109,25 @@ namespace Jotar
 		InputManager();
 		
 
-		bool ProcessInput();
+		bool ProcessInput() const;
 		void ClearFrameEvents();
 
 		void AddControllerBinding(ControllerKey key, std::unique_ptr<Command> pCommand);
 		void AddKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand);
 
 
-		glm::ivec2 GetMouseLocation();
-		bool IsMouseButtonDown();
-		bool IsMouseButtonUp();
+		glm::ivec2 GetMouseLocation() const;
+		bool IsMouseButtonDown() const;
+		bool IsMouseButtonUp() const;
 
 
 
 	private :
 
-		void ControllersHandler();
-		void KeyboardHandler();
+		void ControllersHandler() const;
+		void KeyboardHandler() const;
 
-		bool IsGameQuit();
+		bool IsGameQuit() const;
 
 
 

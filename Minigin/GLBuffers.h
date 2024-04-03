@@ -5,7 +5,7 @@
 #include <vector>
 #include <glad/glad.h>
 #include <stdexcept>
-
+#include <memory>
 
 
 
@@ -159,9 +159,13 @@ namespace Jotar
 
 		void Bind() const;
 		void Unbind() const;
-	private:
-		unsigned int m_VertexBufferID;
 
+		void SetLayout(const BufferLayout& layout);
+		const BufferLayout& GetLayout() const;
+	private:
+
+		unsigned int m_VertexBufferID;
+		BufferLayout m_Layout;
 	};
 
 	class GLIndexBuffer
@@ -179,5 +183,29 @@ namespace Jotar
 	private:
 		unsigned int m_IndexBufferID;
 		unsigned int m_Count;
+	};
+
+
+	class GLVertexArray
+	{
+	public:
+		GLVertexArray();
+		~GLVertexArray();
+
+		void Bind() const;
+		void BindVertexArray() const;
+		void Unbind() const;
+
+		//void AddVertexBuffer(const std::unique_ptr<GLVertexBuffer>& vertexBuffer);
+		void CreateIndexBuffer(unsigned int* indices, unsigned int indicesCount);
+		void CreateVertexBuffer(float* vertices, size_t size, const BufferLayout& layout);
+
+		const std::vector<std::unique_ptr<GLVertexBuffer>>& GetVertexBuffers() const { return m_pVertexBuffers;  }
+		const std::unique_ptr<GLIndexBuffer>& GetIndexBuffer() const { return m_pIndexBuffer;  }
+	private:
+
+		unsigned int m_VertexArrayID;
+		std::vector<std::unique_ptr<GLVertexBuffer>> m_pVertexBuffers;
+		std::unique_ptr<GLIndexBuffer> m_pIndexBuffer;
 	};
 }

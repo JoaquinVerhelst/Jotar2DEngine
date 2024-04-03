@@ -15,6 +15,7 @@ namespace Jotar
 		Component& operator=(const Component& other) = delete;
 		Component& operator=(Component&& other) = delete;
 
+		virtual void Start() {};
 		virtual void Update() {};
 		virtual void FixedUpdate() {};
 		virtual void LateUpdate() {};

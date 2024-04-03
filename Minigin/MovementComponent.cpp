@@ -7,7 +7,7 @@ Jotar::MovementComponent::MovementComponent(GameObject* owner, float movementSpe
 	: Component(owner)
 	, m_MovementSpeed{movementSpeed}
 {
-	m_pTransformComponent = &GetOwner()->GetComponent<TransformComponent>();
+	m_pTransformComponent = GetOwner()->GetComponent<TransformComponent>();
 }
 
 void Jotar::MovementComponent::Move(const glm::vec2& dir)

@@ -50,7 +50,7 @@ namespace Jotar
 			return m_CurrentState.Gamepad.wButtons & button;
 		}
 
-		unsigned int GetMaxControllers()
+		unsigned int GetMaxControllers() const
 		{
 			return XUSER_MAX_COUNT;
 		}

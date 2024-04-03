@@ -1,6 +1,14 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+void Jotar::SceneManager::Start()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->Start();
+	}
+}
+
 void Jotar::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)
@@ -54,4 +62,9 @@ void Jotar::SceneManager::Destroy()
 	{
 		scene = nullptr;
 	}
+}
+
+Jotar::Scene& Jotar::SceneManager::GetScene(int SceneIndex) const
+{
+	return *m_scenes[SceneIndex];
 }
