@@ -58,7 +58,7 @@ namespace Jotar
         TextureComponent& operator=(TextureComponent&& other) = delete;
 
 
-
+        void SetSize(glm::ivec2 size);
         void SetIsStatic(bool isStatic) { m_IsStatic = isStatic; }
         bool GetIsStatic() { return m_IsStatic; }
 

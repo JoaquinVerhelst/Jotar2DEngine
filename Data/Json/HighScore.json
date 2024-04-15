@@ -1,0 +1,38 @@
+{
+        "coop": [
+                {
+                        "name1": " ALEJ",
+                        "name2": " JOAQ",
+                        "score1": 1250,
+                        "score2": 1325
+                },
+                {
+                        "name1": " DAM",
+                        "name2": " TEA",
+                        "score1": 1250,
+                        "score2": 1525
+                }
+        ],
+        "singleplayer": [
+                {
+                        "name": " JOEEDSLKKKKJJJJ",
+                        "score": 0
+                },
+                {
+                        "name": " SSSSSS",
+                        "score": 50
+                },
+                {
+                        "name": " MANP",
+                        "score": 0
+                },
+                {
+                        "name": " WHATT",
+                        "score": 0
+                },
+                {
+                        "name": "BOB",
+                        "score": 650
+                }
+        ]
+}

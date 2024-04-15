@@ -10,7 +10,7 @@
 #include "WorldTimeManager.h"
 #include "GLSDLManager.h"
 #include "ImguiRenderer.h"
-#include "WorldGrid.h"
+
 
 #include "SteamAchievements.h"
 
@@ -23,7 +23,7 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 
 	Renderer::GetInstance().Init();
 
-	WorldGrid::GetInstance().Init(30, 60, 32);
+
 
 	//CSteamAchievements::GetInstance().Init(g_Achievements, 4);
 

@@ -240,6 +240,9 @@
     <ClInclude Include="CollisionEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
+    <ClInclude Include="JsonLevelLoader.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -403,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="CollisionEvents.cpp">
       <Filter>Engine\Observer\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonLevelLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
