@@ -37,6 +37,23 @@ void Jotar::TransformComponent::SetPosition(const glm::vec2& position)
 	SetPositionDirty();
 }
 
+void Jotar::TransformComponent::Translate(const glm::vec2& position)
+{
+	m_LocalPosition += position;
+
+	SetPositionDirty();
+}
+
+void Jotar::TransformComponent::SetSize(glm::vec2& size)
+{
+	m_Size = size;
+}
+
+glm::vec2& Jotar::TransformComponent::GetSize()
+{
+	return m_Size;
+}
+
 
 void Jotar::TransformComponent::SetPositionDirty()
 {

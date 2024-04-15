@@ -13,7 +13,7 @@ Jotar::ScoreComponent::~ScoreComponent()
 
 void Jotar::ScoreComponent::Start()
 {
-	NotifyObservers(new EventAddScore{ m_CurrentScore });
+	NotifyObservers(EventAddScore{ m_CurrentScore });
 }
 
 int Jotar::ScoreComponent::GetScore()
@@ -25,5 +25,5 @@ void Jotar::ScoreComponent::AddScore(int score)
 {
 	m_CurrentScore += score;
 
-	NotifyObservers(new EventAddScore{ m_CurrentScore});
+	NotifyObservers(EventAddScore{ m_CurrentScore});
 }

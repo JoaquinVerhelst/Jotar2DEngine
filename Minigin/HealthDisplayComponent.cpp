@@ -9,16 +9,25 @@ Jotar::HealthDisplayComponent::HealthDisplayComponent(GameObject* owner)
 }
 
 
-void Jotar::HealthDisplayComponent::OnNotify(EventPlayerDamage* event)
+void Jotar::HealthDisplayComponent::OnNotify(const PlayerHealthEvent& event)
 {
-    if (event->GetHealth() > 0)
+    if (typeid(event) == typeid(EventPlayerDamage))
     {
-        m_pTextComponent->SetText("Lives: " + std::to_string(event->GetHealth()));
-    }
-    else
-    {
-        // Do nothing for now
-        m_pTextComponent->SetText("Player Died!");
-    }
+        const EventPlayerDamage& damageEvent = static_cast<const EventPlayerDamage&>(event);
 
+        if (damageEvent.GetHealth() > 0)
+        {
+            m_pTextComponent->SetText("Lives: " + std::to_string(damageEvent.GetHealth()));
+        }
+        else
+        {
+            m_pTextComponent->SetText("Player Died!");
+        }
+    }
+    else if (typeid(event) == typeid(EventUpdatePlayerHealth))
+    {
+        const EventUpdatePlayerHealth& updateHealthEvent = static_cast<const EventUpdatePlayerHealth&>(event);
+
+        m_pTextComponent->SetText("Lives: " + std::to_string(updateHealthEvent.GetHealth()));
+    }
 }

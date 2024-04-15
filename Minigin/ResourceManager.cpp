@@ -27,6 +27,23 @@ std::shared_ptr<Jotar::Texture2D> Jotar::ResourceManager::LoadTexture(const std:
 	return std::make_shared<Texture2D>(texture);
 }
 
+void Jotar::ResourceManager::AddSharedTexture(const std::string& file, const std::string& name)
+{
+	auto texture = LoadTexture(file);
+	m_SharedTextures.emplace_back(SharedTexture2D(std::move(texture), name));
+}
+
+std::shared_ptr<Jotar::Texture2D> Jotar::ResourceManager::GetSharedTexture(std::string textureName)
+{
+	for (auto& sharedTexture : m_SharedTextures)
+	{
+		if (sharedTexture.Name == textureName)
+			return sharedTexture.Texture;
+	}
+
+	throw std::runtime_error(std::string("Failed to find Shared Texture by this name: " + textureName));
+}
+
 std::shared_ptr<Jotar::Font> Jotar::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
 {
 	return std::make_shared<Font>(m_dataPath + file, size);

@@ -19,7 +19,7 @@ namespace Jotar
         ScoreDisplayComponent& operator=(const ScoreDisplayComponent& other) = delete;
         ScoreDisplayComponent& operator=(ScoreDisplayComponent&& other) = delete;
 
-        void OnNotify(EventAddScore* event) override;
+        void OnNotify(const EventAddScore& event) override;
 
     private:
 

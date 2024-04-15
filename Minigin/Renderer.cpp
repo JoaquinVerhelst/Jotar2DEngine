@@ -5,6 +5,8 @@
 #include "GLSDLManager.h"
 #include "glad\glad.h"
 
+#include "WorldGrid.h"
+
 int GetOpenGLDriverIndex()
 {
 	auto openglIndex = -1;
@@ -44,13 +46,13 @@ void Jotar::Renderer::Render() const
 
 	// open gl testing ///////////////////////////
 
-	BeginRender();
+	//BeginRender();
 
 
-	SceneManager::GetInstance().Render();
+	//SceneManager::GetInstance().Render();
 
 
-	EndRender();
+	//EndRender();
 
 
 
@@ -59,15 +61,15 @@ void Jotar::Renderer::Render() const
 
 
 
-	//SDL_RenderClear(m_Renderer);
-	//const auto& color = GetBackgroundColor();
-	//SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	//
+	SDL_RenderClear(m_Renderer);
+	const auto& color = GetBackgroundColor();
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	
+	WorldGrid::GetInstance().Render();
+	SceneManager::GetInstance().Render();
+	//m_ImguiRenderer->Render();
 
-	//SceneManager::GetInstance().Render();
-	////m_ImguiRenderer->Render();
-
-	//SDL_RenderPresent(m_Renderer);
+	SDL_RenderPresent(m_Renderer);
 
 }
 

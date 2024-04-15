@@ -8,7 +8,7 @@ namespace Jotar
 	{
 	public:
 		virtual ~Observer() = default;
-		virtual void OnNotify(T* eventData) = 0;
+		virtual void OnNotify(const T& eventData) = 0;
 	};
 
 }

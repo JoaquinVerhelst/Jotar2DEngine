@@ -46,6 +46,7 @@ namespace Jotar
     class TextureComponent : public Component {
     public:
         explicit TextureComponent(GameObject* owner, const std::string& filePath, bool isStatic = true, int columns = 1, int rows = 1);
+        explicit TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture);
         virtual ~TextureComponent() override = default;
 
         virtual void Update() override;
@@ -66,10 +67,13 @@ namespace Jotar
 
     private:
         SpriteSheet m_SpriteSheet;
+        std::shared_ptr<Texture2D> m_pSharedTexture{};
+
 
         glm::ivec4 m_SrcRect;
 
         bool m_IsStatic;
+        bool m_IsSharedResource;
         int m_NrFramesPerSec;
         float m_AnimTime;
         int m_AnimFrame;

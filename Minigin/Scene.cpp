@@ -48,10 +48,13 @@ void Scene::Update()
 
 void Jotar::Scene::FixedUpdate()
 {
+
 	for (auto& object : m_pObjects)
 	{
 		object->FixedUpdate();
 	}
+
+	m_CollisionManager.FixedUpdate();
 }
 
 void Jotar::Scene::LateUpdate()
@@ -111,5 +114,10 @@ void Jotar::Scene::CleanUpDestroyedObjects()
 		}
 	}
 
+}
+
+CollisionManager& Jotar::Scene::GetCollisionManager()
+{
+	return m_CollisionManager;
 }
 

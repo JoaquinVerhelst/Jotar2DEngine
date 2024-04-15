@@ -36,7 +36,7 @@ namespace Jotar
 		float m_TimeCounter;
 		bool m_IsExploded;
 
-		Jotar::GridCell m_CurrentGridCell;
+		//Jotar::GridCell m_CurrentGridCell;
 
 	};
 }

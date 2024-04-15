@@ -12,14 +12,15 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& 
 	, m_SpriteSheet{}
 	, m_IsStatic{ isStatic }
 	, m_NrFramesPerSec{ 3 }
+	, m_IsSharedResource{ false }
 {
 	m_SpriteSheet.pTexture = std::make_unique<Texture2D>(filePath);
 
 	m_SpriteSheet.TotalColumns = columns;
 	m_SpriteSheet.TotalRows = rows;
 
-	m_SpriteSheet.ClipHeight = m_SpriteSheet.pTexture->GetSize().y / columns;
-	m_SpriteSheet.ClipWidth = m_SpriteSheet.pTexture->GetSize().x / rows;
+	m_SpriteSheet.ClipHeight = 32;// m_SpriteSheet.pTexture->GetSize().y / columns;
+	m_SpriteSheet.ClipWidth = 32;// m_SpriteSheet.pTexture->GetSize().x / rows;
 
 
 	m_SrcRect.w = m_SpriteSheet.ClipWidth;
@@ -27,6 +28,22 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& 
 
 	m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
 	m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
+}
+
+Jotar::TextureComponent::TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture)
+	: Component(owner)
+	, m_AnimTime{}
+	, m_AnimFrame{}
+	, m_SpriteSheet{}
+	, m_IsStatic{ true }
+	, m_NrFramesPerSec{ 0 }
+	, m_IsSharedResource{ true}
+	, m_pSharedTexture{ texture }
+{
+	m_SrcRect.w = texture->GetSize().x;
+	m_SrcRect.a = texture->GetSize().y;
+	m_SrcRect.y = m_SrcRect.a;
+	m_SrcRect.x = m_SrcRect.w;
 }
 
 void Jotar::TextureComponent::Update()
@@ -40,14 +57,19 @@ void Jotar::TextureComponent::Update()
 void Jotar::TextureComponent::Render() const
 {
 	const auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
-	glm::ivec4 dst{};
-	dst.x = static_cast<int>(pos.x);
-	dst.y = static_cast<int>(pos.y);
-	dst.w = m_SrcRect.w;
-	dst.a = m_SrcRect.a;
 
+	if (!m_IsSharedResource)
+	{
+		glm::ivec4 dst{};
+		dst.x = static_cast<int>(pos.x) - m_SpriteSheet.ClipWidth / 2;
+		dst.y = static_cast<int>(pos.y) - m_SpriteSheet.ClipHeight / 2;
+		dst.w = m_SrcRect.w;
+		dst.a = m_SrcRect.a;
 
-	Renderer::GetInstance().RenderTexture(*m_SpriteSheet.pTexture, m_SrcRect, dst);
+		Renderer::GetInstance().RenderTexture(*m_SpriteSheet.pTexture, m_SrcRect, dst);
+	}
+	else
+		Renderer::GetInstance().RenderTexture(*m_pSharedTexture, pos.x - static_cast<float>(m_SrcRect.w / 2), pos.y - static_cast<float>(m_SrcRect.a / 2));
 }
 
 void Jotar::TextureComponent::UpdateFrame()

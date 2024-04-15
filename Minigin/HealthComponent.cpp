@@ -4,17 +4,17 @@ Jotar::HealthComponent::HealthComponent(GameObject* owner, int health)
 	:Component(owner)
 	, m_CurrentHealth(health)
 {
+	m_pSubject = std::make_unique<Subject<PlayerHealthEvent>>();
 }
 
 Jotar::HealthComponent::~HealthComponent()
 {
-	RemoveAllObservers();
+	m_pSubject->RemoveAllObservers();
 }
 
 void Jotar::HealthComponent::Start()
 {
-	// wrong event, player Spawn Event OR 
-	NotifyObservers(new EventPlayerDamage{ m_CurrentHealth }); // TODO; NEW weg, 
+	m_pSubject->NotifyObservers(EventUpdatePlayerHealth(m_CurrentHealth));
 }
 
 int Jotar::HealthComponent::GetHealth() const
@@ -26,8 +26,7 @@ void Jotar::HealthComponent::TakeDamage(int damage)
 {
 	m_CurrentHealth -= damage;
 
-
-	NotifyObservers(new EventPlayerDamage{m_CurrentHealth});// tODO new weg
+	m_pSubject->NotifyObservers(EventPlayerDamage{m_CurrentHealth});
 }
 
 

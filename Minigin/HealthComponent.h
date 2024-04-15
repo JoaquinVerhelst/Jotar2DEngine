@@ -1,14 +1,14 @@
 #pragma once
 #include "Component.h"
 #include "Subject.h"
-#include "EventPlayerDamage.h"
-
+#include "PlayerHealthEvents.h"
+#include <memory>
 
 namespace Jotar
 {
 	class GameObject;
 
-	class HealthComponent final : public Component, public Subject<EventPlayerDamage>
+	class HealthComponent final : public Component   /*, public Subject<EventPlayerDamage>*/
 	{
 	public:
 
@@ -27,8 +27,20 @@ namespace Jotar
 		void TakeDamage(int damage = 1);
 		void AddHealth(int health);
 
+
+		void AddObserver(Observer<PlayerHealthEvent>* pObserver)
+		{
+			m_pSubject->AddObserver(pObserver);
+		}
+		void RemoveObserver(Observer<PlayerHealthEvent>* pObserver)
+		{
+			m_pSubject->RemoveObserver(pObserver);
+		}
+
+
 	private:
 
+		std::unique_ptr<Subject<PlayerHealthEvent>> m_pSubject;
 		int m_CurrentHealth;
 	};
 

@@ -1,12 +1,15 @@
 #include "WorldGrid.h"
 
-
-
+#include "SDL.h"
+#include "Renderer.h"
 
 void Jotar::WorldGrid::Init(int rows, int columns, int size)
 {
     m_Grid.reserve(rows * columns);
 
+    m_CellSize = size;
+    //m_GridSize.x = rows;
+    //m_GridSize.y = columns;
 
     for (int r = 0; r < rows; ++r)
     {
@@ -16,10 +19,31 @@ void Jotar::WorldGrid::Init(int rows, int columns, int size)
 
             glm::vec2 worldPosition(r * size, c * size);
 
-            GridCell cell{ worldPosition };
+            GridCell cell{ worldPosition, size };
 
             m_Grid[IDposition] = cell;
         }
+    }
+}
+
+void Jotar::WorldGrid::Render() const
+{
+    int index = 0;
+
+    for (const auto& cellPair : m_Grid)
+    {
+        const GridCell& cell = cellPair.second;
+        const glm::vec2& cellPos = cell.WorldPosition;
+
+        SDL_Rect rect = { static_cast<int>(cellPos.x) ,static_cast<int>( cellPos.y), m_CellSize, m_CellSize};
+        if (index % 2)
+            SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
+        else
+            SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
+
+        SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+
+        ++index;
     }
 }
 
@@ -37,7 +61,7 @@ const Jotar::GridCell Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) con
         return it->second;
     }
 
-    return GridCell( glm::vec2( - 1, -1 ));
+    return GridCell( glm::vec2( - 1, -1 ), 0);
 }
 
 
@@ -46,7 +70,7 @@ const Jotar::GridCell Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& p
     for (const auto& cellPair : m_Grid)
     {
         const GridCell& cell = cellPair.second;
-        const glm::vec2& cellPos = cell.worldPosition;
+        const glm::vec2& cellPos = cell.WorldPosition;
 
         if (position.x >= cellPos.x && position.x < cellPos.x + m_CellSize &&
             position.y >= cellPos.y && position.y < cellPos.y + m_CellSize)
@@ -55,5 +79,5 @@ const Jotar::GridCell Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& p
         }
     }
 
-    return GridCell(glm::vec2(-1, -1));
+    return GridCell(glm::vec2(-1, -1), 0);
 }

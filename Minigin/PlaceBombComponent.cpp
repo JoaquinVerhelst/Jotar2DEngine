@@ -2,7 +2,10 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "GameObject.h"
-
+#include "BombComponent.h"
+#include "WorldGrid.h"
+#include "ResourceManager.h"
+#include "TextureComponent.h"
 
 Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
 	: Component(owner)
@@ -11,33 +14,19 @@ Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
 
 void Jotar::PlaceBombComponent::PlaceBomb()
 {
-	// todo unhardcode this
-
-
-
-	// copy m_BombToPlace and add to scene;
-
-	//std::shared_ptr<GameObject> newBomb = std::make_shared<GameObject>(*m_BombToPlace);
-
-
-
-
+	auto bomb = CreateBombGameObject();
+	auto cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetWorldPosition());
+	bomb->GetTransform()->SetPosition(cell.CenterCellPosition);
 }
 
 std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject()
 {
-
-	//Scene& scene = SceneManager::GetInstance().GetScene(0);
-
-	//auto bomb = scene.CreateGameObject("Bomb");
-
-	//bomb->AddComponent<BombC
-	//bomb->GetTransform()->SetPosition(GetOwner()->GetTransform()->GetWorldPosition());
-
-	
-
-	return nullptr;
-
+	// TODO get rid of hardcoded scene index
+	Scene& scene = SceneManager::GetInstance().GetScene(0);
+	auto bomb = scene.CreateGameObject("Bomb");
+	//bomb->AddComponent<BombComponent>();
+	bomb->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("Bomb"));
+	return bomb;
 }
 
 

@@ -55,11 +55,11 @@
     <Filter Include="Engine\Components\PlayerComponents">
       <UniqueIdentifier>{a2254aca-9c5e-44fd-9930-e3f222a931e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Singletons">
+      <UniqueIdentifier>{60c9179f-0e0f-4962-aa34-fd064a4ae1ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Texture2D.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -69,16 +69,10 @@
     <ClInclude Include="Scene.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Minigin.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldTimeManager.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -189,7 +183,7 @@
     <ClInclude Include="Event.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
-    <ClInclude Include="EventPlayerDamage.h">
+    <ClInclude Include="PlayerHealthEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
     <ClInclude Include="TempCommand.h">
@@ -219,14 +213,32 @@
     <ClInclude Include="BombComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="WorldGrid.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="PlaceBombCommand.h">
       <Filter>Engine\Command</Filter>
     </ClInclude>
     <ClInclude Include="ExplosionComponent.h">
       <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Engine\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldTimeManager.h">
+      <Filter>Engine\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>Engine\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Engine\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Engine\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionEvents.h">
+      <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,19 +254,10 @@
     <ClCompile Include="Minigin.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Texture2D.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldTimeManager.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
@@ -347,7 +350,7 @@
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="EventPlayerDamage.cpp">
+    <ClCompile Include="PlayerHealthEvents.cpp">
       <Filter>Engine\Observer\Events</Filter>
     </ClCompile>
     <ClCompile Include="ScoreComponent.cpp">
@@ -374,14 +377,32 @@
     <ClCompile Include="BombComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="WorldGrid.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="PlaceBombCommand.cpp">
       <Filter>Engine\Command</Filter>
     </ClCompile>
     <ClCompile Include="ExplosionComponent.cpp">
       <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Engine\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldTimeManager.cpp">
+      <Filter>Engine\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>Engine\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Engine\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Engine\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionEvents.cpp">
+      <Filter>Engine\Observer\Events</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

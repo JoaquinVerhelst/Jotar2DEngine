@@ -4,11 +4,11 @@
 #include "Observer.h"
 #include "Component.h"
 #include "TextComponent.h"
-#include "EventPlayerDamage.h"
-
+#include "PlayerHealthEvents.h"
+    
 namespace Jotar
 {
-    class HealthDisplayComponent final : public Component, public Observer<EventPlayerDamage>
+    class HealthDisplayComponent final : public Component, public Observer<PlayerHealthEvent>
     {
     public:
 
@@ -20,7 +20,7 @@ namespace Jotar
         HealthDisplayComponent& operator=(const HealthDisplayComponent& other) = delete;
         HealthDisplayComponent& operator=(HealthDisplayComponent&& other) = delete;
 
-        void OnNotify(EventPlayerDamage* event) override;
+        void OnNotify(const PlayerHealthEvent& event) override;
 
     private:
 

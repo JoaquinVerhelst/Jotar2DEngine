@@ -1,7 +1,7 @@
 #pragma once
 #include "Command.h"
 
-#include "BombComponent.h"
+#include "PlaceBombComponent.h"
 
 
 namespace Jotar
@@ -12,12 +12,11 @@ namespace Jotar
 	class PlaceBombCommand final : public Command
 	{
 	public:
-		PlaceBombCommand(GameObject* player, BombComponent* bomb);
+		PlaceBombCommand(PlaceBombComponent* bomb);
 		virtual void Execute() override;
 
 	private:
-		GameObject* m_pPlayer{};
-		BombComponent* m_pBombComp{};
+		PlaceBombComponent* m_pBombComp{};
 
 	};
 }

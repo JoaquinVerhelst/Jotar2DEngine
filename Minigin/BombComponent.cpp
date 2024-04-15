@@ -9,7 +9,7 @@ Jotar::BombComponent::BombComponent(GameObject* owner, GameObject*, float explod
 	, m_ExplodeTime{ explodeTime }
 	, m_IsExploded { false }
 	, m_TimeCounter { 0 }
-	, m_CurrentGridCell{ {} }
+	//, m_CurrentGridCell{ {} }
 {
 }
 
@@ -34,7 +34,7 @@ void Jotar::BombComponent::Activate(const glm::vec2& pos)
 {
 	m_IsExploded = false;
 	GetOwner()->GetTransform()->SetPosition(pos);
-	m_CurrentGridCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
+	//m_CurrentGridCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
 
 
 

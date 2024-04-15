@@ -10,6 +10,7 @@
 #include "WorldTimeManager.h"
 #include "GLSDLManager.h"
 #include "ImguiRenderer.h"
+#include "WorldGrid.h"
 
 #include "SteamAchievements.h"
 
@@ -21,6 +22,8 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 	GLSDLManager::GetInstance().Init();
 
 	Renderer::GetInstance().Init();
+
+	WorldGrid::GetInstance().Init(30, 60, 32);
 
 	//CSteamAchievements::GetInstance().Init(g_Achievements, 4);
 
@@ -42,7 +45,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 	auto& time = WorldTimeManager::GetInstance();
 	//auto& imgui = ImguiRenderer::GetInstance();
-
+	//auto& worldGrid = WorldGrid::GetInstance();
 
 	//Game loop
 	bool doContinue = true;
@@ -79,7 +82,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 
 		sceneManager.LateUpdate();
 
-	
+
 		renderer.Render();
 
 		SteamAPI_RunCallbacks();

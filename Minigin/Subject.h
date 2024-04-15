@@ -27,16 +27,12 @@ namespace Jotar
 			m_Observers.clear();
 		}
 
-		void NotifyObservers(T* eventData)
+		void NotifyObservers(const T& eventData)
 		{
-			if (eventData == nullptr) return;
-			
 			for (size_t i = 0; i < m_Observers.size(); i++)
 			{
 				m_Observers[i]->OnNotify(eventData);
 			}
-
-			delete eventData;
 		}
 
 	private:

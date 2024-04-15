@@ -18,8 +18,13 @@ namespace Jotar
 		const glm::vec2& GetLocalPosition() const;
 		const glm::vec2& GetWorldPosition();
 
+
 		void SetPosition(float x, float y);
 		void SetPosition(const glm::vec2& position);
+		void Translate(const glm::vec2& position);
+
+		void SetSize(glm::vec2& size);
+		glm::vec2& GetSize();
 
 
 		void SetPositionDirty();
@@ -33,5 +38,8 @@ namespace Jotar
 
 		glm::vec2 m_LocalPosition{};
 		glm::vec2 m_WorldPosition{};
+
+		glm::vec2 m_Size{ 32, 32 };
+		int m_Scale = 1;
 	};
 }
