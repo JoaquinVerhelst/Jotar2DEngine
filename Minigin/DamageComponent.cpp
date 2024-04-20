@@ -30,7 +30,7 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
 
 bool Jotar::DamageComponent::IsColliderAlreadyHit(ColliderComponent* otherCollider)
 {
-    for (int i = 0; i < m_pDamagedColliders.size(); i++)
+    for (size_t i = 0; i < m_pDamagedColliders.size(); i++)
     {
         if (m_pDamagedColliders[i] == otherCollider)
         {
