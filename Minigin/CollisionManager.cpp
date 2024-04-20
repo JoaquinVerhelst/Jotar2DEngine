@@ -28,7 +28,7 @@ void Jotar::CollisionManager::FixedUpdate()
     for (auto pCollider : m_pSceneColliders)
     {
         // A static object will not trigger a collision
-        if (pCollider->GetIsStatic()) continue;
+        if (pCollider->GetIsStatic() && !pCollider->GetIsTrigger()) continue;
 
         for (auto pOtherCollider : m_pSceneColliders)
         {
@@ -36,12 +36,13 @@ void Jotar::CollisionManager::FixedUpdate()
 
             if (pCollider->IsOverlapping(pOtherCollider->GetCollisionRect()))
             {
-                if (pOtherCollider->GetIsTrigger())
+                if (pCollider->GetIsTrigger())
                 {
-                    TriggerEvent triggerEvent{ pOtherCollider, pCollider };
-                    pOtherCollider->OnTriggerCollision(triggerEvent);
-                    //std::cout << "IsOverlapping " << '\n';
+                    TriggerEvent triggerEvent{ pCollider, pOtherCollider };
+                    pCollider->OnTriggerCollision(triggerEvent);
+                    
                 }
+                else if (pOtherCollider->GetIsTrigger()) continue;
                 else
                 {
 

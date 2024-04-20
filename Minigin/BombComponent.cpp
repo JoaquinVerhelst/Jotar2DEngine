@@ -32,17 +32,22 @@ void Jotar::BombComponent::Update()
 			m_IsExploded = true;
 			m_TimeCounter = 0;
 
-			OnExplode(1);
+            //todo refactor magic number
+			OnExplode(3);
             GetOwner()->Destroy();
 		}
 	}
 }
 
-
-void Jotar::BombComponent::Activate(const glm::vec2& pos)
+void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
 {
-	m_IsExploded = false;
-	GetOwner()->GetTransform()->SetPosition(pos);
+
+    if (triggerEvent.GetOtherCollider()->GetOwner()->GetName() == "Explosion")
+    {
+        //todo refactor magic number
+        OnExplode(3);
+        GetOwner()->Destroy();
+    }
 }
 
 void Jotar::BombComponent::OnExplode(int range)
@@ -122,7 +127,7 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
     auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Explosion"), explosionPosition);
     texture->SetDestroyOnLastFrame(true);
     explosion->GetTransform()->SetPosition(pos);
-    auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
+    auto triggerCollider = explosion->AddComponent<ColliderComponent>(false, true);
 
     int damage = 1;
     auto damageComp = explosion->AddComponent<DamageComponent>(damage);

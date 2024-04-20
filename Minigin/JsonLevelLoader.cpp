@@ -5,6 +5,7 @@
 #include "WorldGrid.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "ResourceManager.h"
 
 #include "TextureComponent.h"
 #include <random>
@@ -92,7 +93,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall
 {
     auto wall = scene.CreateGameObject("Wall");
     wall->AddComponent<ColliderComponent>(true);
-    wall->AddComponent<TextureComponent>("../Data/Sprites/UnbreakableWall.png");
+    wall->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("UnbreakableWall"));
     return wall;
 }
 
@@ -100,7 +101,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(S
 {
     auto wall = scene.CreateGameObject("Breakable Wall");
     wall->AddComponent<ColliderComponent>(true);
-    wall->AddComponent<TextureComponent>("../Data/Sprites/BreakableWall.png");
+    wall->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("BreakableWall"));
     return wall;
 }
 
