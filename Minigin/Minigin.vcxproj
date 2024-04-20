@@ -211,6 +211,7 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClInclude Include="..\3rdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\imgui\imstb_truetype.h" />
     <ClInclude Include="BombComponent.h" />
+    <ClInclude Include="BreakableWallComponent.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionEvents.h" />
     <ClInclude Include="CollisionManager.h" />
@@ -218,6 +219,7 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClInclude Include="Enums.h" />
     <ClInclude Include="ExplosionComponent.h" />
     <ClInclude Include="JsonLevelLoader.h" />
+    <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="PlaceBombCommand.h" />
     <ClInclude Include="PlaceBombComponent.h" />
     <ClInclude Include="Camera.h" />
@@ -275,11 +277,13 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClCompile Include="..\3rdParty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="BombComponent.cpp" />
+    <ClCompile Include="BreakableWallComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="ExplosionComponent.cpp" />
     <ClCompile Include="JsonLevelLoader.cpp" />
+    <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlaceBombCommand.cpp" />
     <ClCompile Include="PlaceBombComponent.cpp" />
     <ClCompile Include="Camera.cpp" />

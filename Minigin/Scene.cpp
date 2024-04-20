@@ -49,7 +49,6 @@ void Scene::Update()
 {
 	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		std::cout << "Object Name: " << m_pObjects[i]->GetName() << "  Object Index: " << i << std::endl;
 		m_pObjects[i]->Update();
 	}
 }

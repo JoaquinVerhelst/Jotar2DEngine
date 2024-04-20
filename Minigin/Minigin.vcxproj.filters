@@ -58,6 +58,9 @@
     <Filter Include="Engine\Singletons">
       <UniqueIdentifier>{60c9179f-0e0f-4962-aa34-fd064a4ae1ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\PickUps">
+      <UniqueIdentifier>{29526f87-3588-48d6-b19e-f27ee8f24cee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -249,6 +252,12 @@
     <ClInclude Include="DamageComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
+    <ClInclude Include="BreakableWallComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -411,6 +420,12 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="DamageComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableWallComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PickUpComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
