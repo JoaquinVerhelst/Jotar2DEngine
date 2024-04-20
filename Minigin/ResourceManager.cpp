@@ -33,6 +33,29 @@ void Jotar::ResourceManager::AddSharedTexture(const std::string& file, const std
 	m_SharedTextures.emplace_back(SharedTexture2D(std::move(texture), name));
 }
 
+void Jotar::ResourceManager::AddSharedSpriteSheet(const std::string& file, SpriteSheet spriteSheet, const std::string& name)
+{
+	auto texture = LoadTexture(file);
+	
+	spriteSheet.m_pTexture = texture;
+	spriteSheet.Name = name;
+	spriteSheet.ClipHeight = spriteSheet.m_pTexture->GetSize().y / spriteSheet.TotalColumns;
+	spriteSheet.ClipWidth = spriteSheet.m_pTexture->GetSize().x / spriteSheet.TotalRows;
+
+	m_SharedSpriteSheets.emplace_back(spriteSheet);
+}
+
+Jotar::SpriteSheet& Jotar::ResourceManager::GetSharedSpriteSheet(std::string spriteSheetName)
+{
+	for (auto& spriteSheet : m_SharedSpriteSheets)
+	{
+		if (spriteSheet.Name == spriteSheetName)
+			return spriteSheet;
+	}
+
+	throw std::runtime_error(std::string("Failed to find Shared SpriteSheet by this name: " + spriteSheetName));
+}
+
 std::shared_ptr<Jotar::Texture2D> Jotar::ResourceManager::GetSharedTexture(std::string textureName)
 {
 	for (auto& sharedTexture : m_SharedTextures)

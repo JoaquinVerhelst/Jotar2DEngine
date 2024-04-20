@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Subject.h"
-#include "PlayerHealthEvents.h"
+#include "HealthEvents.h"
 #include <memory>
 
 namespace Jotar
@@ -28,11 +28,11 @@ namespace Jotar
 		void AddHealth(int health);
 
 
-		void AddObserver(Observer<PlayerHealthEvent>* pObserver)
+		void AddObserver(Observer<HealthEvent>* pObserver)
 		{
 			m_pSubject->AddObserver(pObserver);
 		}
-		void RemoveObserver(Observer<PlayerHealthEvent>* pObserver)
+		void RemoveObserver(Observer<HealthEvent>* pObserver)
 		{
 			m_pSubject->RemoveObserver(pObserver);
 		}
@@ -40,7 +40,7 @@ namespace Jotar
 
 	private:
 
-		std::unique_ptr<Subject<PlayerHealthEvent>> m_pSubject;
+		std::unique_ptr<Subject<HealthEvent>> m_pSubject;
 		int m_CurrentHealth;
 	};
 

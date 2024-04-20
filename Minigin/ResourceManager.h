@@ -3,11 +3,13 @@
 #include <memory>
 #include "Singleton.h"
 #include <vector>
+#include "Enums.h"
+
+
 namespace Jotar
 {
 	class Texture2D;
 	class Font;
-
 
 	struct SharedTexture2D
 	{
@@ -26,6 +28,9 @@ namespace Jotar
 		void Init(const std::string& data);
 		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
 		void AddSharedTexture(const std::string& file, const std::string& name);
+		void AddSharedSpriteSheet(const std::string& file, SpriteSheet spriteSheet, const std::string& name);
+
+		SpriteSheet& GetSharedSpriteSheet(std::string spriteSheetName);
 		std::shared_ptr<Texture2D> GetSharedTexture(std::string textureName);
 
 		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
@@ -36,7 +41,7 @@ namespace Jotar
 
 
 		std::vector<SharedTexture2D> m_SharedTextures;
-
+		std::vector<SpriteSheet> m_SharedSpriteSheets;
 
 
 	};

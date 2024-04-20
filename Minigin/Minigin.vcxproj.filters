@@ -183,7 +183,7 @@
     <ClInclude Include="Event.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerHealthEvents.h">
+    <ClInclude Include="HealthEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
     <ClInclude Include="TempCommand.h">
@@ -242,6 +242,12 @@
     </ClInclude>
     <ClInclude Include="JsonLevelLoader.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageComponent.h">
+      <Filter>Engine\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -353,9 +359,6 @@
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerHealthEvents.cpp">
-      <Filter>Engine\Observer\Events</Filter>
-    </ClCompile>
     <ClCompile Include="ScoreComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
@@ -404,11 +407,11 @@
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionEvents.cpp">
-      <Filter>Engine\Observer\Events</Filter>
-    </ClCompile>
     <ClCompile Include="JsonLevelLoader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageComponent.cpp">
+      <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

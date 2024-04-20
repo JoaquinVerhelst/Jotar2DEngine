@@ -12,22 +12,10 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& 
 	, m_SpriteSheet{}
 	, m_IsStatic{ isStatic }
 	, m_NrFramesPerSec{ 3 }
-	, m_IsSharedResource{ false }
 {
-	m_SpriteSheet.pTexture = std::make_unique<Texture2D>(filePath);
-
-	m_SpriteSheet.TotalColumns = columns;
-	m_SpriteSheet.TotalRows = rows;
-
-	m_SpriteSheet.ClipHeight = 32;// m_SpriteSheet.pTexture->GetSize().y / columns;
-	m_SpriteSheet.ClipWidth = 32;// m_SpriteSheet.pTexture->GetSize().x / rows;
-
-
-	m_SrcRect.w = m_SpriteSheet.ClipWidth;
-	m_SrcRect.z = m_SpriteSheet.ClipHeight;
-
-	m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
-	m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
+	m_SpriteSheet.m_pTexture = std::make_shared<Texture2D>(filePath);
+	InitSpriteSheet(columns, rows);
+	Initizialize();
 }
 
 Jotar::TextureComponent::TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture)
@@ -36,15 +24,29 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, std::shared_ptr<Tex
 	, m_AnimFrame{}
 	, m_SpriteSheet{}
 	, m_IsStatic{ true }
-	, m_NrFramesPerSec{ 0 }
-	, m_IsSharedResource{ true}
-	, m_pSharedTexture{ texture }
+	, m_NrFramesPerSec{ 3 }
 {
-	m_SrcRect.w = texture->GetSize().x;
-	m_SrcRect.z = texture->GetSize().y;
-	m_SrcRect.y = m_SrcRect.z;
-	m_SrcRect.x = m_SrcRect.w;
+	m_SpriteSheet.m_pTexture = texture;
+	InitSpriteSheet(1, 1);
+	Initizialize();
 }
+
+Jotar::TextureComponent::TextureComponent(GameObject* owner, SpriteSheet& spriteSheet, int currentRow, int currentColumn)
+	: Component(owner)
+	, m_AnimTime{}
+	, m_AnimFrame{}
+	, m_SpriteSheet{}
+	, m_IsStatic{ false }
+	, m_NrFramesPerSec{ 3 }
+{
+	m_SpriteSheet = spriteSheet;
+	m_SpriteSheet.CurrentColumn = currentColumn;
+	m_SpriteSheet.CurrentRow = currentRow;
+
+
+	Initizialize();
+}
+
 
 void Jotar::TextureComponent::Update()
 {
@@ -58,24 +60,34 @@ void Jotar::TextureComponent::Render() const
 {
 	const auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
 
-	if (!m_IsSharedResource)
-	{
-		glm::ivec4 dst{};
-		dst.x = static_cast<int>(pos.x) - m_SpriteSheet.ClipWidth / 2;
-		dst.y = static_cast<int>(pos.y) - m_SpriteSheet.ClipHeight / 2;
-		dst.w = m_SrcRect.w;
-		dst.z = m_SrcRect.z;
+	glm::ivec4 dst{};
+	dst.x = static_cast<int>(pos.x) - m_Size.x / 2;
+	dst.y = static_cast<int>(pos.y) - m_Size.y / 2;
+	dst.w = m_Size.x;
+	dst.z = m_Size.y;
 
-		Renderer::GetInstance().RenderTexture(*m_SpriteSheet.pTexture, m_SrcRect, dst);
-	}
-	else
-		Renderer::GetInstance().RenderTexture(*m_pSharedTexture, pos.x - static_cast<float>(m_SrcRect.w / 2), pos.y - static_cast<float>(m_SrcRect.z / 2));
+	Renderer::GetInstance().RenderTexture(*m_SpriteSheet.m_pTexture, m_SrcRect, dst);
 }
+
+void Jotar::TextureComponent::SetDestroyOnLastFrame(bool newValue)
+{
+	m_DestroyOnLastFrame = newValue;
+}
+
+void Jotar::TextureComponent::SetCurrentRow(int currentRow)
+{
+	m_SpriteSheet.CurrentRow = currentRow;
+}
+
+void Jotar::TextureComponent::SetCurrentColumn(int currentColumn)
+{
+	m_SpriteSheet.CurrentColumn = currentColumn;
+}
+
 
 void Jotar::TextureComponent::SetSize(glm::ivec2 size)
 {
-	m_SrcRect.w = size.x;
-	m_SrcRect.z = size.y;
+	m_Size = size;
 }
 
 void Jotar::TextureComponent::UpdateFrame()
@@ -88,15 +100,51 @@ void Jotar::TextureComponent::UpdateFrame()
 	{
 		if (m_SpriteSheet.Direction == SpriteSheet::SpriteSheetDirection::Right)
 		{
+			if (m_DestroyOnLastFrame)
+				CheckForDestroy(m_SpriteSheet.CurrentRow, m_SpriteSheet.TotalRows - 1);
+
 			++m_SpriteSheet.CurrentRow %= m_SpriteSheet.TotalRows;
 			m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
+			m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
 		}
 		else
 		{
+			if (m_DestroyOnLastFrame)
+				CheckForDestroy(m_SpriteSheet.CurrentColumn, m_SpriteSheet.TotalColumns - 1);
+
 			++m_SpriteSheet.CurrentColumn %= m_SpriteSheet.TotalColumns;
 			m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
+			m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
 		}
 
 		m_AnimTime -= frameTime;
 	}
+}
+
+void Jotar::TextureComponent::InitSpriteSheet(int columns, int rows)
+{
+	m_SpriteSheet.TotalColumns = columns;
+	m_SpriteSheet.TotalRows = rows;
+				 
+	m_SpriteSheet.ClipHeight = m_SpriteSheet.m_pTexture->GetSize().y / columns;
+	m_SpriteSheet.ClipWidth = m_SpriteSheet.m_pTexture->GetSize().x / rows;
+}
+
+void Jotar::TextureComponent::CheckForDestroy(int currentFrame, int totalFrames)
+{
+	if (currentFrame == totalFrames)
+	{
+		GetOwner()->Destroy();
+	}
+}
+
+void Jotar::TextureComponent::Initizialize()
+{
+	glm::vec2 size = GetOwner()->GetTransform()->GetSize();
+	m_Size = size;
+	m_SrcRect.z = m_SpriteSheet.ClipWidth;
+	m_SrcRect.w = m_SpriteSheet.ClipHeight;
+							   
+	m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
+	m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
 }

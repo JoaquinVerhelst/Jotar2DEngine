@@ -7,7 +7,7 @@
 #include "Scene.h"
 
 #include "TextureComponent.h"
-
+#include <random>
 
 using json = nlohmann::json;
 
@@ -55,11 +55,27 @@ bool Jotar::JsonLevelLoader::LoadLevelsFromJson(Scene& scene, const std::string&
                 {
                     auto wall = CreateUnbreakableWall(scene);
                     auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    cell.HasWall = GridCell::WallType::Undestroyable;
+                    wall->GetTransform()->SetPosition(cell.CenterCellPosition);
+                }
+                if (tile == '2')
+                {
+                    auto wall = CreateBreakableWall(scene);
+                    auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    cell.HasWall = GridCell::WallType::Destroyable;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
             }
         }
 
+        const auto& randomizeBreakableWalls = levelLayout["randomizeBreakableWalls"];
+        const auto& isRandomized = randomizeBreakableWalls["isRandomized"];
+
+        if (isRandomized)
+        {
+            const auto& amount = levelLayout["randomizeBreakableWalls"]["amount"];
+            RandomizeBreakableWalls(gridRows, gridColumns, scene, amount);
+        }
 
         return true;
     }
@@ -80,3 +96,39 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall
     return wall;
 }
 
+std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(Scene& scene)
+{
+    auto wall = scene.CreateGameObject("Breakable Wall");
+    wall->AddComponent<ColliderComponent>(true);
+    wall->AddComponent<TextureComponent>("../Data/Sprites/BreakableWall.png");
+    return wall;
+}
+
+
+void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribX(0, rows - 1); // Random distribution for X coordinate
+    std::uniform_int_distribution<int> distribY(0, columns - 1);    // Random distribution for Y coordinate
+
+    auto& worldGrid = WorldGrid::GetInstance();
+
+    int wallsPlaced = 0;
+ 
+    while (wallsPlaced < amount)
+    {
+        int randomX = distribX(gen); // Generate random X coordinate
+        int randomY = distribY(gen); // Generate random Y coordinate
+
+        auto& cell = worldGrid.GetGridCellByID({ randomX, randomY });
+
+        if (cell.HasWall == GridCell::WallType::None)
+        {
+            auto wall = CreateBreakableWall(scene);
+            cell.HasWall = GridCell::WallType::Destroyable;
+            wall->GetTransform()->SetPosition(cell.CenterCellPosition);
+            ++wallsPlaced;
+        }
+    }
+}

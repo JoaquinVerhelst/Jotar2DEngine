@@ -3,6 +3,11 @@
 #include <iostream>
 
 
+Jotar::CollisionManager::CollisionManager()
+    :m_pSceneColliders{}
+{
+}
+
 void Jotar::CollisionManager::AddCollider(ColliderComponent* pCollider)
 {
 	m_pSceneColliders.emplace_back(pCollider);
@@ -35,10 +40,11 @@ void Jotar::CollisionManager::FixedUpdate()
                 {
                     TriggerEvent triggerEvent{ pOtherCollider, pCollider };
                     pOtherCollider->OnTriggerCollision(triggerEvent);
+                    //std::cout << "IsOverlapping " << '\n';
                 }
                 else
                 {
-                    std::cout << "IsOverlapping " << '\n';
+
                     const auto& collisionRect = pCollider->GetCollisionRect();
                     const auto& otherCollisionRect = pOtherCollider->GetCollisionRect();
 
@@ -69,6 +75,22 @@ void Jotar::CollisionManager::FixedUpdate()
             }
         }
     }
+}
+
+Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosition(const glm::vec2& position) const
+{
+    for (auto pCollider : m_pSceneColliders)
+    {
+        glm::vec4 colliderRect = pCollider->GetCollisionRect();
+
+        if (position.x >= colliderRect.x && position.x < colliderRect.x + colliderRect.w &&
+            position.y >= colliderRect.y && position.y < colliderRect.y + colliderRect.z)
+        {
+            return pCollider;
+        }
+    }
+
+    return nullptr;
 }
 
 std::vector<Jotar::ColliderComponent*> Jotar::CollisionManager::GetOverlappingColliders(ColliderComponent*) const

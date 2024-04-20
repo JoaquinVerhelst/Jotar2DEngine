@@ -2,11 +2,13 @@
 
 #include "SDL.h"
 #include "Renderer.h"
+#include <stdexcept>
+
 
 void Jotar::WorldGrid::Init(int rows, int columns, int size)
 {
     m_Grid.reserve(rows * columns);
-
+    m_GridSize = { rows, columns };
     m_CellSize = size;
     //m_GridSize.x = rows;
     //m_GridSize.y = columns;
@@ -19,7 +21,7 @@ void Jotar::WorldGrid::Init(int rows, int columns, int size)
 
             glm::vec2 worldPosition(r * size, c * size);
 
-            GridCell cell{ worldPosition, size };
+            GridCell cell{ worldPosition, size, {r, c} };
 
             m_Grid[IDposition] = cell;
         }
@@ -53,7 +55,17 @@ std::unordered_map<glm::vec2, Jotar::GridCell>& Jotar::WorldGrid::GetWorldGrid()
 }
 
 
-const Jotar::GridCell Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) const
+const int Jotar::WorldGrid::GetCellSize() const
+{
+    return m_CellSize;
+}
+
+const glm::vec2& Jotar::WorldGrid::GetGridSize() const
+{
+    return m_GridSize;
+}
+
+const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) const
 {
     auto it = m_Grid.find(ID);
 
@@ -61,11 +73,22 @@ const Jotar::GridCell Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) con
         return it->second;
     }
 
-    return GridCell( glm::vec2( - 1, -1 ), 0);
+    throw std::runtime_error("const& GetGridCellByID() const: ID not found");
+}
+
+Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID)
+{
+    auto it = m_Grid.find(ID);
+
+    if (it != m_Grid.end()) {
+        return it->second;
+    }
+
+    throw std::runtime_error("& GetGridCellByID(): ID not found");
 }
 
 
-const Jotar::GridCell Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& position) const
+const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& position) const
 {
     for (const auto& cellPair : m_Grid)
     {
@@ -79,5 +102,5 @@ const Jotar::GridCell Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& p
         }
     }
 
-    return GridCell(glm::vec2(-1, -1), 0);
+    throw std::runtime_error("const& GetGridCellByPosition() const: ID not found");
 }

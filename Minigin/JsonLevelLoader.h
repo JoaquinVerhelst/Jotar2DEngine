@@ -24,8 +24,9 @@ namespace Jotar
 
 	private:
 
-
+		void RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount);
 		std::shared_ptr<GameObject> CreateUnbreakableWall(Scene& scene);
+		std::shared_ptr<GameObject> CreateBreakableWall(Scene& scene);
 
 		std::string m_JsonFilePath;
 	};

@@ -3,11 +3,18 @@
 
 #include <algorithm>
 
+#include <iostream>
+
+
 using namespace Jotar;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_Name(name) {}
+Scene::Scene(const std::string& name)
+	: m_Name(name)
+	, m_CollisionManager()
+
+{}
 
 
 
@@ -32,26 +39,26 @@ void Scene::RemoveAll()
 
 void Jotar::Scene::Start()
 {
-	for (auto& object : m_pObjects)
+	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		object->Start();
+		m_pObjects[i]->Start();
 	}
 }
 
 void Scene::Update()
 {
-	for(auto& object : m_pObjects)
+	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		object->Update();
+		std::cout << "Object Name: " << m_pObjects[i]->GetName() << "  Object Index: " << i << std::endl;
+		m_pObjects[i]->Update();
 	}
 }
 
 void Jotar::Scene::FixedUpdate()
 {
-
-	for (auto& object : m_pObjects)
+	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		object->FixedUpdate();
+		m_pObjects[i]->FixedUpdate();
 	}
 
 	m_CollisionManager.FixedUpdate();
@@ -59,19 +66,17 @@ void Jotar::Scene::FixedUpdate()
 
 void Jotar::Scene::LateUpdate()
 {
-
-	for (auto& object : m_pObjects)
+	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		object->LateUpdate();
+		m_pObjects[i]->LateUpdate();
 	}
-
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_pObjects)
+	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
-		object->Render();
+		m_pObjects[i]->Render();
 	}
 }
 

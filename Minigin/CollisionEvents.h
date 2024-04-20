@@ -19,8 +19,8 @@ namespace Jotar
 		
 		virtual ~CollisionEvent() = default;
 
-		ColliderComponent* GetCollider() { return m_Collider; }
-		ColliderComponent* GetOtherCollider() { return m_OtherCollider; }
+		ColliderComponent* GetCollider() const { return m_Collider; }
+		ColliderComponent* GetOtherCollider() const { return m_OtherCollider; }
 
 	protected:
 

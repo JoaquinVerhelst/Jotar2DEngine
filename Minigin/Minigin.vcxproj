@@ -214,6 +214,8 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionEvents.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="ExplosionComponent.h" />
     <ClInclude Include="JsonLevelLoader.h" />
     <ClInclude Include="PlaceBombCommand.h" />
@@ -247,7 +249,7 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClInclude Include="MovementCommand.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Observer.h" />
-    <ClInclude Include="PlayerHealthEvents.h" />
+    <ClInclude Include="HealthEvents.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RotatorComponent.h" />
@@ -274,8 +276,8 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="ColliderComponent.cpp" />
-    <ClCompile Include="CollisionEvents.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="ExplosionComponent.cpp" />
     <ClCompile Include="JsonLevelLoader.cpp" />
     <ClCompile Include="PlaceBombCommand.cpp" />
@@ -284,7 +286,6 @@ xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(Out
     <ClCompile Include="EventAddScore.cpp" />
     <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="PlayerHealthEvents.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />

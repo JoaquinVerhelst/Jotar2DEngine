@@ -32,17 +32,29 @@ namespace Jotar
 
 	struct GridCell
 	{
-		GridCell() = default;
-		GridCell(glm::vec2 worldPos, int size)
+		GridCell()
+			:WorldPosition{}, CellSize{}, CenterCellPosition{}, Index{} {}
+
+		GridCell(glm::vec2 worldPos, int size, glm::ivec2 index)
+			:WorldPosition{ worldPos }, CellSize{ size }, CenterCellPosition{}, Index{ index }
 		{
-			WorldPosition = worldPos;
-			CellSize = size;
 			CenterCellPosition = glm::vec2(worldPos.x + CellSize / 2, worldPos.y + CellSize / 2);
 		}
 
 		glm::vec2 WorldPosition;
 		int CellSize;
 		glm::vec2 CenterCellPosition;
+		glm::ivec2 Index;
+
+		enum class WallType
+		{
+			None,
+			Destroyable,
+			Undestroyable
+
+		};
+
+		WallType HasWall = WallType::None;
 	};
 
 
@@ -63,20 +75,18 @@ namespace Jotar
 		WorldGrid& operator=(const WorldGrid& other) = delete;
 		WorldGrid& operator=(WorldGrid&& other) = delete;
 
-
-
 		std::unordered_map<glm::vec2, GridCell>& GetWorldGrid();
 
-		const GridCell GetGridCellByID(const glm::vec2& ID) const;
-		const GridCell GetGridCellByPosition(const glm::vec2& position) const;
+		const int GetCellSize() const;
+		const glm::vec2& GetGridSize() const;
+		const GridCell& GetGridCellByID(const glm::vec2& ID) const;
+		GridCell& GetGridCellByID(const glm::vec2& ID);
+		const GridCell& GetGridCellByPosition(const glm::vec2& position) const;
 
 	private:
 
 		std::unordered_map<glm::vec2, GridCell> m_Grid;
-		//glm::vec2 m_GridSize;
+		glm::vec2 m_GridSize;
 		int m_CellSize;
-
-
-
 	};
 }

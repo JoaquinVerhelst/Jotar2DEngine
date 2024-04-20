@@ -16,14 +16,10 @@ namespace Jotar
 	{
 	public:
 		ColliderComponent(GameObject* owner, bool isStatic = true, bool isTrigger = false);
-
+		~ColliderComponent() = default;
 
 		virtual void Start() override;
-		//virtual void Update() override;
 		virtual void FixedUpdate() override;
-		//virtual void LateUpdate() override;
-		//virtual void Init() override;
-		//virtual void Render() const override;
 		virtual void OnDestroy() override;
 
 		void AddObserver(Observer<CollisionEvent>* pObserver);
@@ -38,6 +34,7 @@ namespace Jotar
 
 		bool IsOverlapping(const glm::vec4& otherCollisionRect);
 		void OnTriggerCollision(TriggerEvent& collisionEvent);
+
 	private:
 		void UpdatePosition();
 

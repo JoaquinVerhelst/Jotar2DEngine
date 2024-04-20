@@ -5,11 +5,14 @@
 
 namespace Jotar
 {
+
+	class Scene;
+
 	class BombComponent : public Component
 	{
 	public:
 
-		explicit BombComponent(GameObject* owner, GameObject* explosion, float explodeTime);
+		explicit BombComponent(GameObject* owner, float explodeTime);
 		virtual ~BombComponent() = default;
 
 
@@ -28,15 +31,15 @@ namespace Jotar
 
 	private:
 
-		void OnExplode();
-		void Reset();
+		void OnExplode(int range);
+		//0 = middle, 1 = Vertical, 2 = horizontal, 3 = endUp, 4 = EndDown, 5 = EndRight, 6 = EndLeft
+		void CreateChildExplosion(int explosionPosition, const glm::vec2& pos, Scene& scene);
 
+		int CalculateSpriteSheetRow(int xDir, int yDir, int range, int currentRange);
 		int m_Range;
 		float m_ExplodeTime;
 		float m_TimeCounter;
 		bool m_IsExploded;
-
-		//Jotar::GridCell m_CurrentGridCell;
 
 	};
 }

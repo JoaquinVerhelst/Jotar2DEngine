@@ -24,10 +24,13 @@ namespace Jotar
 
 		virtual void OnDestroy() {};
 
+
+		GameObject* GetOwner() const { return m_pOwner; }
+
 	protected:
 
 		explicit Component(GameObject* pOwner);
-		GameObject* GetOwner() const { return m_pOwner; }
+
 
 	private:
 

@@ -9,6 +9,9 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 	, m_IsStatic{ isStatic }
 	, m_IsTrigger{ isTrigger }
 {
+	m_pSubject = std::make_unique<Subject<CollisionEvent>>();
+
+
 	m_pTransform = GetOwner()->GetComponent<TransformComponent>();
 
 	auto& pos = m_pTransform->GetWorldPosition();
@@ -24,6 +27,7 @@ void Jotar::ColliderComponent::OnDestroy()
 {
 	//to do : Get Rid of hard coded scene index
 	SceneManager::GetInstance().GetScene(0).GetCollisionManager().RemoveCollider(this);
+	m_pSubject->RemoveAllObservers();
 }
 
 void Jotar::ColliderComponent::AddObserver(Observer<CollisionEvent>* pObserver)

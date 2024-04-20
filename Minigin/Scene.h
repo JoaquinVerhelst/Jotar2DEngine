@@ -38,7 +38,7 @@ namespace Jotar
 
 
 		std::string m_Name;
-		CollisionManager m_CollisionManager{};
+		CollisionManager m_CollisionManager;
 		std::vector < std::shared_ptr<GameObject>> m_pObjects{};
 
 		static unsigned int m_idCounter; 

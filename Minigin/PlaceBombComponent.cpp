@@ -24,7 +24,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	// TODO get rid of hardcoded scene index
 	Scene& scene = SceneManager::GetInstance().GetScene(0);
 	auto bomb = scene.CreateGameObject("Bomb");
-	//bomb->AddComponent<BombComponent>();
+	bomb->AddComponent<BombComponent>(5.f);
 	bomb->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("Bomb"));
 	return bomb;
 }

@@ -85,7 +85,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 
 		renderer.Render();
 
-		SteamAPI_RunCallbacks();
+		//SteamAPI_RunCallbacks();
 
 		//imgui.Render();
 

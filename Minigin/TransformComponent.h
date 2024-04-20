@@ -39,7 +39,7 @@ namespace Jotar
 		glm::vec2 m_LocalPosition{};
 		glm::vec2 m_WorldPosition{};
 
-		glm::vec2 m_Size{ 32, 32 };
+		glm::vec2 m_Size{ 64, 64 };
 		int m_Scale = 1;
 	};
 }
