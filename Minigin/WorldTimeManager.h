@@ -17,6 +17,9 @@ namespace Jotar
         float GetFPS() const { return m_Fps; }
 
     private:
+        friend class Singleton<WorldTimeManager>;
+        WorldTimeManager() = default;
+
         std::chrono::time_point<std::chrono::high_resolution_clock> m_LastFrameTime;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
 

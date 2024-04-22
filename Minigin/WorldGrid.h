@@ -63,10 +63,6 @@ namespace Jotar
 	class WorldGrid : public Singleton<WorldGrid>
 	{
 	public:
-
-		WorldGrid() = default;
-		~WorldGrid() = default;
-
 		void Init(int rows, int columns, int size);
 		void Render() const;
 
@@ -84,7 +80,8 @@ namespace Jotar
 		const GridCell& GetGridCellByPosition(const glm::vec2& position) const;
 
 	private:
-
+		friend class Singleton<WorldGrid>;
+		WorldGrid() = default;
 		std::unordered_map<glm::vec2, GridCell> m_Grid;
 		glm::vec2 m_GridSize;
 		int m_CellSize;
