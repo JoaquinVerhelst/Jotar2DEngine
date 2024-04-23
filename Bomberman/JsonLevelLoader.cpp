@@ -13,7 +13,14 @@
 using json = nlohmann::json;
 
 
-bool Jotar::JsonLevelLoader::LoadLevelsFromJson(Scene& scene, const std::string& filePath)
+Jotar::JsonLevelLoader::JsonLevelLoader(GameObject* owner, Scene& scene, const std::string& filePath)
+    : Component(owner)
+{
+    LoadLevelFromJson(scene, filePath);
+}
+
+
+bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& filePath)
 {
     std::ifstream file(filePath);
     if (!file.is_open())

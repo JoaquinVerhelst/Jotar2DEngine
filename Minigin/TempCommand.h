@@ -4,7 +4,7 @@
 #include "Command.h"
 #include "HealthComponent.h"
 #include "ScoreComponent.h"
-#include "steam_api.h"
+//#include "steam_api.h"
 
 namespace Jotar
 {
@@ -37,22 +37,5 @@ namespace Jotar
 
 	private:
 		ScoreComponent* m_pScoreComponent;
-	};
-
-	class ResetAchievementsCommand : public Command
-	{
-	public:
-		ResetAchievementsCommand()
-		{}
-		void Execute() override
-		{
-			ISteamUserStats* steamUserStats = SteamUserStats();
-			if (steamUserStats) {
-				steamUserStats->ResetAllStats(true);
-			}
-		}
-
-	private:
-
 	};
 }

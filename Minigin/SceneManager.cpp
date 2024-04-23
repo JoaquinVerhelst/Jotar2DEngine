@@ -51,13 +51,10 @@ void Jotar::SceneManager::CleanUpDestroyedObjects()
 	}
 }
 
-Jotar::Scene& Jotar::SceneManager::CreateScene(const std::string& name, const std::string& levelFilepath)
+Jotar::Scene& Jotar::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
 	m_scenes.push_back(scene);
-
-	m_JsonLevelLoader.LoadLevelsFromJson(*scene, levelFilepath);
-
 
 	return *scene;
 }

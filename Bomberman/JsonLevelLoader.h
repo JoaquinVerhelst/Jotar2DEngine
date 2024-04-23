@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-
+#include "Component.h"
 
 namespace Jotar
 {
@@ -9,18 +9,22 @@ namespace Jotar
 	class Scene;
 
 
-	class JsonLevelLoader final
+	class JsonLevelLoader final : public Component
 	{
 
 	public:
 
-		JsonLevelLoader() = default;
+		JsonLevelLoader(GameObject* owner, Scene& scene, const std::string& filePath);
 		~JsonLevelLoader() = default;
 
-		bool LoadLevelsFromJson(Scene& scene, const std::string& filePath);
+		bool LoadLevelFromJson(Scene& scene, const std::string& filePath);
 
 		//std::shared_ptr<GameObject> LoadPlayer(int index);
 
+		JsonLevelLoader(const JsonLevelLoader& other) = delete;
+		JsonLevelLoader(JsonLevelLoader&& other) = delete;
+		JsonLevelLoader& operator=(const JsonLevelLoader& other) = delete;
+		JsonLevelLoader& operator=(JsonLevelLoader&& other) = delete;
 
 	private:
 

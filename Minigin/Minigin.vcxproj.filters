@@ -162,12 +162,6 @@
     <ClInclude Include="ControllerInput.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="MovementComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementCommand.h">
-      <Filter>Engine\Command</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Engine\Command</Filter>
     </ClInclude>
@@ -180,47 +174,14 @@
     <ClInclude Include="Subject.h">
       <Filter>Engine\Observer</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h">
-      <Filter>Engine\Observer\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
     <ClInclude Include="TempCommand.h">
       <Filter>Engine\Command</Filter>
     </ClInclude>
-    <ClInclude Include="EventAddScore.h">
-      <Filter>Engine\Observer\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="SteamAchievements.h">
-      <Filter>Engine\Observer\Steam</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthDisplayComponent.h">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreDisplayComponent.h">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="PlaceBombComponent.h">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="BombComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PlaceBombCommand.h">
-      <Filter>Engine\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="ExplosionComponent.h">
-      <Filter>Engine\Components</Filter>
     </ClInclude>
     <ClInclude Include="ColliderComponent.h">
       <Filter>Engine\Components</Filter>
@@ -229,9 +190,6 @@
       <Filter>Engine\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="WorldTimeManager.h">
-      <Filter>Engine\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldGrid.h">
       <Filter>Engine\Singletons</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
@@ -243,20 +201,11 @@
     <ClInclude Include="CollisionEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
-    <ClInclude Include="JsonLevelLoader.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Enums.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="DamageComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BreakableWallComponent.h">
-      <Filter>Engine\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PickUpComponent.h">
-      <Filter>Engine\Components</Filter>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -264,9 +213,6 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Minigin.cpp">
@@ -359,44 +305,11 @@
     <ClCompile Include="ControllerInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="MovementComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
     <ClCompile Include="KeyboardInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="EventAddScore.cpp">
-      <Filter>Engine\Observer\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="SteamAchievements.cpp">
-      <Filter>Engine\Observer\Steam</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthDisplayComponent.cpp">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreDisplayComponent.cpp">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="PlaceBombComponent.cpp">
-      <Filter>Engine\Components\PlayerComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="BombComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PlaceBombCommand.cpp">
-      <Filter>Engine\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="ExplosionComponent.cpp">
-      <Filter>Engine\Components</Filter>
     </ClCompile>
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Engine\Components</Filter>
@@ -407,26 +320,14 @@
     <ClCompile Include="WorldTimeManager.cpp">
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="WorldGrid.cpp">
-      <Filter>Engine\Singletons</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="JsonLevelLoader.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="DamageComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BreakableWallComponent.cpp">
-      <Filter>Engine\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PickUpComponent.cpp">
-      <Filter>Engine\Components</Filter>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

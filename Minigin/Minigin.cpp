@@ -14,7 +14,7 @@
 
 #include "SteamAchievements.h"
 
-#include <steam_api.h>
+//#include <steam_api.h>
 
 Jotar::Minigin::Minigin(const std::string &dataPath)
 {

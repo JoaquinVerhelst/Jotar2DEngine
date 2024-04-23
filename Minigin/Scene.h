@@ -8,7 +8,7 @@ namespace Jotar
 	class GameObject;
 	class Scene final
 	{
-		friend Scene& SceneManager::CreateScene(const std::string& name, const std::string& levelFilepath);
+		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
 
 		~Scene();
