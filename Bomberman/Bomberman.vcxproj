@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
+    <ClCompile Include="BombermanComponent.cpp" />
     <ClCompile Include="BreakableWallComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="EventAddScore.cpp" />
@@ -165,10 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h" />
+    <ClInclude Include="BombermanComponent.h" />
     <ClInclude Include="BreakableWallComponent.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="EventAddScore.h" />
     <ClInclude Include="ExplosionComponent.h" />
+    <ClInclude Include="ExplosionEvent.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
     <ClInclude Include="HealthEvents.h" />

@@ -16,22 +16,24 @@ namespace Jotar
 
 
 
-    class TextureComponent : public Component {
+    class TextureComponent final : public Component {
     public:
         explicit TextureComponent(GameObject* owner, const std::string& filePath, bool isStatic = true, int columns = 1, int rows = 1);
         explicit TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture);
         explicit TextureComponent(GameObject* owner, SpriteSheet& spriteSheet, int currentRow = 0, int currentColumn = 0);
 
-        virtual ~TextureComponent() override = default;
+        ~TextureComponent() override = default;
 
-        virtual void Update() override;
-        virtual void Render() const override;
-
+        void Update() override;
+        void Render() const override;
+ 
  
         TextureComponent(const TextureComponent& other) = delete;
         TextureComponent(TextureComponent&& other) = delete;
         TextureComponent& operator=(const TextureComponent& other) = delete;
         TextureComponent& operator=(TextureComponent&& other) = delete;
+
+        void SetTexture(std::shared_ptr<Texture2D> texture);
 
         void SetDestroyOnLastFrame(bool newValue);
         void SetCurrentRow(int currentRow);

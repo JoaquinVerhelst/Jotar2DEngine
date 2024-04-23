@@ -27,11 +27,26 @@ void Jotar::CollisionManager::FixedUpdate()
 {
     for (auto pCollider : m_pSceneColliders)
     {
+
+        if (pCollider == nullptr)
+        {
+            RemoveCollider(pCollider);
+            continue;
+        }
+
         // A static object will not trigger a collision
-        if (pCollider->GetIsStatic() && !pCollider->GetIsTrigger()) continue;
+        if (pCollider->GetIsStatic()) continue;
+
 
         for (auto pOtherCollider : m_pSceneColliders)
         {
+
+            if (pOtherCollider == nullptr)
+            {
+                RemoveCollider(pOtherCollider);
+                continue;
+            }
+
             if (pCollider == pOtherCollider) continue;
 
             if (pCollider->IsOverlapping(pOtherCollider->GetCollisionRect()))
@@ -40,9 +55,13 @@ void Jotar::CollisionManager::FixedUpdate()
                 {
                     TriggerEvent triggerEvent{ pCollider, pOtherCollider };
                     pCollider->OnTriggerCollision(triggerEvent);
-                    
                 }
-                else if (pOtherCollider->GetIsTrigger()) continue;
+                else if (pOtherCollider->GetIsTrigger())
+                {
+                    TriggerEvent triggerEvent{ pOtherCollider, pCollider };
+                    pOtherCollider->OnTriggerCollision(triggerEvent);
+
+                }
                 else
                 {
 

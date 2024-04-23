@@ -25,7 +25,7 @@ namespace Jotar
 		void AddObserver(Observer<CollisionEvent>* pObserver);
 		void RemoveObserver(Observer<CollisionEvent>* pObserver);
 		bool CompareTag(const std::string& compareTag) const;
-
+		void SetTag(std::string tag);
 
 		glm::vec4 GetCollisionRect() const;
 		bool GetIsTrigger() const;

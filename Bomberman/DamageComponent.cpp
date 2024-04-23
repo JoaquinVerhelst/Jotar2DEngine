@@ -14,15 +14,16 @@ Jotar::DamageComponent::DamageComponent(GameObject* owner, int amountOfDamage)
 
 void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
 {
+    if (triggerEvent.GetOtherCollider() == nullptr) return;
     auto* otherCollider = triggerEvent.GetOtherCollider();
 
     if (IsColliderAlreadyHit(otherCollider)) return;
 
     if (otherCollider->GetOwner()->HasComponent<HealthComponent>()) {
-
-        m_pDamagedColliders.emplace_back(triggerEvent.GetOtherCollider());
         triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
     }
+
+    m_pDamagedColliders.emplace_back(triggerEvent.GetOtherCollider());
 }
 
 bool Jotar::DamageComponent::IsColliderAlreadyHit(ColliderComponent* otherCollider)

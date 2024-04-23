@@ -1,17 +1,34 @@
 #pragma once
 #include "Component.h"
-
+#include "Observer.h"
+#include "CollisionEvents.h"
+#include "ColliderComponent.h"
+#include <vector>
 
 namespace Jotar
 {
-	class PickUpComponent : public Component
+	class TextureComponent;
+
+	enum class PickUpType
+	{
+		ExtraBomb = 0,
+		Detonator = 1,
+		ExtraExplosionRange = 2
+	};
+
+
+
+	class PickUpComponent final : public Component , public Observer<CollisionEvent>
 	{
 	public:
 
 		explicit PickUpComponent(GameObject* owner);
 		virtual ~PickUpComponent() = default;
 
-		virtual void OnDestroy() override;
+		void OnNotify(const CollisionEvent& eventData) override;
+		void OnDestroy() override;
+		bool IsColliderAlreadyHit(ColliderComponent* otherCollider);
+
 
 		PickUpComponent(const PickUpComponent& other) = delete;
 		PickUpComponent(PickUpComponent&& other) = delete;
@@ -20,5 +37,11 @@ namespace Jotar
 
 	private:
 
+		void RandomizePickUpType();
+
+
+		std::vector<ColliderComponent*> m_pAlreadyHitColliders;
+		//TextureComponent* m_pTextureComponent;
+		PickUpType m_PickUpType;
 	};
 }

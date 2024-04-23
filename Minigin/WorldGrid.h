@@ -5,7 +5,7 @@
 //#include <vector>
 #include <unordered_map>
 #include "Singleton.h"
-
+#include "GameObject.h"
 
 
 namespace std {
@@ -30,6 +30,7 @@ namespace std {
 namespace Jotar
 {
 
+
 	struct GridCell
 	{
 		GridCell()
@@ -46,15 +47,7 @@ namespace Jotar
 		glm::vec2 CenterCellPosition;
 		glm::ivec2 Index;
 
-		enum class WallType
-		{
-			None,
-			Destroyable,
-			Undestroyable
-
-		};
-
-		WallType HasWall = WallType::None;
+		std::weak_ptr<GameObject> ObjectOnCell;
 	};
 
 
@@ -78,6 +71,8 @@ namespace Jotar
 		const GridCell& GetGridCellByID(const glm::vec2& ID) const;
 		GridCell& GetGridCellByID(const glm::vec2& ID);
 		const GridCell& GetGridCellByPosition(const glm::vec2& position) const;
+		GridCell& GetGridCellByPosition(const glm::vec2& position);
+
 
 	private:
 		friend class Singleton<WorldGrid>;

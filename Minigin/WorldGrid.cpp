@@ -98,7 +98,24 @@ const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& 
         if (position.x >= cellPos.x && position.x < cellPos.x + m_CellSize &&
             position.y >= cellPos.y && position.y < cellPos.y + m_CellSize)
         {
-            return cell;
+            return cellPair.second;
+        }
+    }
+
+    throw std::runtime_error("const& GetGridCellByPosition() const: ID not found");
+}
+
+Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& position)
+{
+    for (auto& cellPair : m_Grid)
+    {
+        const GridCell& cell = cellPair.second;
+        const glm::vec2& cellPos = cell.WorldPosition;
+
+        if (position.x >= cellPos.x && position.x < cellPos.x + m_CellSize &&
+            position.y >= cellPos.y && position.y < cellPos.y + m_CellSize)
+        {
+            return cellPair.second;
         }
     }
 

@@ -4,6 +4,8 @@
 #include "CollisionManager.h"
 #include "Scene.h"
 
+#include <iostream>
+
 Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bool isTrigger)
 	: Component(owner)
 	, m_IsStatic{ isStatic }
@@ -93,6 +95,10 @@ void Jotar::ColliderComponent::UpdatePosition()
 	m_CollisionRect.y = pos.y;
 }
 
+void Jotar::ColliderComponent::SetTag(std::string tag)
+{
+	m_Tag = tag;
+}
 
 void Jotar::ColliderComponent::Start()
 {

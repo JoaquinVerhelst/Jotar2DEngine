@@ -27,6 +27,8 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 
 	SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/PlaceBomb.wav");
 	SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/BombExplodes.wav");
+	SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/ItemGet.wav");
+
 	//CSteamAchievements::GetInstance().Init(g_Achievements, 4);
 
 	ResourceManager::GetInstance().Init(dataPath);

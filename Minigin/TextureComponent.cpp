@@ -69,6 +69,13 @@ void Jotar::TextureComponent::Render() const
 	Renderer::GetInstance().RenderTexture(*m_SpriteSheet.m_pTexture, m_SrcRect, dst);
 }
 
+void Jotar::TextureComponent::SetTexture(std::shared_ptr<Texture2D> texture)
+{
+	m_SpriteSheet.m_pTexture = texture;
+	InitSpriteSheet(1, 1);
+	Initizialize();
+}
+
 void Jotar::TextureComponent::SetDestroyOnLastFrame(bool newValue)
 {
 	m_DestroyOnLastFrame = newValue;

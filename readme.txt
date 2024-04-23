@@ -8,3 +8,7 @@ I did feel the limitations of  SDL the previous years. So I decide to go with Op
 
 
 Resourcemanager -> loads and manages shared resources 
+
+
+
+Observer -> health, Score, Collsision, If bomb gets collided with explosion, on bomb explode

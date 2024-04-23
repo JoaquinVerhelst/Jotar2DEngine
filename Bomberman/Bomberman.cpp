@@ -65,6 +65,10 @@ void load()
 	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/BreakableWall.png", "BreakableWall");
 	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/UnbreakableWall.png", "UnbreakableWall");
 
+	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/ExtraBombPickUp.png", "ExtraBombPickUp");
+	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/ExplosionRangePickUp.png", "ExplosionRangePickUp");
+	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/DetonatorPickUp.png", "DetonatorPickUp");
+
 
 	SpriteSheet explosionSheet{};
 	explosionSheet.TotalColumns = 4;

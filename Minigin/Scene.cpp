@@ -55,12 +55,12 @@ void Scene::Update()
 
 void Jotar::Scene::FixedUpdate()
 {
+	m_CollisionManager.FixedUpdate();
+
 	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
 		m_pObjects[i]->FixedUpdate();
 	}
-
-	m_CollisionManager.FixedUpdate();
 }
 
 void Jotar::Scene::LateUpdate()

@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "ResourceManager.h"
-
+#include "BreakableWallComponent.h"
 #include "TextureComponent.h"
 #include <random>
 
@@ -63,14 +63,14 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
                 {
                     auto wall = CreateUnbreakableWall(scene);
                     auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
-                    cell.HasWall = GridCell::WallType::Undestroyable;
+                    cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
                 if (tile == '2')
                 {
                     auto wall = CreateBreakableWall(scene);
                     auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
-                    cell.HasWall = GridCell::WallType::Destroyable;
+                    cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
             }
@@ -99,7 +99,8 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
 std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall(Scene& scene)
 {
     auto wall = scene.CreateGameObject("Wall");
-    wall->AddComponent<ColliderComponent>(true);
+    auto collider = wall->AddComponent<ColliderComponent>(true);
+    collider->SetTag("Undestroyable");
     wall->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("UnbreakableWall"));
     return wall;
 }
@@ -107,7 +108,9 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall
 std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(Scene& scene)
 {
     auto wall = scene.CreateGameObject("Breakable Wall");
-    wall->AddComponent<ColliderComponent>(true);
+    auto collider = wall->AddComponent<ColliderComponent>(true);
+    collider->SetTag("Destroyable");
+    wall->AddComponent<BreakableWallComponent>();
     wall->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("BreakableWall"));
     return wall;
 }
@@ -131,10 +134,10 @@ void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scen
 
         auto& cell = worldGrid.GetGridCellByID({ randomX, randomY });
 
-        if (cell.HasWall == GridCell::WallType::None)
+        if (cell.ObjectOnCell.expired())
         {
             auto wall = CreateBreakableWall(scene);
-            cell.HasWall = GridCell::WallType::Destroyable;
+            cell.ObjectOnCell = wall;
             wall->GetTransform()->SetPosition(cell.CenterCellPosition);
             ++wallsPlaced;
         }

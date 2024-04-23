@@ -9,15 +9,16 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "SoundServiceLocator.h"
+#include "ExplosionEvent.h"
 
-Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime)
+Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime, int range)
 	: Component(owner)
 	, m_ExplodeTime{ explodeTime }
 	, m_IsExploded { false }
 	, m_TimeCounter { 0 }
-    , m_Range{}
+    , m_Range{ range }
 {
-
+    m_pSubject = std::make_unique<Subject<ExplosionEvent>>();
 
 }
 
@@ -29,30 +30,45 @@ void Jotar::BombComponent::Update()
 
 		if (m_TimeCounter >= m_ExplodeTime)
 		{
-			m_IsExploded = true;
 			m_TimeCounter = 0;
-
-            //todo refactor magic number
-			OnExplode(3);
-            GetOwner()->Destroy();
+			OnExplode(m_Range);
 		}
 	}
 }
 
+void Jotar::BombComponent::OnDestroy()
+{
+    m_pSubject->RemoveAllObservers();
+}
+
 void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
 {
+    if (m_IsExploded) return;
 
-    if (triggerEvent.GetOtherCollider()->GetOwner()->GetName() == "Explosion")
+    if (triggerEvent.GetOtherCollider()->CompareTag("Explosion"))
     {
-        //todo refactor magic number
-        OnExplode(3);
-        GetOwner()->Destroy();
+        OnExplode(m_Range);
     }
+}
+
+void Jotar::BombComponent::AddObserver(Observer<ExplosionEvent>* pObserver)
+{
+    m_pSubject->AddObserver(pObserver);
+}
+
+void Jotar::BombComponent::RemoveObserver(Observer<ExplosionEvent>* pObserver)
+{
+    m_pSubject->RemoveObserver(pObserver);
 }
 
 void Jotar::BombComponent::OnExplode(int range)
 {
+    m_IsExploded = true;
+
     SoundServiceLocator::GetSoundSystem().Play(1);
+    ExplosionEvent explosionevent{};
+    m_pSubject->NotifyObservers(explosionevent);
+
 
     auto pos = GetOwner()->GetTransform()->GetLocalPosition();
     auto& centerCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
@@ -89,20 +105,21 @@ void Jotar::BombComponent::OnExplode(int range)
             if (x >= 0 && x < gridSize.x &&
                 y >= 0 && y < gridSize.y)
             {
-
                 auto& cell = worldGrid.GetGridCellByID({ x,y });
 
-                if (cell.HasWall == GridCell::WallType::Undestroyable)
-                    break;
-                else if (cell.HasWall == GridCell::WallType::Destroyable)
+                if (auto objPtr = cell.ObjectOnCell.lock())
                 {
-                    auto colllider = scene.GetCollisionManager().GetOverlappingColliderInPosition(cell.CenterCellPosition);
-                    if (colllider == nullptr) break;
+                    auto collider = objPtr->GetComponent<ColliderComponent>();
 
-                    cell.HasWall = GridCell::WallType::None;
-                    colllider->GetOwner()->Destroy();
+                    if (collider == nullptr) return;
 
-                    break;
+                    if (collider->CompareTag("Undestroyable"))
+                        break;
+                    else if (collider->CompareTag("Destroyable"))
+                    {
+                        objPtr->Destroy();
+                        break;
+                    }
                 }
 
                 int animationRow = CalculateSpriteSheetRow(dx, dy, range, i);
@@ -120,7 +137,9 @@ void Jotar::BombComponent::OnExplode(int range)
         }
     }
 
+    GetOwner()->Destroy();
 }
+
 
 void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm::vec2& pos, Scene& scene)
 {
@@ -129,8 +148,8 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
     auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Explosion"), explosionPosition);
     texture->SetDestroyOnLastFrame(true);
     explosion->GetTransform()->SetPosition(pos);
-    auto triggerCollider = explosion->AddComponent<ColliderComponent>(false, true);
-
+    auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
+    triggerCollider->SetTag("Explosion");
     int damage = 1;
     auto damageComp = explosion->AddComponent<DamageComponent>(damage);
 

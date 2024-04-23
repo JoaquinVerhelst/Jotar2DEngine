@@ -3,7 +3,7 @@
 #include "Observer.h"
 #include "CollisionEvents.h"
 #include "ColliderComponent.h"
-
+#include <vector>
 
 namespace Jotar
 {
