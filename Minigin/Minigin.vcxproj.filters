@@ -61,6 +61,9 @@
     <Filter Include="Engine\Components\PickUps">
       <UniqueIdentifier>{29526f87-3588-48d6-b19e-f27ee8f24cee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ServiceLocator">
+      <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -207,6 +210,12 @@
     <ClInclude Include="WorldGrid.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="SoundServiceLocator.h">
+      <Filter>ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>ServiceLocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -326,8 +335,17 @@
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
+    <ClCompile Include="SoundServiceLocator.cpp">
+      <Filter>ServiceLocator</Filter>
+    </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>ServiceLocator</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggingSoundSystem.cpp">
+      <Filter>ServiceLocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

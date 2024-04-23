@@ -6,6 +6,7 @@
 #include "WorldGrid.h"
 #include "ResourceManager.h"
 #include "TextureComponent.h"
+#include "SoundServiceLocator.h"
 
 Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
 	: Component(owner)
@@ -14,9 +15,11 @@ Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
 
 void Jotar::PlaceBombComponent::PlaceBomb()
 {
+
 	auto bomb = CreateBombGameObject();
 	auto cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetWorldPosition());
 	bomb->GetTransform()->SetPosition(cell.CenterCellPosition);
+	SoundServiceLocator::GetSoundSystem().Play(0);
 }
 
 std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject()

@@ -8,7 +8,7 @@
 #include "DamageComponent.h"
 #include "SceneManager.h"
 #include "Scene.h"
-
+#include "SoundServiceLocator.h"
 
 Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime)
 	: Component(owner)
@@ -52,6 +52,8 @@ void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
 
 void Jotar::BombComponent::OnExplode(int range)
 {
+    SoundServiceLocator::GetSoundSystem().Play(1);
+
     auto pos = GetOwner()->GetTransform()->GetLocalPosition();
     auto& centerCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
 

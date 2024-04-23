@@ -10,8 +10,8 @@
 #include "WorldTimeManager.h"
 #include "GLSDLManager.h"
 #include "ImguiRenderer.h"
-
-
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
 #include "SteamAchievements.h"
 
 //#include <steam_api.h>
@@ -23,8 +23,10 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 
 	Renderer::GetInstance().Init();
 
+	SoundServiceLocator::RegisterSoundSystem(std::make_unique<LoggingSoundSystem>(std::make_unique<SDL_SoundSystem>()));
 
-
+	SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/PlaceBomb.wav");
+	SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/BombExplodes.wav");
 	//CSteamAchievements::GetInstance().Init(g_Achievements, 4);
 
 	ResourceManager::GetInstance().Init(dataPath);
@@ -81,7 +83,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 		sceneManager.Update();
 
 		sceneManager.LateUpdate();
-
+		SoundServiceLocator::GetSoundSystem().Update();
 
 		renderer.Render();
 

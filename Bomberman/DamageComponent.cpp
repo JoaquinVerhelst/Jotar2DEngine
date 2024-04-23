@@ -23,9 +23,6 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
         m_pDamagedColliders.emplace_back(triggerEvent.GetOtherCollider());
         triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
     }
-
-
-    std::cout << "Got damaged " << '\n';
 }
 
 bool Jotar::DamageComponent::IsColliderAlreadyHit(ColliderComponent* otherCollider)
