@@ -64,6 +64,9 @@
     <Filter Include="ServiceLocator">
       <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\AI">
+      <UniqueIdentifier>{0d617682-868e-41b7-8e62-e7dc016d2830}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -216,6 +219,12 @@
     <ClInclude Include="SoundSystem.h">
       <Filter>ServiceLocator</Filter>
     </ClInclude>
+    <ClInclude Include="AIFiniteStateMachine.h">
+      <Filter>Engine\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Blackboard.h">
+      <Filter>Engine\AI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -346,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="LoggingSoundSystem.cpp">
       <Filter>ServiceLocator</Filter>
+    </ClCompile>
+    <ClCompile Include="AIFiniteStateMachine.cpp">
+      <Filter>Engine\AI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

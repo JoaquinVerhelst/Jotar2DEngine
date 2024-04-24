@@ -19,6 +19,7 @@ namespace Jotar
         MovementComponent& operator=(MovementComponent&& other) = delete;
 
         void Move(const glm::vec2& dir);
+        TransformComponent* GetTransform();
     private:
 
         float m_MovementSpeed;

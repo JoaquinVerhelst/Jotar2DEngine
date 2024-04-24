@@ -18,6 +18,9 @@
     <Filter Include="GameFIles\Commands">
       <UniqueIdentifier>{be6bfbed-6fd7-4198-8af7-f20cda54bebb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonLevelLoader.cpp">
@@ -68,6 +71,13 @@
     <ClCompile Include="Bomberman.cpp">
       <Filter>GameFIles</Filter>
     </ClCompile>
+    <ClCompile Include="NavigationSystem.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIStatesAndConditions.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIBehaviorComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
@@ -123,6 +133,15 @@
     </ClInclude>
     <ClInclude Include="ExplosionEvent.h">
       <Filter>GameFIles\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationSystem.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIStatesAndConditions.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIBehaviorComponent.h">
+      <Filter>AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

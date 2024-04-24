@@ -141,13 +141,13 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 
 
 
-float Jotar::NavigationSystem::GetHeuristicCost(glm::vec2 startNodePos, glm::vec2 endNodePos) const
+float Jotar::NavigationSystem::GetHeuristicCost(glm::vec2 startNodePos, glm::vec2 endNodePos)
 {
 	glm::vec2 toDestination = endNodePos - startNodePos;
 	return HeuristicFunctionChebyshev(abs(toDestination.x), abs(toDestination.y));
 }
 
-float Jotar::NavigationSystem::HeuristicFunctionChebyshev(float x, float y) const
+float Jotar::NavigationSystem::HeuristicFunctionChebyshev(float x, float y)
 {
 	return std::max(x, y);
 }

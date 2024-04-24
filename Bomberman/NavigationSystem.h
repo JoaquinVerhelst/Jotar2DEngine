@@ -50,13 +50,13 @@ namespace Jotar
 		NavigationSystem& operator=(NavigationSystem&& other) = delete;
 
 
-		std::vector<glm::vec2> FindPath(const GridCell& startCell, const GridCell& endCell);
+		static std::vector<glm::vec2> FindPath(const GridCell& startCell, const GridCell& endCell);
 
 
 	private:
 
-		float GetHeuristicCost(glm::vec2 startNodePos, glm::vec2 endNodePos) const;
+		static float GetHeuristicCost(glm::vec2 startNodePos, glm::vec2 endNodePos);
 
-		float HeuristicFunctionChebyshev(float x, float y) const;
+		static float HeuristicFunctionChebyshev(float x, float y);
 	};
 }

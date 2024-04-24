@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIBehaviorComponent.cpp" />
+    <ClCompile Include="AIStatesAndConditions.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
     <ClCompile Include="BombermanComponent.cpp" />
@@ -158,6 +160,7 @@
     <ClCompile Include="HealthDisplayComponent.cpp" />
     <ClCompile Include="JsonLevelLoader.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="NavigationSystem.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlaceBombCommand.cpp" />
     <ClCompile Include="PlaceBombComponent.cpp" />
@@ -165,6 +168,8 @@
     <ClCompile Include="ScoreDisplayComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIBehaviorComponent.h" />
+    <ClInclude Include="AIStatesAndConditions.h" />
     <ClInclude Include="BombComponent.h" />
     <ClInclude Include="BombermanComponent.h" />
     <ClInclude Include="BreakableWallComponent.h" />
@@ -178,6 +183,7 @@
     <ClInclude Include="JsonLevelLoader.h" />
     <ClInclude Include="MovementCommand.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="NavigationSystem.h" />
     <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="PlaceBombCommand.h" />
     <ClInclude Include="PlaceBombComponent.h" />

@@ -11,7 +11,7 @@ namespace Jotar
 	class AIState
 	{
 	public:
-		AIState() {}
+		AIState() = default;
 		virtual ~AIState() = default;
 
 		virtual void OnEnter(Blackboard* pBlackboard) {};
@@ -31,16 +31,18 @@ namespace Jotar
 
 	class AIFiniteStateMachine
 	{
+	public:
 		AIFiniteStateMachine(std::shared_ptr<AIState> startState, std::unique_ptr<Blackboard> pBlackboard);
 		virtual ~AIFiniteStateMachine() = default;
-
-		void AddTransition(std::shared_ptr<AIState> startState, std::shared_ptr<AIState> toState, std::shared_ptr<AICondition> transition);
 		virtual void Update();
+		void AddTransition(std::shared_ptr<AIState> startState, std::shared_ptr<AIState> toState, std::shared_ptr<AICondition> transition);
+
 		Blackboard* GetBlackboard() const;
 
 	private:
 		void ChangeState(std::shared_ptr<AIState> newState);
-	private:
+
+
 		typedef std::pair<std::shared_ptr<AICondition>, std::shared_ptr<AIState>> TransitionStatePair;
 		typedef std::vector<TransitionStatePair> Transitions;
 

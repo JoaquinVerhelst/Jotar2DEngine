@@ -91,6 +91,7 @@ namespace Jotar
 		friend class Singleton<WorldGrid>;
 		WorldGrid() = default;
 		std::unordered_map<glm::ivec2, GridCell> m_Grid;
+		
 		glm::vec2 m_GridSize;
 		int m_CellSize;
 	};

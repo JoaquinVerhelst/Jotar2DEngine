@@ -7,7 +7,7 @@ Jotar::MovementComponent::MovementComponent(GameObject* owner, float movementSpe
 	: Component(owner)
 	, m_MovementSpeed{movementSpeed}
 {
-	m_pTransformComponent = GetOwner()->GetComponent<TransformComponent>();
+	m_pTransformComponent = GetOwner()->GetTransform();
 }
 
 void Jotar::MovementComponent::Move(const glm::vec2& dir)
@@ -16,4 +16,9 @@ void Jotar::MovementComponent::Move(const glm::vec2& dir)
 	newPos += dir * m_MovementSpeed * WorldTimeManager::GetInstance().GetDeltaTime();
 
 	m_pTransformComponent->SetPosition(newPos);
+}
+
+Jotar::TransformComponent* Jotar::MovementComponent::GetTransform()
+{
+	return m_pTransformComponent;
 }

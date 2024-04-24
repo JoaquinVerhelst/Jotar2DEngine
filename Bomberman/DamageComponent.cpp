@@ -13,7 +13,7 @@ Jotar::DamageComponent::DamageComponent(GameObject* owner, int amountOfDamage)
 }
 
 void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
-{
+{ 
     if (triggerEvent.GetOtherCollider() == nullptr) return;
     auto* otherCollider = triggerEvent.GetOtherCollider();
 
