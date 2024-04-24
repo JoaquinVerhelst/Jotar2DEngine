@@ -82,7 +82,6 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	colliderComp->SetTag("Bomb");
 	auto bombComp = bombObj->AddComponent<BombComponent>(m_BombTimer, m_AmountOfFlames);
 
-
 	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	colliderComp->UpdatePosition();
 	cell.ObjectOnCell = bombObj;

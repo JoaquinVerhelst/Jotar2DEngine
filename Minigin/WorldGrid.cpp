@@ -17,7 +17,7 @@ void Jotar::WorldGrid::Init(int rows, int columns, int size)
     {
         for (int c = 0; c < columns; ++c)
         {
-            glm::vec2 IDposition(r, c);
+            glm::ivec2 IDposition(r, c);
 
             glm::vec2 worldPosition(r * size, c * size);
 
@@ -49,7 +49,7 @@ void Jotar::WorldGrid::Render() const
     }
 }
 
-std::unordered_map<glm::vec2, Jotar::GridCell>& Jotar::WorldGrid::GetWorldGrid()
+std::unordered_map<glm::ivec2, Jotar::GridCell>& Jotar::WorldGrid::GetWorldGrid()
 {
 	return m_Grid;
 }
@@ -65,7 +65,7 @@ const glm::vec2& Jotar::WorldGrid::GetGridSize() const
     return m_GridSize;
 }
 
-const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) const
+const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::ivec2& ID) const
 {
     auto it = m_Grid.find(ID);
 
@@ -76,7 +76,7 @@ const Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID) co
     throw std::runtime_error("const& GetGridCellByID() const: ID not found");
 }
 
-Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::vec2& ID)
+Jotar::GridCell& Jotar::WorldGrid::GetGridCellByID(const glm::ivec2& ID)
 {
     auto it = m_Grid.find(ID);
 
@@ -120,4 +120,34 @@ Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& positi
     }
 
     throw std::runtime_error("const& GetGridCellByPosition() const: ID not found");
+}
+
+
+std::vector<Jotar::GridCell> Jotar::WorldGrid::GetConnectedCellsFromIndex(glm::ivec2 cellIndex) const
+{
+    std::vector<GridCell> connectedCells;
+
+    for (int i = -1; i <= 1; ++i)
+    {
+        for (int j = -1; j <= 1; ++j)
+        {
+            if (i == 0 && j == 0)
+                continue;
+
+            glm::ivec2 neighborIndex(cellIndex.x + i, cellIndex.y + j);
+
+            // Check if the neighbor index is within the grid
+            if (m_Grid.find(neighborIndex) != m_Grid.end())
+            {
+                // Check if the neighbor cell is connected to the current cell
+                if (m_Grid.at(neighborIndex).IsConnected(cellIndex))
+                {
+                    // Add the connected neighbor cell to the list
+                    connectedCells.push_back(m_Grid.at(neighborIndex));
+                }
+            }
+        }
+    }
+
+    return connectedCells;
 }
