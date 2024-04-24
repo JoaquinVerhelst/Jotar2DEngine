@@ -21,6 +21,9 @@ void Jotar::CollisionManager::RemoveCollider(ColliderComponent* pCollider)
             return collider == pCollider;
         }),
         m_pSceneColliders.end());
+
+
+    std::cout << "Collider Removed" << '\n';
 }
 
 void Jotar::CollisionManager::FixedUpdate()
@@ -28,7 +31,7 @@ void Jotar::CollisionManager::FixedUpdate()
     for (auto pCollider : m_pSceneColliders)
     {
 
-        if (pCollider == nullptr)
+        if (!pCollider)
         {
             RemoveCollider(pCollider);
             continue;
@@ -41,7 +44,7 @@ void Jotar::CollisionManager::FixedUpdate()
         for (auto pOtherCollider : m_pSceneColliders)
         {
 
-            if (pOtherCollider == nullptr)
+            if (!pOtherCollider)
             {
                 RemoveCollider(pOtherCollider);
                 continue;
@@ -49,8 +52,15 @@ void Jotar::CollisionManager::FixedUpdate()
 
             if (pCollider == pOtherCollider) continue;
 
+
+
             if (pCollider->IsOverlapping(pOtherCollider->GetCollisionRect()))
             {
+                if (pOtherCollider->CompareTag("Bomb") && pCollider->CompareTag("Explosion"))
+                {
+                    std::cout << "Bomb Check!" << '\n';
+                }
+
                 if (pCollider->GetIsTrigger())
                 {
                     TriggerEvent triggerEvent{ pCollider, pOtherCollider };
@@ -60,37 +70,11 @@ void Jotar::CollisionManager::FixedUpdate()
                 {
                     TriggerEvent triggerEvent{ pOtherCollider, pCollider };
                     pOtherCollider->OnTriggerCollision(triggerEvent);
-
                 }
                 else
                 {
-
-                    const auto& collisionRect = pCollider->GetCollisionRect();
-                    const auto& otherCollisionRect = pOtherCollider->GetCollisionRect();
-
-                    glm::vec2 offset{};
-     
-                    float horizontalOverlap = 0.0f;
-                    if (collisionRect.x < otherCollisionRect.x)
-                        horizontalOverlap = otherCollisionRect.x - (collisionRect.x + collisionRect.w);
-                    else
-                        horizontalOverlap = (otherCollisionRect.x + otherCollisionRect.w) - collisionRect.x;
-
-                    float verticalOverlap = 0.0f;
-                    if (collisionRect.y < otherCollisionRect.y)
-                        verticalOverlap = otherCollisionRect.y - (collisionRect.y + collisionRect.z);
-                    else
-                        verticalOverlap = (otherCollisionRect.y + otherCollisionRect.z) - (collisionRect.y);
-
-                    if (std::abs(horizontalOverlap) < std::abs(verticalOverlap)) {
-       
-                        offset.x = horizontalOverlap;
-                    }
-                    else {
-   
-                        offset.y = verticalOverlap;
-                    }
-                    pCollider->GetTransform()->Translate(offset);
+                    CollideEvent collideEvent{ pCollider, pOtherCollider };
+                    pCollider->OnColliderCollision(collideEvent);
                 }
             }
         }

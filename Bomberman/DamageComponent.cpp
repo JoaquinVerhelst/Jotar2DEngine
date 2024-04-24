@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #include "HealthComponent.h"
-
+#include "BombComponent.h"
 #include <iostream>
 
 Jotar::DamageComponent::DamageComponent(GameObject* owner, int amountOfDamage)
@@ -19,9 +19,14 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
 
     if (IsColliderAlreadyHit(otherCollider)) return;
 
-    if (otherCollider->GetOwner()->HasComponent<HealthComponent>()) {
+    if (otherCollider->CompareTag("Killable"))
+    {
         triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
     }
+    //else if (otherCollider->CompareTag("Bomb"))
+    //{
+    //    triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<BombComponent>()->Explode();
+    //}
 
     m_pDamagedColliders.emplace_back(triggerEvent.GetOtherCollider());
 }

@@ -12,7 +12,7 @@ namespace Jotar
 	class Scene;
 	class ExplosionEvent;
 
-	class BombComponent final : public Component, public Observer<CollisionEvent>
+	class BombComponent final : public Component//, public Observer<CollisionEvent>
 	{
 	public:
 
@@ -23,7 +23,7 @@ namespace Jotar
 		void Update() override;
 		void OnDestroy() override;
 
-		void OnNotify(const CollisionEvent& event) override;
+		//void OnNotify(const CollisionEvent& event) override;
 		void AddObserver(Observer<ExplosionEvent>* pObserver);
 		void RemoveObserver(Observer<ExplosionEvent>* pObserver);
 
@@ -34,12 +34,12 @@ namespace Jotar
 		BombComponent& operator=(BombComponent&& other) = delete;
 
 
-		void OnExplode(int range);
+		void Explode();
 
 
 	private:
 
-
+		void OnExplode(int range);
 		//0 = middle, 1 = Vertical, 2 = horizontal, 3 = endUp, 4 = EndDown, 5 = EndRight, 6 = EndLeft
 		void CreateChildExplosion(int explosionPosition, const glm::vec2& pos, Scene& scene);
 		int CalculateSpriteSheetRow(int xDir, int yDir, int range, int currentRange);

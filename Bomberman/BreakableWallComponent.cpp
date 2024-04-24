@@ -18,10 +18,12 @@ void Jotar::BreakableWallComponent::OnDestroy()
 	auto& scene = SceneManager::GetInstance().GetScene(0);
 	auto pickupObj = scene.CreateGameObject("PickUp");
 	auto pickupComp = pickupObj->AddComponent<PickUpComponent>();
-	auto collider = pickupObj->AddComponent<ColliderComponent>(false , true);
+	auto collider = pickupObj->AddComponent<ColliderComponent>(true , true);
+
 	collider->AddObserver(pickupComp);
 
 	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetWorldPosition());
 
 	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
+	collider->UpdatePosition();
 }

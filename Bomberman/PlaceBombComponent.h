@@ -8,6 +8,7 @@
 
 namespace Jotar
 {
+	struct GridCell;
 
 	class PlaceBombComponent : public Component , public Observer<ExplosionEvent>
 	{
@@ -32,7 +33,7 @@ namespace Jotar
 
 	private:
 
-		std::shared_ptr<GameObject> CreateBombGameObject();
+		std::shared_ptr<GameObject> CreateBombGameObject(GridCell& cell);
 
 
 		int m_MaxAmountOfBombs;

@@ -50,11 +50,7 @@ void Jotar::PlaceBombComponent::PlaceBomb()
 
 	if (cell.ObjectOnCell.expired())
 	{
-		auto bomb = CreateBombGameObject();
-
-		bomb->GetTransform()->SetPosition(cell.CenterCellPosition);
-		cell.ObjectOnCell = bomb;
-		SoundServiceLocator::GetSoundSystem().Play(0);
+		auto bomb = CreateBombGameObject(cell);
 	}
 
 }
@@ -67,13 +63,13 @@ void Jotar::PlaceBombComponent::DetonateBomb()
 	{
 		if (m_BombsPlaced[i] != nullptr)
 		{
-			m_BombsPlaced[i]->OnExplode(m_AmountOfFlames);
+			m_BombsPlaced[i]->Explode();
 			return;
 		}
 	}
 }
 
-std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject()
+std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject(GridCell& cell)
 {
 	// TODO get rid of hardcoded scene index
 	Scene& scene = SceneManager::GetInstance().GetScene(0);
@@ -82,9 +78,16 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	glm::vec2 sizeVec = { size, size };
 
 	bombObj->GetTransform()->SetSize({ sizeVec });
-	auto triggerCollider = bombObj->AddComponent<ColliderComponent>(true, false);
+	auto colliderComp = bombObj->AddComponent<ColliderComponent>(true);
+	colliderComp->SetTag("Bomb");
 	auto bombComp = bombObj->AddComponent<BombComponent>(m_BombTimer, m_AmountOfFlames);
-	triggerCollider->AddObserver(bombComp);
+
+
+	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
+	colliderComp->UpdatePosition();
+	cell.ObjectOnCell = bombObj;
+	SoundServiceLocator::GetSoundSystem().Play(0);
+
 	bombComp->AddObserver(this);
 	m_BombsPlaced.emplace_back(bombComp);
 

@@ -27,6 +27,8 @@ namespace Jotar
 		bool CompareTag(const std::string& compareTag) const;
 		void SetTag(std::string tag);
 
+		void RemoveThisColliderFromManager();
+
 		glm::vec4 GetCollisionRect() const;
 		bool GetIsTrigger() const;
 		bool GetIsStatic() const;
@@ -34,9 +36,12 @@ namespace Jotar
 
 		bool IsOverlapping(const glm::vec4& otherCollisionRect);
 		void OnTriggerCollision(TriggerEvent& collisionEvent);
+		void OnColliderCollision(CollideEvent& collisionEvent);
+
+		void UpdatePosition();
 
 	private:
-		void UpdatePosition();
+
 
 		glm::vec4 m_CollisionRect;
 		std::string m_Tag;

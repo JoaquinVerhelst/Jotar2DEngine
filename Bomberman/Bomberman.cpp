@@ -184,8 +184,8 @@ void load()
 
 
 	auto placeBombComp = player1->AddComponent<PlaceBombComponent>();
-	player1->AddComponent<ColliderComponent>(false);
-
+	auto colliderComp = player1->AddComponent<ColliderComponent>(false);
+	colliderComp->SetTag("Killable");
 	player1->GetTransform()->SetPosition(200, 250);
 
 
@@ -202,7 +202,8 @@ void load()
 	auto scoreCompPlayer2 = player2->AddComponent<ScoreComponent>();
 	scoreCompPlayer2->AddObserver(player2ScoreDisplay);
 
-	player2->AddComponent<ColliderComponent>(false);
+	colliderComp = player2->AddComponent<ColliderComponent>(false);
+	colliderComp->SetTag("Killable");
 	player2->GetTransform()->SetPosition(280, 250);
 
 

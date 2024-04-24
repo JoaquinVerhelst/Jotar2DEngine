@@ -41,15 +41,15 @@ void Jotar::BombComponent::OnDestroy()
     m_pSubject->RemoveAllObservers();
 }
 
-void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
-{
-    if (m_IsExploded) return;
-
-    if (triggerEvent.GetOtherCollider()->CompareTag("Explosion"))
-    {
-        OnExplode(m_Range);
-    }
-}
+//void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
+//{
+//    if (m_IsExploded) return;
+//
+//    if (triggerEvent.GetOtherCollider()->CompareTag("Explosion"))
+//    {
+//        OnExplode(m_Range);
+//    }
+//}
 
 void Jotar::BombComponent::AddObserver(Observer<ExplosionEvent>* pObserver)
 {
@@ -59,6 +59,12 @@ void Jotar::BombComponent::AddObserver(Observer<ExplosionEvent>* pObserver)
 void Jotar::BombComponent::RemoveObserver(Observer<ExplosionEvent>* pObserver)
 {
     m_pSubject->RemoveObserver(pObserver);
+}
+
+void Jotar::BombComponent::Explode()
+{
+    if (!m_IsExploded)
+        OnExplode(m_Range);
 }
 
 void Jotar::BombComponent::OnExplode(int range)
@@ -120,6 +126,10 @@ void Jotar::BombComponent::OnExplode(int range)
                         objPtr->Destroy();
                         break;
                     }
+                    else if (collider->CompareTag("Bomb"))
+                    {
+                        objPtr->GetComponent<BombComponent>()->Explode();
+                    }
                 }
 
                 int animationRow = CalculateSpriteSheetRow(dx, dy, range, i);
@@ -137,6 +147,7 @@ void Jotar::BombComponent::OnExplode(int range)
         }
     }
 
+    //GetOwner()->GetComponent<ColliderComponent>()->RemoveThisColliderFromManager();
     GetOwner()->Destroy();
 }
 
@@ -148,7 +159,7 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
     auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Explosion"), explosionPosition);
     texture->SetDestroyOnLastFrame(true);
     explosion->GetTransform()->SetPosition(pos);
-    auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
+    auto triggerCollider = explosion->AddComponent<ColliderComponent>(false, true);
     triggerCollider->SetTag("Explosion");
     int damage = 1;
     auto damageComp = explosion->AddComponent<DamageComponent>(damage);

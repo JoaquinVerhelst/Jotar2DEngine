@@ -83,9 +83,41 @@ bool Jotar::ColliderComponent::IsOverlapping(const glm::vec4& otherCollisionRect
 	return false;
 }
 
-void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& collisionEvent)
+void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 {
-	m_pSubject->NotifyObservers(collisionEvent);
+	m_pSubject->NotifyObservers(triggerEvent);
+}
+
+void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
+{
+	m_pSubject->NotifyObservers(collideEvent);
+
+	const auto& otherCollisionRect = collideEvent.GetOtherCollider()->GetCollisionRect();
+
+	glm::vec2 offset{};
+
+	float horizontalOverlap = 0.0f;
+	if (m_CollisionRect.x < otherCollisionRect.x)
+		horizontalOverlap = otherCollisionRect.x - (m_CollisionRect.x + m_CollisionRect.w);
+	else
+		horizontalOverlap = (otherCollisionRect.x + otherCollisionRect.w) - m_CollisionRect.x;
+
+	float verticalOverlap = 0.0f;
+	if (m_CollisionRect.y < otherCollisionRect.y)
+		verticalOverlap = otherCollisionRect.y - (m_CollisionRect.y + m_CollisionRect.z);
+	else
+		verticalOverlap = (otherCollisionRect.y + otherCollisionRect.z) - (m_CollisionRect.y);
+
+	if (std::abs(horizontalOverlap) < std::abs(verticalOverlap)) {
+
+		offset.x = horizontalOverlap;
+	}
+	else {
+
+		offset.y = verticalOverlap;
+	}
+
+	GetOwner()->GetTransform()->Translate(offset);
 }
 
 void Jotar::ColliderComponent::UpdatePosition()
@@ -98,6 +130,11 @@ void Jotar::ColliderComponent::UpdatePosition()
 void Jotar::ColliderComponent::SetTag(std::string tag)
 {
 	m_Tag = tag;
+}
+
+void Jotar::ColliderComponent::RemoveThisColliderFromManager()
+{
+	SceneManager::GetInstance().GetScene(0).GetCollisionManager().RemoveCollider(this);
 }
 
 void Jotar::ColliderComponent::Start()
