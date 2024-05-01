@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 #include "GameObject.h"
 #include <iostream>
-
+#include "set"
 
 Jotar::CollisionManager::CollisionManager()
     :m_pSceneColliders{}
@@ -21,9 +21,6 @@ void Jotar::CollisionManager::RemoveCollider(ColliderComponent* pCollider)
             return collider == pCollider;
         }),
         m_pSceneColliders.end());
-
-
-    std::cout << "Collider Removed" << '\n';
 }
 
 void Jotar::CollisionManager::FixedUpdate()
@@ -51,7 +48,6 @@ void Jotar::CollisionManager::FixedUpdate()
             }
 
             if (pCollider == pOtherCollider) continue;
-
 
 
             if (pCollider->IsOverlapping(pOtherCollider->GetCollisionRect()))

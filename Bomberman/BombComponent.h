@@ -12,7 +12,7 @@ namespace Jotar
 	class Scene;
 	class ExplosionEvent;
 
-	class BombComponent final : public Component//, public Observer<CollisionEvent>
+	class BombComponent final : public Component, public Observer<CollisionEvent>
 	{
 	public:
 
@@ -23,7 +23,8 @@ namespace Jotar
 		void Update() override;
 		void OnDestroy() override;
 
-		//void OnNotify(const CollisionEvent& event) override;
+		void OnNotify(const CollisionEvent& event) override;
+
 		void AddObserver(Observer<ExplosionEvent>* pObserver);
 		void RemoveObserver(Observer<ExplosionEvent>* pObserver);
 

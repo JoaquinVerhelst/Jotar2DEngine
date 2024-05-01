@@ -125,3 +125,13 @@ CollisionManager& Jotar::Scene::GetCollisionManager()
 	return m_CollisionManager;
 }
 
+void Jotar::Scene::SetCamera(Camera* cameraObj)
+{
+	m_pCameraObject = cameraObj;
+}
+
+Camera* Jotar::Scene::GetCamera() const
+{
+	return m_pCameraObject;
+}
+

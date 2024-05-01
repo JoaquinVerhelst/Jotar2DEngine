@@ -10,17 +10,17 @@
 
 namespace std {
 	template <>
-	struct hash<glm::vec2> {
-		size_t operator()(const glm::vec2& v) const {
+	struct hash<glm::ivec2> {
+		size_t operator()(const glm::ivec2& v) const {
 			// Combine the hash values of the x and y components
 			// You can use any suitable hash function here
-			return hash<float>()(v.x) ^ (hash<float>()(v.y) << 1);
+			return hash<int>()(v.x) ^ (hash<int>()(v.y) << 1);
 		}
 	};
 
 	template <>
-	struct equal_to<glm::vec2> {
-		bool operator()(const glm::vec2& v1, const glm::vec2& v2) const {
+	struct equal_to<glm::ivec2> {
+		bool operator()(const glm::ivec2& v1, const glm::ivec2& v2) const {
 			// Compare the x and y components for equality
 			return v1.x == v2.x && v1.y == v2.y;
 		}
@@ -58,13 +58,12 @@ namespace Jotar
 
 			return false;
 		}
-
 	};
 
 
 
 
-	class WorldGrid : public Singleton<WorldGrid>
+	class WorldGrid final : public Singleton<WorldGrid>
 	{
 	public:
 		void Init(int rows, int columns, int size);

@@ -22,7 +22,7 @@ void Jotar::BreakableWallComponent::OnDestroy()
 
 	collider->AddObserver(pickupComp);
 
-	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetWorldPosition());
+	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
 
 	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	collider->UpdatePosition();

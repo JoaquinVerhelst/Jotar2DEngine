@@ -27,8 +27,6 @@ namespace Jotar
 
 		void OnNotify(const CollisionEvent& eventData) override;
 		void OnDestroy() override;
-		bool IsColliderAlreadyHit(ColliderComponent* otherCollider);
-
 
 		PickUpComponent(const PickUpComponent& other) = delete;
 		PickUpComponent(PickUpComponent&& other) = delete;
@@ -39,9 +37,6 @@ namespace Jotar
 
 		void RandomizePickUpType();
 
-
-		std::vector<ColliderComponent*> m_pAlreadyHitColliders;
-		//TextureComponent* m_pTextureComponent;
 		PickUpType m_PickUpType;
 	};
 }

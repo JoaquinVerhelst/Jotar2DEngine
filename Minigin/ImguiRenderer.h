@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL.h>
-#include "Singleton.h"
 
 namespace Jotar
 {
@@ -44,7 +43,7 @@ namespace Jotar
 
 
 
-	class ImguiRenderer final : public Singleton<ImguiRenderer>
+	class ImguiRenderer final
 	{
 	public:
 		ImguiRenderer();

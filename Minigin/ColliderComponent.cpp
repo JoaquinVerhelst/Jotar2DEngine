@@ -55,6 +55,11 @@ glm::vec4 Jotar::ColliderComponent::GetCollisionRect() const
 	return m_CollisionRect;
 }
 
+void Jotar::ColliderComponent::SetIsTrigger(bool isTrigger)
+{
+	m_IsTrigger = isTrigger;
+}
+
 bool Jotar::ColliderComponent::GetIsTrigger() const
 {
 	return m_IsTrigger;
@@ -83,10 +88,41 @@ bool Jotar::ColliderComponent::IsOverlapping(const glm::vec4& otherCollisionRect
 	return false;
 }
 
+
+void Jotar::ColliderComponent::OnTriggerBegin(TriggerBeginEvent& beginOverlap)
+{
+	m_pSubject->NotifyObservers(beginOverlap);
+	std::cout << "begin Overlap" << '\n';
+}
+
 void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 {
+
+	auto owner = GetOwner();
+	owner->GetName();
+
+	if (!IsColliderAlreadyHit(triggerEvent.GetOtherCollider()))
+	{
+		TriggerBeginEvent beginOverlap = TriggerBeginEvent{ triggerEvent.GetCollider(), triggerEvent.GetOtherCollider() };
+		m_pCollidingColliders.emplace_back(triggerEvent.GetOtherCollider());
+		OnTriggerBegin(beginOverlap);
+	}
+
+	m_pCollidingCollidersThisFrame.emplace_back(triggerEvent.GetOtherCollider());
+
 	m_pSubject->NotifyObservers(triggerEvent);
+
+
+
 }
+
+void Jotar::ColliderComponent::OnTriggerEnd(TriggerEndEvent& endOverlap)
+{
+	m_pSubject->NotifyObservers(endOverlap);
+	std::cout << "End Overlap" << '\n';
+}
+
+
 
 void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 {
@@ -144,9 +180,33 @@ void Jotar::ColliderComponent::Start()
 
 void Jotar::ColliderComponent::FixedUpdate()
 {
-	if (!m_IsStatic)
+	UpdatePosition();
+
+
+	for (size_t i = 0; i < m_pCollidingColliders.size(); ++i)
 	{
-		UpdatePosition();
+		auto foundObj = std::find_if(m_pCollidingCollidersThisFrame.begin(), m_pCollidingCollidersThisFrame.end(), [&](auto* p) { return p == m_pCollidingColliders[i]; });
+
+		if (foundObj == m_pCollidingCollidersThisFrame.end())
+		{
+			TriggerEndEvent endOverlap = { this, m_pCollidingColliders[i] };
+			OnTriggerEnd(endOverlap);
+			m_pCollidingColliders.erase(m_pCollidingColliders.begin() + i);
+		}
 	}
+
+	m_pCollidingCollidersThisFrame.clear();
 }
 
+bool Jotar::ColliderComponent::IsColliderAlreadyHit(ColliderComponent* otherCollider)
+{
+	for (size_t i = 0; i < m_pCollidingColliders.size(); i++)
+	{
+		if (m_pCollidingColliders[i] == otherCollider)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

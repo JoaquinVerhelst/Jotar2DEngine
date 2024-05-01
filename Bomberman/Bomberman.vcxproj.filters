@@ -77,7 +77,10 @@
     <ClCompile Include="AIStatesAndConditions.cpp">
       <Filter>AI</Filter>
     </ClCompile>
-    <ClCompile Include="AIBehaviorComponent.cpp" />
+    <ClCompile Include="AIBehaviorComponent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="AIBehaviorComponent.h">
       <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>GameFIles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

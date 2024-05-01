@@ -37,7 +37,7 @@
 #include <iostream>
 #include "Enums.h"
 #include "ColliderComponent.h"
-
+#include "Camera.h"
 
 #include "JsonLevelLoader.h"
 
@@ -87,6 +87,13 @@ void load()
 	levelLoader->AddComponent<JsonLevelLoader>(scene, "../Data/Json/Level1.json");
 
 
+	glm::ivec4 camRect = { 0, 0, 720, 1080 };
+	glm::ivec4 levelBounds = { 0, 0, 1000, 25*64 };
+
+	auto cameraObj = scene.CreateGameObject("Camera");
+	auto camera = cameraObj->AddComponent<Camera>(camRect, levelBounds);
+
+	scene.SetCamera(camera);
 
 	// logo
 	auto go = scene.CreateGameObject("Logo");
@@ -131,6 +138,9 @@ void load()
 	player1ScoreDisplayObj->AddComponent<TextComponent>("Score: ", font2);
 	auto player1ScoreDisplay = player1ScoreDisplayObj->AddComponent<ScoreDisplayComponent>();
 	player1ScoreDisplayObj->GetTransform()->SetPosition(10, 70);
+
+
+
 
 
 	// PLAYER 2 HUD
@@ -185,8 +195,15 @@ void load()
 
 	auto placeBombComp = player1->AddComponent<PlaceBombComponent>();
 	auto colliderComp = player1->AddComponent<ColliderComponent>(false);
-	colliderComp->SetTag("Killable");
+	colliderComp->SetTag("Player");
 	player1->GetTransform()->SetPosition(200, 250);
+
+
+
+
+
+	camera->SetTarget(player1->GetTransform());
+
 
 
 	//player 2
@@ -202,8 +219,9 @@ void load()
 	auto scoreCompPlayer2 = player2->AddComponent<ScoreComponent>();
 	scoreCompPlayer2->AddObserver(player2ScoreDisplay);
 
+	auto placeBombComp2 = player2->AddComponent<PlaceBombComponent>();
 	colliderComp = player2->AddComponent<ColliderComponent>(false);
-	colliderComp->SetTag("Killable");
+	colliderComp->SetTag("Player");
 	player2->GetTransform()->SetPosition(280, 250);
 
 
@@ -213,10 +231,10 @@ void load()
 	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::DPadDown }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ 0, 1 }));
 	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::DPadRight }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ 1, 0 }));
 	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::DPadLeft }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ -1, 0 }));
-	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonA , InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer1));
-	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer1));
+	//input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonA , InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer1));
+	//input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer1));
 
-	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonX , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp));
+	input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp));
 
 
 
@@ -225,52 +243,50 @@ void load()
 	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::DPadDown }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ 0, 1 }));
 	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::DPadRight }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ 1, 0 }));
 	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::DPadLeft }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ -1, 0 }));
-	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::ButtonA, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer2));
-	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer2));
-
+	//input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::ButtonA, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer2));
+	//input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer2));
+	input.AddControllerBinding(ControllerKey{ 1, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp2));
 
 
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_w }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ 0, -1 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_s }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ 0, 1 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_d }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ 1, 0 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_a }, std::make_unique<MovementCommand>(movementCompPlayer1, glm::vec2{ -1, 0 }));
-	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_t, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer1));
-	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_g, InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer1));
+	//input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_t, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer1));
+	//input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_g, InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer1));
+
+	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_e , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp));
 
 
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_UP }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ 0, -1 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_DOWN }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ 0, 1 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_RIGHT }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ 1, 0 }));
 	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_LEFT }, std::make_unique<MovementCommand>(movementCompPlayer2, glm::vec2{ -1, 0 }));
-	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_y, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer2));
-	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_h, InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer2));
+	//input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_y, InputType::Up }, std::make_unique<TakeDamageCommand>(healthCompPlayer2));
+	//input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_h, InputType::Up }, std::make_unique<AddScoreCommand>(scoreCompPlayer2));
+	input.AddKeyBinding(KeyboardKey{ Jotar::KeyboardButton::Key_m , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp2));
 
 
+	std::cout << '\n';
+	std::cout << '\n';
 
-	//std::cout << '\n';
-	//std::cout << '\n';
+	std::cout << "Player1 Controls: " << '\n';
+	std::cout << "Movement: Controller 1 DPad and WASD" << '\n';
+	std::cout << "E or Button B to Place Bomb for sound" << '\n';
 
-	//std::cout << "Player1 Controls: " << '\n';
-	//std::cout << "Movement: Controller 1 DPad and WASD" << '\n';
-	//std::cout << "T or Button A to remove Health" << '\n';
-	//std::cout << "G or Button B to add Score" << '\n';
+	std::cout << '\n';
+	std::cout << '\n';
 
-	//std::cout << '\n';
-	//std::cout << '\n';
+	std::cout << "Player2 Controls: " << '\n';
+	std::cout << "Movement: Controller 2 DPad and arrow keys" << '\n';
+	std::cout << "M or Button B to add Score" << '\n';
 
-	//std::cout << "Player2 Controls: " << '\n';
-	//std::cout << "Movement: Controller 2 DPad and arrow keys" << '\n';
-	//std::cout << "Y or Button A to remove Health" << '\n';
-	//std::cout << "H or Button B to add Score" << '\n';
-
-	//std::cout << '\n';
-	//std::cout << '\n';
-
-	//std::cout << "R or Button Y Reset Steam achievements" << '\n';
-	//
-	//std::cout << '\n';
-	//std::cout << '\n';
-	// 
+	std::cout << '\n';
+	std::cout << '\n';
+	
+	std::cout << '\n';
+	std::cout << '\n';
+	 
 }
 
 

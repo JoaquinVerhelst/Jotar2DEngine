@@ -23,10 +23,12 @@ int GetOpenGLDriverIndex()
 
 void Jotar::Renderer::Init()
 {
-	SDL_Window* window = GLSDLManager::GetInstance().GetSDLWindow();
+	m_GLSDLManager = std::make_unique<GLSDLManager>();
+
+	SDL_Window* window = m_GLSDLManager->GetWindow();
 
 
-	m_Renderer = SDL_CreateRenderer(window, GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED);
+	m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	if (m_Renderer == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
@@ -38,7 +40,7 @@ void Jotar::Renderer::Init()
 
 	//ImguiRenderer::GetInstance().Init(window, properties);
 
-	SetWireFrameOn(false);
+	//SetWireFrameOn(false);
 }
 
 void Jotar::Renderer::Render() const
@@ -84,6 +86,8 @@ void Jotar::Renderer::Destroy()
 		SDL_DestroyRenderer(m_Renderer);
 		m_Renderer = nullptr;
 	}
+
+	m_GLSDLManager->Destroy();
 }
 
 void Jotar::Renderer::BeginRender() const
@@ -93,7 +97,7 @@ void Jotar::Renderer::BeginRender() const
 
 void Jotar::Renderer::EndRender() const
 {
-	SDL_GL_SwapWindow(GLSDLManager::GetInstance().GetSDLWindow());
+	//SDL_GL_SwapWindow(m_GLSDLManager->GetWindow());
 }
 
 
@@ -133,22 +137,33 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& 
 
 SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
-void Jotar::Renderer::SetWireFrameOn(bool on)
+Jotar::GLSDLManager* Jotar::Renderer::GetGlSDLManager()
 {
-	if (on)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	else
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	return m_GLSDLManager.get();
 }
+
+void Jotar::Renderer::SetViewportPos(SDL_Rect newviewportRect)
+{
+	m_ViewPortRect = newviewportRect;
+	//SDL_RenderSetViewport(m_Renderer, 
+}
+
+//void Jotar::Renderer::SetWireFrameOn(bool on)
+//{
+//	if (on)
+//	{
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	}
+//	else
+//	{
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//	}
+//}
 
 
 
 void Jotar::Renderer::Clear() const
 {
-	glClearColor(0.3f, 0.3f, 0.3f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

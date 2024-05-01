@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "WorldTimeManager.h"
-#include "GLSDLManager.h"
+
 #include "ImguiRenderer.h"
 #include "SoundServiceLocator.h"
 #include "SoundSystem.h"
@@ -18,9 +18,6 @@
 
 Jotar::Minigin::Minigin(const std::string &dataPath)
 {
-
-	GLSDLManager::GetInstance().Init();
-
 	Renderer::GetInstance().Init();
 
 	SoundServiceLocator::RegisterSoundSystem(std::make_unique<LoggingSoundSystem>(std::make_unique<SDL_SoundSystem>()));
@@ -37,7 +34,6 @@ Jotar::Minigin::Minigin(const std::string &dataPath)
 Jotar::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
-	GLSDLManager::GetInstance().Destroy();
 }
 
 void Jotar::Minigin::Run(const std::function<void()>& load)

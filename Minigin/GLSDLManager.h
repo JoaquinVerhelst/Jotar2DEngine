@@ -1,24 +1,23 @@
 #pragma once
 
-#include "Singleton.h"
+//#include "Singleton.h"
 #include "SDL.h"
-
 #include <memory>
-
+#include "glm/glm.hpp"
 
 namespace Jotar
 {
-	class FrameBuffer;
-
 	// TODO: I Will probs refactor this and/or move this code somehwre else or rename this 
-	class GLSDLManager : public Singleton<GLSDLManager>
+
+	class GLSDLManager /*: public Singleton<GLSDLManager>*/
 	{
 	public:
-
+		GLSDLManager();
 		void Init();
 
 
-		SDL_Window* GetSDLWindow();
+		SDL_Window* GetWindow();
+		
 		void Destroy();
 
 	private:

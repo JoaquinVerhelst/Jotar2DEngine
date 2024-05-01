@@ -50,4 +50,25 @@ namespace Jotar
 		~CollideEvent() = default;
 	};
 
+	class TriggerBeginEvent final : public CollisionEvent
+	{
+	public:
+		TriggerBeginEvent(ColliderComponent* collider, ColliderComponent* otherCollider)
+			:CollisionEvent(collider, otherCollider) {}
+
+		~TriggerBeginEvent() = default;
+	};
+
+	class TriggerEndEvent final : public CollisionEvent
+	{
+	public:
+		TriggerEndEvent(ColliderComponent* collider, ColliderComponent* otherCollider)
+			:CollisionEvent(collider, otherCollider) {}
+
+		~TriggerEndEvent() = default;
+	};
+
+
+
+
 }

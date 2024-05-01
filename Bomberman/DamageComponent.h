@@ -12,9 +12,7 @@ namespace Jotar
 	public:
 		DamageComponent(GameObject* owner, int amountOfDamage);
 
-
 		void OnNotify(const CollisionEvent& event) override;
-
 
 		DamageComponent(const DamageComponent& other) = delete;
 		DamageComponent(DamageComponent&& other) = delete;
@@ -23,9 +21,6 @@ namespace Jotar
 
 	private:
 
-		bool IsColliderAlreadyHit(ColliderComponent* otherCollider);
-
-		std::vector<ColliderComponent*> m_pDamagedColliders;
 		int m_Damage;
 
 	};

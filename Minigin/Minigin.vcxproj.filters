@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -61,11 +53,11 @@
     <Filter Include="Engine\Components\PickUps">
       <UniqueIdentifier>{29526f87-3588-48d6-b19e-f27ee8f24cee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ServiceLocator">
-      <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{0d617682-868e-41b7-8e62-e7dc016d2830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ServiceLocator">
+      <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -214,10 +206,10 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="SoundServiceLocator.h">
-      <Filter>ServiceLocator</Filter>
+      <Filter>Engine\ServiceLocator</Filter>
     </ClInclude>
     <ClInclude Include="SoundSystem.h">
-      <Filter>ServiceLocator</Filter>
+      <Filter>Engine\ServiceLocator</Filter>
     </ClInclude>
     <ClInclude Include="AIFiniteStateMachine.h">
       <Filter>Engine\AI</Filter>
@@ -345,16 +337,16 @@
       <Filter>Engine\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="SoundServiceLocator.cpp">
-      <Filter>ServiceLocator</Filter>
+      <Filter>Engine\ServiceLocator</Filter>
     </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="SoundSystem.cpp">
-      <Filter>ServiceLocator</Filter>
+      <Filter>Engine\ServiceLocator</Filter>
     </ClCompile>
     <ClCompile Include="LoggingSoundSystem.cpp">
-      <Filter>ServiceLocator</Filter>
+      <Filter>Engine\ServiceLocator</Filter>
     </ClCompile>
     <ClCompile Include="AIFiniteStateMachine.cpp">
       <Filter>Engine\AI</Filter>

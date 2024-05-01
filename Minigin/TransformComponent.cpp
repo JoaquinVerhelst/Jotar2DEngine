@@ -1,5 +1,9 @@
 #include "TransformComponent.h"
 #include "GameObject.h"
+#include "SceneManager.h"
+#include "Scene.h"
+
+#include "Camera.h"
 
 
 Jotar::TransformComponent::TransformComponent(GameObject* owner)
@@ -19,7 +23,19 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 	if (m_IsPositionDirty)
 		UpdateWorldPosition();
 	
-	return m_WorldPosition;
+	m_WorldProjectionPosition = m_WorldPosition;
+
+	//todo get rid of hardcocded index
+	auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
+	if (camObj != nullptr)
+		m_WorldProjectionPosition += camObj->GetOffset();
+
+
+
+	if (GetOwner()->GetName() == ("Camera"))
+		return m_WorldPosition;
+	else
+		return m_WorldProjectionPosition;
 }
 
 void Jotar::TransformComponent::SetPosition(float x, float y)
@@ -54,6 +70,11 @@ glm::vec2& Jotar::TransformComponent::GetSize()
 	return m_Size;
 }
 
+glm::vec4 Jotar::TransformComponent::GetShape()
+{
+	return glm::vec4(m_WorldPosition.x, m_WorldPosition.y, m_Size.y, m_Size.x);
+}
+
 
 void Jotar::TransformComponent::SetPositionDirty()
 {
@@ -78,6 +99,9 @@ void Jotar::TransformComponent::UpdateWorldPosition()
 		else
 			m_WorldPosition = parent->GetTransform()->GetWorldPosition() + m_LocalPosition;
 	}
+
+
+
 
 	m_IsPositionDirty = false;
 }

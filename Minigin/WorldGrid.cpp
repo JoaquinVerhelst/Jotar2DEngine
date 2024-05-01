@@ -30,23 +30,23 @@ void Jotar::WorldGrid::Init(int rows, int columns, int size)
 
 void Jotar::WorldGrid::Render() const
 {
-    int index = 0;
+    //int index = 0;
 
-    for (const auto& cellPair : m_Grid)
-    {
-        const GridCell& cell = cellPair.second;
-        const glm::vec2& cellPos = cell.WorldPosition;
+    //for (const auto& cellPair : m_Grid)
+    //{
+    //    const GridCell& cell = cellPair.second;
+    //    const glm::vec2& cellPos = cell.WorldPosition;
 
-        SDL_Rect rect = { static_cast<int>(cellPos.x) ,static_cast<int>( cellPos.y), m_CellSize, m_CellSize};
-        if (index % 2)
-            SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
-        else
-            SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
+    //    SDL_Rect rect = { static_cast<int>(cellPos.x) ,static_cast<int>( cellPos.y), m_CellSize, m_CellSize};
+    //    if (index % 2)
+    //        SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
+    //    else
+    //        SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
 
-        SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+    //    SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
 
-        ++index;
-    }
+    //    ++index;
+    //}
 }
 
 std::unordered_map<glm::ivec2, Jotar::GridCell>& Jotar::WorldGrid::GetWorldGrid()

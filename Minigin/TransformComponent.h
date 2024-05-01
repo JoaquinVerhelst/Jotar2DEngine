@@ -26,6 +26,7 @@ namespace Jotar
 		void SetSize(glm::vec2& size);
 		glm::vec2& GetSize();
 
+		glm::vec4 GetShape();
 
 		void SetPositionDirty();
 
@@ -38,6 +39,8 @@ namespace Jotar
 
 		glm::vec2 m_LocalPosition{};
 		glm::vec2 m_WorldPosition{};
+
+		glm::vec2 m_WorldProjectionPosition{};
 
 		glm::vec2 m_Size{ 64, 64 };
 		int m_Scale = 1;

@@ -1,26 +1,35 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Component.h"
 
-namespace JV
+
+namespace Jotar
 {
-	class Camera
+	class GameObject;
+	class  TransformComponent;
+
+	class Camera : public Component 
 	{
 	public:
-		Camera(float left, float right, float bottom, float top);
+		explicit Camera(GameObject* owner, glm::ivec4& cameraRect, glm::ivec4& levelBoundaries);
 
-		const glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
-		const glm::mat4 GetViewMatrix() const { return m_ViewMatrix; }
-		const glm::mat4 GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+		void LateUpdate() override;
+		void SetTarget(TransformComponent* target);
+
+		glm::vec2 GetOffset();
+		
 
 	private:
-		// DONT FORGET, THIS NEEDS TO BE CALLED after CHANGING POS AND ROT OR WHATEVER, not implemented now cuz this is going to be refactored probs
-		void CalculateViewMatrix();
+
+		glm::ivec2 Track(const glm::ivec4& target) const;
+		void Clamp(glm::ivec2& targetPos) const;
 
 
-		glm::mat4 m_ProjectionMatrix;
-		glm::mat4 m_ViewMatrix;
-		glm::mat4 m_ViewProjectionMatrix;
+		glm::vec2 m_Offset;
 
+		glm::ivec4 m_LevelBoundaries;
+		glm::ivec4 m_CameraRect;
+		TransformComponent* m_Target;
 	};
 
 }

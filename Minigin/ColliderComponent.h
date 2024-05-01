@@ -30,17 +30,26 @@ namespace Jotar
 		void RemoveThisColliderFromManager();
 
 		glm::vec4 GetCollisionRect() const;
+		void SetIsTrigger(bool isTrigger);
 		bool GetIsTrigger() const;
 		bool GetIsStatic() const;
 		TransformComponent* GetTransform();
 
 		bool IsOverlapping(const glm::vec4& otherCollisionRect);
+
+
+		void OnTriggerBegin(TriggerBeginEvent& collisionEvent);
 		void OnTriggerCollision(TriggerEvent& collisionEvent);
+		void OnTriggerEnd(TriggerEndEvent& collisionEvent);
+
+
 		void OnColliderCollision(CollideEvent& collisionEvent);
 
 		void UpdatePosition();
 
 	private:
+
+		bool IsColliderAlreadyHit(ColliderComponent* otherCollider);
 
 
 		glm::vec4 m_CollisionRect;
@@ -49,5 +58,9 @@ namespace Jotar
 		bool m_IsStatic;
 		bool m_IsTrigger;
 		std::unique_ptr<Subject<CollisionEvent>> m_pSubject;
+
+
+		std::vector<ColliderComponent*> m_pCollidingColliders;
+		std::vector<ColliderComponent*> m_pCollidingCollidersThisFrame;
 	};
 }

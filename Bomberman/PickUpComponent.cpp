@@ -17,52 +17,38 @@ Jotar::PickUpComponent::PickUpComponent(GameObject* owner)
 
 void Jotar::PickUpComponent::OnNotify(const CollisionEvent& eventData)
 {
-    auto* otherCollider = eventData.GetOtherCollider();
-
-    if (IsColliderAlreadyHit(otherCollider)) return;
-
-    if (otherCollider->GetOwner()->HasComponent<PlaceBombComponent>())
+    if (typeid(eventData) == typeid(TriggerBeginEvent))
     {
-        SoundServiceLocator::GetSoundSystem().Play(2);
+        auto* otherCollider = eventData.GetOtherCollider();
 
-        switch (m_PickUpType)
+        if (otherCollider->GetOwner()->HasComponent<PlaceBombComponent>())
         {
-        case Jotar::PickUpType::ExtraBomb:
-            eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->UpgradeMaxAmountOfBombs();
-            break;
-        case Jotar::PickUpType::Detonator:
-            eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->GiveDetonator();
-            break;
-        case Jotar::PickUpType::ExtraExplosionRange:
-            eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->UpgradeExplosionRange();
-            break;
-        default:
-            break;
+            SoundServiceLocator::GetSoundSystem().Play(2, 80);
+
+            switch (m_PickUpType)
+            {
+            case Jotar::PickUpType::ExtraBomb:
+                eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->UpgradeMaxAmountOfBombs();
+                break;
+            case Jotar::PickUpType::Detonator:
+                eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->GiveDetonator();
+                break;
+            case Jotar::PickUpType::ExtraExplosionRange:
+                eventData.GetOtherCollider()->GetOwner()->GetComponent<PlaceBombComponent>()->UpgradeExplosionRange();
+                break;
+            default:
+                break;
+            }
+
+            GetOwner()->Destroy();
         }
-
-        GetOwner()->Destroy();
     }
-
-    m_pAlreadyHitColliders.emplace_back(eventData.GetOtherCollider());
 }
 
 void Jotar::PickUpComponent::OnDestroy()
 {
 }
 
-
-bool Jotar::PickUpComponent::IsColliderAlreadyHit(ColliderComponent* otherCollider)
-{
-    for (size_t i = 0; i < m_pAlreadyHitColliders.size(); i++)
-    {
-        if (m_pAlreadyHitColliders[i] == otherCollider)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
 
 void Jotar::PickUpComponent::RandomizePickUpType()
 {

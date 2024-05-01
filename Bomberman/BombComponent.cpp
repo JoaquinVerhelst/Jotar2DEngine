@@ -11,6 +11,9 @@
 #include "SoundServiceLocator.h"
 #include "ExplosionEvent.h"
 
+
+#include <iostream>
+
 Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime, int range)
 	: Component(owner)
 	, m_ExplodeTime{ explodeTime }
@@ -41,15 +44,22 @@ void Jotar::BombComponent::OnDestroy()
     m_pSubject->RemoveAllObservers();
 }
 
-//void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
-//{
-//    if (m_IsExploded) return;
-//
-//    if (triggerEvent.GetOtherCollider()->CompareTag("Explosion"))
-//    {
-//        OnExplode(m_Range);
-//    }
-//}
+
+void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
+{
+    if (m_IsExploded) return;
+
+
+    if (typeid(triggerEvent) == typeid(TriggerEndEvent))
+    {
+        std::cout << "On Collsiion ENd" << '\n';
+
+        if (triggerEvent.GetOtherCollider()->CompareTag("Player"))
+        {
+            GetOwner()->GetComponent<ColliderComponent>()->SetIsTrigger(false);
+        }
+    }
+}
 
 void Jotar::BombComponent::AddObserver(Observer<ExplosionEvent>* pObserver)
 {
@@ -71,7 +81,7 @@ void Jotar::BombComponent::OnExplode(int range)
 {
     m_IsExploded = true;
 
-    SoundServiceLocator::GetSoundSystem().Play(1);
+    SoundServiceLocator::GetSoundSystem().Play(1, 100);
     ExplosionEvent explosionevent{};
     m_pSubject->NotifyObservers(explosionevent);
 

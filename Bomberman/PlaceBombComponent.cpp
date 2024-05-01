@@ -23,7 +23,7 @@ Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
 
 void Jotar::PlaceBombComponent::OnNotify(const ExplosionEvent&)
 {
-	std::cout << "BombRemoved" << '\n';
+	//std::cout << "BombRemoved" << '\n';
 	m_BombsPlaced.erase(m_BombsPlaced.begin());
 }
 
@@ -46,7 +46,7 @@ void Jotar::PlaceBombComponent::PlaceBomb()
 {
 	if (m_BombsPlaced.size() >= m_MaxAmountOfBombs) return;
 
-	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetWorldPosition());
+	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
 
 	if (cell.ObjectOnCell.expired())
 	{
@@ -78,14 +78,21 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	glm::vec2 sizeVec = { size, size };
 
 	bombObj->GetTransform()->SetSize({ sizeVec });
-	auto colliderComp = bombObj->AddComponent<ColliderComponent>(true);
+	auto colliderComp = bombObj->AddComponent<ColliderComponent>(true, true);
 	colliderComp->SetTag("Bomb");
+
 	auto bombComp = bombObj->AddComponent<BombComponent>(m_BombTimer, m_AmountOfFlames);
 
+	colliderComp->AddObserver(bombComp);
+
 	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
-	colliderComp->UpdatePosition();
+	//colliderComp->UpdatePosition();
 	cell.ObjectOnCell = bombObj;
-	SoundServiceLocator::GetSoundSystem().Play(0);
+
+
+
+	SoundServiceLocator::GetSoundSystem().Play(0, 64);
+
 
 	bombComp->AddObserver(this);
 	m_BombsPlaced.emplace_back(bombComp);
