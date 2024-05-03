@@ -77,7 +77,7 @@ namespace Jotar
 		std::unordered_map<glm::ivec2, GridCell>& GetWorldGrid();
 
 		const int GetCellSize() const;
-		const glm::vec2& GetGridSize() const;
+		const glm::ivec2& GetGridSize() const;
 		const GridCell& GetGridCellByID(const glm::ivec2& ID) const;
 		GridCell& GetGridCellByID(const glm::ivec2& ID);
 		const GridCell& GetGridCellByPosition(const glm::vec2& position) const;
@@ -91,7 +91,7 @@ namespace Jotar
 		WorldGrid() = default;
 		std::unordered_map<glm::ivec2, GridCell> m_Grid;
 		
-		glm::vec2 m_GridSize;
+		glm::ivec2 m_GridSize;
 		int m_CellSize;
 	};
 }

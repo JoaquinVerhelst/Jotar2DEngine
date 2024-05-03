@@ -92,12 +92,10 @@ bool Jotar::ColliderComponent::IsOverlapping(const glm::vec4& otherCollisionRect
 void Jotar::ColliderComponent::OnTriggerBegin(TriggerBeginEvent& beginOverlap)
 {
 	m_pSubject->NotifyObservers(beginOverlap);
-	std::cout << "begin Overlap" << '\n';
 }
 
 void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 {
-
 	auto owner = GetOwner();
 	owner->GetName();
 
@@ -110,16 +108,12 @@ void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 
 	m_pCollidingCollidersThisFrame.emplace_back(triggerEvent.GetOtherCollider());
 
-	m_pSubject->NotifyObservers(triggerEvent);
-
-
-
+	//m_pSubject->NotifyObservers(triggerEvent);
 }
 
 void Jotar::ColliderComponent::OnTriggerEnd(TriggerEndEvent& endOverlap)
 {
 	m_pSubject->NotifyObservers(endOverlap);
-	std::cout << "End Overlap" << '\n';
 }
 
 

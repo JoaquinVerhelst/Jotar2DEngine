@@ -39,6 +39,8 @@
 #include "ColliderComponent.h"
 #include "Camera.h"
 
+#include "AIBehaviorComponent.h"
+
 #include "JsonLevelLoader.h"
 
 
@@ -177,6 +179,17 @@ void load()
 	auto explosion = scene.CreateGameObject("Explosion");
 	explosion->AddComponent<TextureComponent>("../Data/Sprites/Explosions.png", false, 4, 7);
 	explosion->GetTransform()->SetPosition(200, 50);
+
+	// AI - ENEMY
+
+	auto enemy = scene.CreateGameObject("enemy");
+	enemy->AddComponent<TextureComponent>("../Data/Sprites/bomberman.png");
+	enemy->AddComponent<MovementComponent>(60.f);
+	enemy->AddComponent<AIBehaviorComponent>();
+	enemy->AddComponent<ColliderComponent>(false);
+
+	enemy->GetTransform()->SetPosition(200, 100);
+
 
 	//Playerss
 

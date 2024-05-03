@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AIBehaviorComponent.cpp" />
+    <ClCompile Include="AIStates.cpp" />
     <ClCompile Include="AIStatesAndConditions.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
@@ -174,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIBehaviorComponent.h" />
+    <ClInclude Include="AIStates.h" />
     <ClInclude Include="AIStatesAndConditions.h" />
     <ClInclude Include="BombComponent.h" />
     <ClInclude Include="BombermanComponent.h" />

@@ -31,7 +31,6 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 		m_WorldProjectionPosition += camObj->GetOffset();
 
 
-
 	if (GetOwner()->GetName() == ("Camera"))
 		return m_WorldPosition;
 	else

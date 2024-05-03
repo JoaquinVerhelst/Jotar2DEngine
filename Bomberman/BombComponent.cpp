@@ -47,18 +47,9 @@ void Jotar::BombComponent::OnDestroy()
 
 void Jotar::BombComponent::OnNotify(const CollisionEvent& triggerEvent)
 {
-    if (m_IsExploded) return;
-
-
-    if (typeid(triggerEvent) == typeid(TriggerEndEvent))
-    {
-        std::cout << "On Collsiion ENd" << '\n';
-
+    if (!m_IsExploded && typeid(triggerEvent) == typeid(TriggerEndEvent))
         if (triggerEvent.GetOtherCollider()->CompareTag("Player"))
-        {
             GetOwner()->GetComponent<ColliderComponent>()->SetIsTrigger(false);
-        }
-    }
 }
 
 void Jotar::BombComponent::AddObserver(Observer<ExplosionEvent>* pObserver)

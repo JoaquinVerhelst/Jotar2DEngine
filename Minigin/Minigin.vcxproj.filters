@@ -23,9 +23,6 @@
     <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29">
       <UniqueIdentifier>{6e87a317-da56-470b-8493-444256f88fc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Buffers">
-      <UniqueIdentifier>{b5df5592-e9fd-4922-8e89-6255d79bd383}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Shader">
       <UniqueIdentifier>{6ac68f5a-571d-405e-9344-613703719cab}</UniqueIdentifier>
     </Filter>
@@ -58,6 +55,9 @@
     </Filter>
     <Filter Include="Engine\ServiceLocator">
       <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers">
+      <UniqueIdentifier>{b5df5592-e9fd-4922-8e89-6255d79bd383}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,16 +134,16 @@
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
     </ClInclude>
     <ClInclude Include="FrameBuffer.h">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="GlFrameBuffer.h">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="ShaderComponent.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
     </ClInclude>
     <ClInclude Include="GLBuffers.h">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="GLTexture2D.h">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
@@ -152,7 +152,7 @@
       <Filter>Engine\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="Buffers.h">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Engine\Input</Filter>
@@ -289,16 +289,16 @@
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
     </ClCompile>
     <ClCompile Include="FrameBuffer.cpp">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="GlFrameBuffer.cpp">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="ShaderComponent.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader</Filter>
     </ClCompile>
     <ClCompile Include="GLBuffers.cpp">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="GLTexture2D.cpp">
       <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
@@ -307,7 +307,7 @@
       <Filter>Engine\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="Buffers.cpp">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Buffers</Filter>
+      <Filter>Engine\OpenGLGraphics%28NOTREADY%29\Shader\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Engine\Input</Filter>

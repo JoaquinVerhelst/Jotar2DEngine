@@ -63,10 +63,12 @@ void Jotar::Renderer::Render() const
 
 
 
-	SDL_RenderClear(m_Renderer);
+
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	
+	SDL_RenderClear(m_Renderer);
+
+
 	WorldGrid::GetInstance().Render();
 	SceneManager::GetInstance().Render();
 	//m_ImguiRenderer->Render();

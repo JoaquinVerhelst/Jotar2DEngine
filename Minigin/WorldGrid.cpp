@@ -60,7 +60,7 @@ const int Jotar::WorldGrid::GetCellSize() const
     return m_CellSize;
 }
 
-const glm::vec2& Jotar::WorldGrid::GetGridSize() const
+const glm::ivec2& Jotar::WorldGrid::GetGridSize() const
 {
     return m_GridSize;
 }
@@ -126,28 +126,20 @@ Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& positi
 std::vector<Jotar::GridCell> Jotar::WorldGrid::GetConnectedCellsFromIndex(glm::ivec2 cellIndex) const
 {
     std::vector<GridCell> connectedCells;
+    // Define the offsets for the adjacent cells (excluding diagonals)
+    std::vector<glm::ivec2> offsets = { {0, -1}, {-1, 0}, {1, 0}, {0, 1} };
 
-    for (int i = -1; i <= 1; ++i)
+    for (const auto& offset : offsets)
     {
-        for (int j = -1; j <= 1; ++j)
+        glm::ivec2 neighborIndex(cellIndex.x + offset.x, cellIndex.y + offset.y);
+
+        if (m_Grid.find(neighborIndex) != m_Grid.end())
         {
-            if (i == 0 && j == 0)
-                continue;
-
-            glm::ivec2 neighborIndex(cellIndex.x + i, cellIndex.y + j);
-
-            // Check if the neighbor index is within the grid
-            if (m_Grid.find(neighborIndex) != m_Grid.end())
+            if (m_Grid.at(neighborIndex).IsConnected(cellIndex))
             {
-                // Check if the neighbor cell is connected to the current cell
-                if (m_Grid.at(neighborIndex).IsConnected(cellIndex))
-                {
-                    // Add the connected neighbor cell to the list
-                    connectedCells.push_back(m_Grid.at(neighborIndex));
-                }
+                connectedCells.push_back(m_Grid.at(neighborIndex));
             }
         }
     }
-
     return connectedCells;
 }

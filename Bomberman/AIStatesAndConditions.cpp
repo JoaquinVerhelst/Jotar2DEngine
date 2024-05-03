@@ -18,7 +18,7 @@
 //
 //	if (m_CurrentDirection == glm::vec2{0, 0})
 //	{
-//		// Go to the next point of the path
+//		 Go to the next point of the path
 //		glm::vec2 dir = m_Path[0] - moveComp->GetOwner()->GetTransform()->GetWorldPosition();
 //
 //		if (dir.x == 0 && dir.y <= 0) // Up
@@ -33,13 +33,13 @@
 //
 //	moveComp->Move(m_CurrentDirection);
 //
-//	// When reached, remove point from path, and go to the next point
+//	 When reached, remove point from path, and go to the next point
 //	if (glm::distance(moveComp->GetTransform()->GetWorldPosition(), m_Path[0]) < 1)
 //	{
 //		m_Path.erase(m_Path.begin());
 //		m_CurrentDirection = glm::vec2{ 0,0 };
 //	}
-//	// if its the path end -> Go to Idle
+//	 if its the path end -> Go to Idle
 //	if (m_Path.empty())
 //	{
 //		pBlackboard->ChangeData("HasFinishedThePath", true);
