@@ -5,6 +5,7 @@
 #include "PickUpComponent.h"
 #include "ColliderComponent.h"
 
+#include "GameManager.h"
 #include "WorldGrid.h"
 
 Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
@@ -22,7 +23,7 @@ void Jotar::BreakableWallComponent::OnDestroy()
 
 	collider->AddObserver(pickupComp);
 
-	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
+	auto& cell = GameManager::GetInstance().GetWorldGrid()->GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
 
 	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	collider->UpdatePosition();

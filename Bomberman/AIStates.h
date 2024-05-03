@@ -45,7 +45,7 @@ namespace Jotar
 	};
 
 
-	class GoToTargetAIState final : public AIState
+	class GoToTargetAIState : public AIState
 	{
 	public:
 		GoToTargetAIState(AIBehaviorComponent* pAiComp);
@@ -53,20 +53,38 @@ namespace Jotar
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
 		virtual void OnExit() override;
-
 		void SetPath(std::vector<glm::vec2>& path);
 		std::vector<glm::vec2> GetPath() const;
-	private:
+
+	protected:
+		void CalculateDirection(glm::vec2& pathPos, glm::vec2& AiPos);
+		void CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos);
+
 		MovementComponent* m_pMovementComp;
 		std::vector<glm::vec2> m_Path{};
-		glm::vec2 m_CurrentDirection{};
+		glm::ivec2 m_CurrentDirection{};
+	};
+
+	class ChaseTargetAIState final : public GoToTargetAIState
+	{
+	public:
+		ChaseTargetAIState(AIBehaviorComponent* pAiComp);
+
+		virtual void OnEnter() override;
+		virtual AIState* OnHandle() override;
+		virtual void OnExit() override;
+
+	private:
+
+		float m_TimerCounter;
+		float m_ResetPathTime;
 	};
 
 
-	class CalculateTargetAIState final : public AIState
+	class CalculateNextTargetAIState final : public AIState
 	{
 	public:
-		CalculateTargetAIState(AIBehaviorComponent* pAiComp);
+		CalculateNextTargetAIState(AIBehaviorComponent* pAiComp);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
@@ -74,10 +92,12 @@ namespace Jotar
 	private:
 		int CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex);
 		glm::ivec2 GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange);
+		bool CalculatePath(const GridCell& startCell, const GridCell& endCell);
 
 		std::unique_ptr<NavigationSystem> m_pNavigationSystem;
 		bool m_IsPathFound;
 	};
+
 
 
 

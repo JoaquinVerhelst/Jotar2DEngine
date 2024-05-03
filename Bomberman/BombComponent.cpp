@@ -11,7 +11,7 @@
 #include "SoundServiceLocator.h"
 #include "ExplosionEvent.h"
 
-
+#include "GameManager.h"
 #include <iostream>
 
 Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime, int range)
@@ -76,9 +76,11 @@ void Jotar::BombComponent::OnExplode(int range)
     ExplosionEvent explosionevent{};
     m_pSubject->NotifyObservers(explosionevent);
 
+    auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
+
 
     auto pos = GetOwner()->GetTransform()->GetLocalPosition();
-    auto& centerCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
+    auto& centerCell = worldGrid->GetGridCellByPosition(pos);
 
 
     const std::vector<std::pair<int, int>> directions = {
@@ -88,8 +90,8 @@ void Jotar::BombComponent::OnExplode(int range)
         {1, 0}   // Right
     };
 
-    auto& worldGrid = WorldGrid::GetInstance();
-    auto gridSize = worldGrid.GetGridSize();
+
+    auto gridSize = worldGrid->GetGridSize();
     //int cellSize = worldGrid.GetCellSize();
     auto centerIndex = centerCell.Index;
 
@@ -112,7 +114,7 @@ void Jotar::BombComponent::OnExplode(int range)
             if (x >= 0 && x < gridSize.x &&
                 y >= 0 && y < gridSize.y)
             {
-                auto& cell = worldGrid.GetGridCellByID({ x,y });
+                auto& cell = worldGrid->GetGridCellByID({ x,y });
 
                 if (auto objPtr = cell.ObjectOnCell.lock())
                 {

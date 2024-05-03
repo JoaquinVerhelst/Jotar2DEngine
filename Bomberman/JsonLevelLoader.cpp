@@ -9,6 +9,7 @@
 #include "BreakableWallComponent.h"
 #include "TextureComponent.h"
 #include <random>
+#include "GameManager.h"
 
 using json = nlohmann::json;
 
@@ -46,8 +47,8 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
 
         const auto& layout = levelLayout["layout"];
 
-        auto& worldGrid = WorldGrid::GetInstance();
-        worldGrid.Init(gridRows, gridColumns, gridSize);
+        GameManager::GetInstance().ResetAndInitializeWorldGrid(gridRows, gridColumns, gridSize);
+        auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 
 
         // Iterate over the layout array
@@ -62,14 +63,14 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
                 if (tile == '1')
                 {
                     auto wall = CreateUnbreakableWall(scene);
-                    auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    auto& cell = worldGrid->GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
                     cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
                 if (tile == '2')
                 {
                     auto wall = CreateBreakableWall(scene);
-                    auto& cell = worldGrid.GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    auto& cell = worldGrid->GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
                     cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
@@ -123,7 +124,7 @@ void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scen
     std::uniform_int_distribution<int> distribX(0, rows - 1); // Random distribution for X coordinate
     std::uniform_int_distribution<int> distribY(0, columns - 1);    // Random distribution for Y coordinate
 
-    auto& worldGrid = WorldGrid::GetInstance();
+    auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 
     int wallsPlaced = 0;
  
@@ -132,7 +133,7 @@ void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scen
         int randomX = distribX(gen); // Generate random X coordinate
         int randomY = distribY(gen); // Generate random Y coordinate
 
-        auto& cell = worldGrid.GetGridCellByID({ randomX, randomY });
+        auto& cell = worldGrid->GetGridCellByID({ randomX, randomY });
 
         if (cell.ObjectOnCell.expired())
         {

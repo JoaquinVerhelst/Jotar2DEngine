@@ -41,6 +41,7 @@
 
 #include "AIBehaviorComponent.h"
 
+#include "GameManager.h"
 #include "JsonLevelLoader.h"
 
 
@@ -213,7 +214,7 @@ void load()
 
 
 
-
+	GameManager::GetInstance().SetPlayerOne(player1);
 
 	camera->SetTarget(player1->GetTransform());
 

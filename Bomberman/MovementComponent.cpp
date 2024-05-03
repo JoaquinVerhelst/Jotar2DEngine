@@ -19,7 +19,7 @@ void Jotar::MovementComponent::Move(const glm::ivec2& dir)
 	auto newPos = Walk(dir, ourPos);
 	//newPos += static_cast<glm::vec2>(dir) * m_MovementSpeed * WorldTimeManager::GetInstance().GetDeltaTime();
 
-	m_pTransformComponent->SetPosition(newPos);
+	m_pTransformComponent->Translate(newPos);
 }
 
 Jotar::TransformComponent* Jotar::MovementComponent::GetTransform()
@@ -47,23 +47,23 @@ glm::vec2 Jotar::MovementComponent::Walk(glm::ivec2 direction, const glm::vec2& 
 	return { 0,0 };
 }
 //
-glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float x, float y)
+glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float x, float )
 {
 	float deltaTime = WorldTimeManager::GetInstance().GetDeltaTime();
 
 	double offset = std::round((static_cast<int>(x) + 32) % static_cast<int>(64));
 
-    glm::vec2 newPos = { x, y };
+    glm::vec2 newPos{ };
 
 	if (offset == 0)
 	{
-        newPos.y += (direction == 1 ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
-        newPos.x = static_cast<float>(std::round(static_cast<int>(newPos.x)));
+        newPos.y = (direction == 1 ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
+        newPos.x = 0;
 	}
 	else
 	{
-        newPos.x += (offset >= 64 / 2.f ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
-        newPos.y = static_cast<float>(std::round(static_cast<int>(newPos.y)));
+        newPos.x = (offset >= 64 / 2.f ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
+        newPos.y = 0;
 	}
 
 	return newPos;

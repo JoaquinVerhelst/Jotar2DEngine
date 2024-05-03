@@ -202,9 +202,6 @@
     <ClInclude Include="Enums.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="WorldGrid.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="SoundServiceLocator.h">
       <Filter>Engine\ServiceLocator</Filter>
     </ClInclude>
@@ -338,9 +335,6 @@
     </ClCompile>
     <ClCompile Include="SoundServiceLocator.cpp">
       <Filter>Engine\ServiceLocator</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldGrid.cpp">
-      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="SoundSystem.cpp">
       <Filter>Engine\ServiceLocator</Filter>

@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 #include "TextureComponent.h"
 #include "SoundServiceLocator.h"
+#include "GameManager.h"
 
 
 #include <iostream>
@@ -46,7 +47,7 @@ void Jotar::PlaceBombComponent::PlaceBomb()
 {
 	if (m_BombsPlaced.size() >= m_MaxAmountOfBombs) return;
 
-	auto& cell = WorldGrid::GetInstance().GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
+	auto& cell = GameManager::GetInstance().GetWorldGrid()->GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
 
 	if (cell.ObjectOnCell.expired())
 	{
@@ -74,7 +75,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	// TODO get rid of hardcoded scene index
 	Scene& scene = SceneManager::GetInstance().GetScene(0);
 	auto bombObj = scene.CreateGameObject("Bomb");
-	auto size = WorldGrid::GetInstance().GetCellSize() / 1.2f;
+	auto size = GameManager::GetInstance().GetWorldGrid()->GetCellSize();
 	glm::vec2 sizeVec = { size, size };
 
 	bombObj->GetTransform()->SetSize({ sizeVec });

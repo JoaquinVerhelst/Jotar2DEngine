@@ -51,23 +51,19 @@ namespace Jotar
 
 		bool IsConnected(glm::ivec2 cellIndex) const
 		{
-			if (std::abs(cellIndex.y - Index.y) == 1)
-				return true;
-			else if (std::abs(cellIndex.x - Index.x) == 1)
-				return true;
-
-			return false;
+			return (std::abs(cellIndex.x - Index.x) == 1 && cellIndex.y == Index.y) ||
+				(std::abs(cellIndex.y - Index.y) == 1 && cellIndex.x == Index.x);
 		}
 	};
 
 
 
 
-	class WorldGrid final : public Singleton<WorldGrid>
+	class WorldGrid final
 	{
 	public:
-		void Init(int rows, int columns, int size);
-		void Render() const;
+
+		explicit WorldGrid(int rows, int columns, int size);
 
 		WorldGrid(const WorldGrid& other) = delete;
 		WorldGrid(WorldGrid&& other) = delete;
@@ -83,14 +79,11 @@ namespace Jotar
 		const GridCell& GetGridCellByPosition(const glm::vec2& position) const;
 		GridCell& GetGridCellByPosition(const glm::vec2& position);
 
-
 		std::vector<GridCell> GetConnectedCellsFromIndex(glm::ivec2 cellIndex) const;
 
 	private:
-		friend class Singleton<WorldGrid>;
-		WorldGrid() = default;
+
 		std::unordered_map<glm::ivec2, GridCell> m_Grid;
-		
 		glm::ivec2 m_GridSize;
 		int m_CellSize;
 	};

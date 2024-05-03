@@ -2,7 +2,7 @@
 #include "WorldGrid.h"
 #include <memory>
 
-
+#include "GameManager.h"
 #include <iostream>
 
 
@@ -30,6 +30,9 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 
 	openList.emplace_back(startNode);
 
+	auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
+
+
 	while (!openList.empty())
 	{
 		//	2.A: Get the node with lowest F score
@@ -44,9 +47,9 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 		//	2.C: Else, we get all the connected cells of the node
 		//	Get all the connections from the currentNode(from 2. A) and loop over them
 
-		for (auto connectedCell : WorldGrid::GetInstance().GetConnectedCellsFromIndex(currentNode.CellIndex))
+		for (auto connectedCell : worldGrid->GetConnectedCellsFromIndex(currentNode.CellIndex))
 		{
-			std::cout << connectedCell.Index.x << " " << connectedCell.Index.y << '\n';
+			//std::cout << connectedCell.Index.x << " " << connectedCell.Index.y << '\n';
 
 			// if it has an object on it, blocking the path
 			if (!connectedCell.ObjectOnCell.expired()) continue;
@@ -146,7 +149,7 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 			return node.CellIndex == currentNode.CellIndex;
 			}), openList.end());
 	}
-
+	 
 
 	//	3. Reconstruct path from last connection to start node
 	//	Track back from the currentRecord until the node of the record is the startnode of the overall path
@@ -156,7 +159,7 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 		path.emplace_back(currentNode.Position);
 
 		auto iter = std::find_if(closedList.begin(), closedList.end(), [&currentNode](const Node& node) {
-			return WorldGrid::GetInstance().GetGridCellByID(currentNode.CellIndex).IsConnected(node.CellIndex);
+			return GameManager::GetInstance().GetWorldGrid()->GetGridCellByID(currentNode.CellIndex).IsConnected(node.CellIndex);
 			});
 
 		if (iter != closedList.end())

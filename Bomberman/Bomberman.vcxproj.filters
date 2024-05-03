@@ -80,9 +80,14 @@
     <ClCompile Include="AIBehaviorComponent.cpp">
       <Filter>AI</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="AIStates.cpp">
       <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>GameFIles</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>GameFIles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="AIStates.h">
       <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>GameFIles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

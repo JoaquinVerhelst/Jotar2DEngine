@@ -3,13 +3,14 @@
 #include "GameObject.h"
 #include <iostream>
 
-#include "WorldGrid.h"
+#include "GameManager.h"
 #include <random>
 #include "AIBehaviorComponent.h"
 
 #include "SceneManager.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "WorldTimeManager.h"
 
 Jotar::IdleAIState::IdleAIState(AIBehaviorComponent* pAiComp)
 	: AIState(pAiComp)
@@ -60,14 +61,13 @@ Jotar::AIState* Jotar::GoToTargetAIState::OnHandle()
 	//std::cout << "GOTO TARGEt On handle " << '\n';
 
 
-	auto& pos = m_pMovementComp->GetTransform()->GetWorldPosition();
+	auto pos = m_pMovementComp->GetTransform()->GetWorldPosition();
 
-
+	//if its the path end -> Go to Idle
 	if (m_Path.empty())
 	{
 		return m_pAIBehaviorComp->GetIdleState();
 	}
-
 
 	glm::vec2 pathPos = m_Path[0];
 
@@ -76,34 +76,11 @@ Jotar::AIState* Jotar::GoToTargetAIState::OnHandle()
 	if (camObj != nullptr)
 		pathPos += camObj->GetOffset();
 
-
-	//Go to the next point of the path
-	glm::vec2 dir = pathPos - pos;
-
-	if (dir.x < 0) // Moving left
-		m_CurrentDirection = { -1, 0 };
-	else if (dir.x > 0) // Moving right
-		m_CurrentDirection = { 1, 0 };
-	else if (dir.y < 0) // Moving up
-		m_CurrentDirection = { 0, -1 };
-	else if (dir.y > 0) // Moving down
-		m_CurrentDirection = { 0, 1 };
+	CalculateDirection(pathPos, pos);
 	
-
 	m_pMovementComp->Move(m_CurrentDirection);
 
-	// When reached, remove point from path, and go to the next point
-	auto distance = glm::distance(pos, pathPos);
-
-
-	if (distance * distance < 5)
-	{
-		m_Path.erase(m_Path.begin());
-		m_CurrentDirection = glm::vec2{ 0,0 };
-	}
-
-	//if its the path end -> Go to Idle
-
+	CheckDistanceToPoint(pathPos, pos);
 
 	return nullptr;
 }
@@ -124,29 +101,108 @@ std::vector<glm::vec2> Jotar::GoToTargetAIState::GetPath() const
 	return m_Path;
 }
 
+void Jotar::GoToTargetAIState::CalculateDirection(glm::vec2& pathPos, glm::vec2& AiPos)
+{
+	//Go to the next point of the path
+	glm::vec2 dir = pathPos - AiPos;
+
+	if (dir.x < 0) // Moving left
+		m_CurrentDirection = { -1, 0 };
+	else if (dir.x > 0) // Moving right
+		m_CurrentDirection = { 1, 0 };
+	else if (dir.y < 0) // Moving up
+		m_CurrentDirection = { 0, -1 };
+	else if (dir.y > 0) // Moving down
+		m_CurrentDirection = { 0, 1 };
+}
+
+void Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos)
+{
+	auto distance = glm::distance(AiPos, pathPos);
+
+	if (distance * distance < 5)
+	{
+		m_Path.erase(m_Path.begin());
+		m_CurrentDirection = glm::vec2{ 0,0 };
+	}
+}
 
 
 
 
-Jotar::CalculateTargetAIState::CalculateTargetAIState(AIBehaviorComponent* pAiComp)
+Jotar::ChaseTargetAIState::ChaseTargetAIState(AIBehaviorComponent* pAiComp)
+	: GoToTargetAIState(pAiComp)
+	, m_TimerCounter{}
+	, m_ResetPathTime{2.f}
+{
+}
+
+void Jotar::ChaseTargetAIState::OnEnter()
+{
+}
+
+Jotar::AIState* Jotar::ChaseTargetAIState::OnHandle()
+{
+	m_TimerCounter += WorldTimeManager::GetInstance().GetDeltaTime();
+	if (m_ResetPathTime <= m_TimerCounter)
+	{
+		m_TimerCounter = 0;
+		return m_pAIBehaviorComp->GetCalculatePathState();
+	}
+
+	auto pos = m_pMovementComp->GetTransform()->GetWorldPosition();
+
+	//if its the path end -> Go to Idle
+	if (m_Path.empty())
+	{
+		return m_pAIBehaviorComp->GetCalculatePathState();
+	}
+
+	glm::vec2 pathPos = m_Path[0];
+
+	//todo get rid of hardcocded index
+	auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
+	if (camObj != nullptr)
+		pathPos += camObj->GetOffset();
+
+	CalculateDirection(pathPos, pos);
+
+	m_pMovementComp->Move(m_CurrentDirection);
+
+	CheckDistanceToPoint(pathPos, pos);
+
+	return nullptr;
+}
+
+void Jotar::ChaseTargetAIState::OnExit()
+{
+}
+
+
+
+
+
+Jotar::CalculateNextTargetAIState::CalculateNextTargetAIState(AIBehaviorComponent* pAiComp)
 	: AIState(pAiComp)
 	, m_pNavigationSystem{ std::make_unique<NavigationSystem>()}
 	, m_IsPathFound{ false }
 {
 }
 
-void Jotar::CalculateTargetAIState::OnEnter()
+void Jotar::CalculateNextTargetAIState::OnEnter()
 {
-	std::cout << "Calculate PAth Enter" << '\n';
+}
 
+Jotar::AIState* Jotar::CalculateNextTargetAIState::OnHandle()
+{
+	auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 	auto& pos = m_pAIBehaviorComp->GetOwner()->GetTransform()->GetLocalPosition();
 	// Get Start cell (our position)
-	auto startCell = WorldGrid::GetInstance().GetGridCellByPosition(pos);
-
+	auto startCell = worldGrid->GetGridCellByPosition(pos);
 
 	//if intelligent && player is seen -> Calculate path based on player position
 	// TODO Get a way to check if the player is seen
-	bool playerIsSeen = true;
+	bool playerIsSeen = m_pAIBehaviorComp->GetIsPlayerSeen();
 	// Get the end cell -> Random or players current location
 	if (!playerIsSeen)
 	{
@@ -154,46 +210,38 @@ void Jotar::CalculateTargetAIState::OnEnter()
 		{
 			//TODO Get rid of hardCoded range
 			auto randomCellIndex = GetNextRandomCellIndex(startCell.Index, 8);
-
-			const auto& endCell = WorldGrid::GetInstance().GetGridCellByID(randomCellIndex);
-
+			const auto& endCell = worldGrid->GetGridCellByID(randomCellIndex);
 			if (!endCell.ObjectOnCell.expired()) continue;
 
 			auto path = m_pNavigationSystem->FindPath(startCell, endCell);
-
-			// Sometimes I had a problem that the path had no commecting positions
-			int minPathLength = CalculateMinPathLength(startCell.Index, endCell.Index);
-
-
-			if (!path.empty() && path.size() >= minPathLength)
+			if (!path.empty())
 			{
 				m_pAIBehaviorComp->GetGoToTargetState()->SetPath(path);
-				m_IsPathFound = true;
+				return m_pAIBehaviorComp->GetGoToTargetState();
 			}
 		}
 	}
 	else
 	{
+		while (!m_IsPathFound)
+		{
+			const auto& endCell = worldGrid->GetGridCellByPosition(GameManager::GetInstance().GetPlayerOne()->GetTransform()->GetLocalPosition());
 
+			auto path = m_pNavigationSystem->FindPath(startCell, endCell);
+			if (!path.empty())
+			{
+				m_pAIBehaviorComp->GetChaseTargetState()->SetPath(path);
+				return m_pAIBehaviorComp->GetChaseTargetState();
+			}
+		}
 	}
+
+	return nullptr;
 }
 
-Jotar::AIState* Jotar::CalculateTargetAIState::OnHandle()
-{
-	std::cout << "Calculate PAth On Handle " << '\n';
 
-	if (m_IsPathFound)
-	{
-		m_IsPathFound = false;
-		return m_pAIBehaviorComp->GetGoToTargetState();
-	}
-	else
-	{
-		return m_pAIBehaviorComp->GetIdleState();
-	}
-}
 
-int Jotar::CalculateTargetAIState::CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex)
+int Jotar::CalculateNextTargetAIState::CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex)
 {
 	int distanceX = std::abs(endIndex.x - startIndex.x);
 	int distanceY = std::abs(endIndex.y - startIndex.y);
@@ -203,7 +251,7 @@ int Jotar::CalculateTargetAIState::CalculateMinPathLength(glm::ivec2 startIndex,
 	return minPathLength;
 }
 
-glm::ivec2 Jotar::CalculateTargetAIState::GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange)
+glm::ivec2 Jotar::CalculateNextTargetAIState::GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -214,7 +262,7 @@ glm::ivec2 Jotar::CalculateTargetAIState::GetNextRandomCellIndex(glm::ivec2 cell
 	randomCellIndex.x = distX(gen);
 	randomCellIndex.y = distY(gen);
 
-	auto gridSize = WorldGrid::GetInstance().GetGridSize();
+	auto gridSize = GameManager::GetInstance().GetWorldGrid()->GetGridSize();
 
 	if (randomCellIndex.x < 0) randomCellIndex.x = 0;
 	if (randomCellIndex.x >= gridSize.x) randomCellIndex.x = gridSize.x - 1;
@@ -224,10 +272,17 @@ glm::ivec2 Jotar::CalculateTargetAIState::GetNextRandomCellIndex(glm::ivec2 cell
 	return randomCellIndex;
 }
 
+bool Jotar::CalculateNextTargetAIState::CalculatePath(const GridCell& startCell, const GridCell& endCell)
+{
+	auto path = m_pNavigationSystem->FindPath(startCell, endCell);
+	if (!path.empty())
+	{
+		m_pAIBehaviorComp->GetGoToTargetState()->SetPath(path);
+		return true;
+	}
 
-
-
-
+	return false;
+}
 
 
 
@@ -248,3 +303,6 @@ Jotar::AIState* Jotar::DeadAIState::OnHandle()
 void Jotar::DeadAIState::OnExit()
 {
 }
+
+
+
