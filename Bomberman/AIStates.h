@@ -58,7 +58,7 @@ namespace Jotar
 
 	protected:
 		void CalculateDirection(glm::vec2& pathPos, glm::vec2& AiPos);
-		void CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos);
+		virtual AIState* CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos);
 
 		MovementComponent* m_pMovementComp;
 		std::vector<glm::vec2> m_Path{};
@@ -74,10 +74,13 @@ namespace Jotar
 		virtual AIState* OnHandle() override;
 		virtual void OnExit() override;
 
+	protected:
+		AIState* CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos) override;
 	private:
 
 		float m_TimerCounter;
 		float m_ResetPathTime;
+		bool m_ShouldReset;
 	};
 
 

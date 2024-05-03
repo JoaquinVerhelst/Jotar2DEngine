@@ -18,7 +18,7 @@ Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	, m_ChaseTargetState{ std::make_unique<ChaseTargetAIState>(this) }
 	, m_CalculatePathState{ std::make_unique<CalculateNextTargetAIState>(this) }
 	, m_DeadState{ std::make_unique<DeadAIState>(this) }
-	, m_IsPlayerSeen{false}
+	, m_IsPlayerSeen{true}
 {
 	m_pCurrentState = m_IdleState.get();
 }

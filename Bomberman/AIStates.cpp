@@ -19,25 +19,16 @@ Jotar::IdleAIState::IdleAIState(AIBehaviorComponent* pAiComp)
 
 void Jotar::IdleAIState::OnEnter()
 {
-	// Stand still for 0 - 2 sec
-	std::cout << "Idle On eneter" << '\n';
 }
 
 Jotar::AIState* Jotar::IdleAIState::OnHandle()
 {
-	std::cout << "Idle On Handle" << '\n';
-	//if waiting time is over -> Calculate Path
-
 	return m_pAIBehaviorComp->GetCalculatePathState();
 }
 
 void Jotar::IdleAIState::OnExit()
 {
 }
-
-
-
-
 
 
 
@@ -50,10 +41,6 @@ Jotar::GoToTargetAIState::GoToTargetAIState(AIBehaviorComponent* pAiComp)
 
 void Jotar::GoToTargetAIState::OnEnter()
 {
-	std::cout << "GOTO TARGEt On eneter" << '\n';
-
-
-
 }
 
 Jotar::AIState* Jotar::GoToTargetAIState::OnHandle()
@@ -80,9 +67,7 @@ Jotar::AIState* Jotar::GoToTargetAIState::OnHandle()
 	
 	m_pMovementComp->Move(m_CurrentDirection);
 
-	CheckDistanceToPoint(pathPos, pos);
-
-	return nullptr;
+	return CheckDistanceToPoint(pathPos, pos);
 }
 
 
@@ -116,7 +101,7 @@ void Jotar::GoToTargetAIState::CalculateDirection(glm::vec2& pathPos, glm::vec2&
 		m_CurrentDirection = { 0, 1 };
 }
 
-void Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos)
+Jotar::AIState* Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos)
 {
 	auto distance = glm::distance(AiPos, pathPos);
 
@@ -125,6 +110,7 @@ void Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2
 		m_Path.erase(m_Path.begin());
 		m_CurrentDirection = glm::vec2{ 0,0 };
 	}
+	return nullptr;
 }
 
 
@@ -134,11 +120,14 @@ Jotar::ChaseTargetAIState::ChaseTargetAIState(AIBehaviorComponent* pAiComp)
 	: GoToTargetAIState(pAiComp)
 	, m_TimerCounter{}
 	, m_ResetPathTime{2.f}
+	, m_ShouldReset{false}
 {
 }
 
 void Jotar::ChaseTargetAIState::OnEnter()
 {
+	m_TimerCounter = 0;
+	m_ShouldReset = false;
 }
 
 Jotar::AIState* Jotar::ChaseTargetAIState::OnHandle()
@@ -146,36 +135,30 @@ Jotar::AIState* Jotar::ChaseTargetAIState::OnHandle()
 	m_TimerCounter += WorldTimeManager::GetInstance().GetDeltaTime();
 	if (m_ResetPathTime <= m_TimerCounter)
 	{
-		m_TimerCounter = 0;
-		return m_pAIBehaviorComp->GetCalculatePathState();
+		m_ShouldReset = true;
 	}
 
-	auto pos = m_pMovementComp->GetTransform()->GetWorldPosition();
-
-	//if its the path end -> Go to Idle
-	if (m_Path.empty())
-	{
-		return m_pAIBehaviorComp->GetCalculatePathState();
-	}
-
-	glm::vec2 pathPos = m_Path[0];
-
-	//todo get rid of hardcocded index
-	auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
-	if (camObj != nullptr)
-		pathPos += camObj->GetOffset();
-
-	CalculateDirection(pathPos, pos);
-
-	m_pMovementComp->Move(m_CurrentDirection);
-
-	CheckDistanceToPoint(pathPos, pos);
-
-	return nullptr;
+	return GoToTargetAIState::OnHandle();
 }
 
 void Jotar::ChaseTargetAIState::OnExit()
 {
+}
+
+Jotar::AIState* Jotar::ChaseTargetAIState::CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos)
+{
+	auto distance = glm::distance(AiPos, pathPos);
+
+	if (distance * distance < 5)
+	{
+		m_Path.erase(m_Path.begin());
+		m_CurrentDirection = glm::vec2{ 0,0 };
+
+		if (m_ShouldReset)
+			return m_pAIBehaviorComp->GetCalculatePathState();
+	}
+
+	return nullptr;
 }
 
 

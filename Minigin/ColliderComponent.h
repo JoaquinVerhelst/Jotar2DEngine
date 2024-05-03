@@ -42,6 +42,7 @@ namespace Jotar
 		void OnTriggerCollision(TriggerEvent& collisionEvent);
 		void OnTriggerEnd(TriggerEndEvent& collisionEvent);
 
+		void AddIgnoreCollisionTag(std::string tag);
 
 		void OnColliderCollision(CollideEvent& collisionEvent);
 
@@ -51,6 +52,7 @@ namespace Jotar
 
 		bool IsColliderAlreadyHit(ColliderComponent* otherCollider);
 
+		std::vector<std::string> m_IgnoreCollisionTags;
 
 		glm::vec4 m_CollisionRect;
 		std::string m_Tag;

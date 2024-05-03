@@ -116,14 +116,24 @@ void Jotar::ColliderComponent::OnTriggerEnd(TriggerEndEvent& endOverlap)
 	m_pSubject->NotifyObservers(endOverlap);
 }
 
+void Jotar::ColliderComponent::AddIgnoreCollisionTag(std::string tag)
+{
+	m_IgnoreCollisionTags.emplace_back(tag);
+}
+
 
 
 void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 {
 	m_pSubject->NotifyObservers(collideEvent);
 
-	const auto& otherCollisionRect = collideEvent.GetOtherCollider()->GetCollisionRect();
+	for (size_t i = 0; i < m_IgnoreCollisionTags.size(); i++)
+	{
+		if (collideEvent.GetOtherCollider()->CompareTag(m_IgnoreCollisionTags[i]))
+			return;
+	}
 
+	const auto& otherCollisionRect = collideEvent.GetOtherCollider()->GetCollisionRect();
 	glm::vec2 offset{};
 
 	float horizontalOverlap = 0.0f;

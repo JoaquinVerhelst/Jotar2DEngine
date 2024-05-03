@@ -183,13 +183,19 @@ void load()
 
 	// AI - ENEMY
 
-	auto enemy = scene.CreateGameObject("enemy");
-	enemy->AddComponent<TextureComponent>("../Data/Sprites/bomberman.png");
-	enemy->AddComponent<MovementComponent>(60.f);
-	enemy->AddComponent<AIBehaviorComponent>();
-	enemy->AddComponent<ColliderComponent>(false);
+	for (float i = 0; i < 3; i++)
+	{
 
-	enemy->GetTransform()->SetPosition(200, 100);
+		auto enemy = scene.CreateGameObject("enemy");
+		enemy->AddComponent<TextureComponent>("../Data/Sprites/bomberman.png");
+		enemy->AddComponent<MovementComponent>(60.f);
+		enemy->AddComponent<AIBehaviorComponent>();
+		auto collEnemy = enemy->AddComponent<ColliderComponent>(false);
+		collEnemy->SetTag("Enemy");
+		collEnemy->AddIgnoreCollisionTag("Enemy");
+		enemy->GetTransform()->SetPosition(64.f * (i + 2.f), 100.f);
+
+	}
 
 
 	//Playerss
