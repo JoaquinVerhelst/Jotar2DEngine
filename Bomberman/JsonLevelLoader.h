@@ -2,6 +2,8 @@
 #include <string>
 #include <memory>
 #include "Component.h"
+#include <vector>
+#include <glm/glm.hpp>
 
 namespace Jotar
 {
@@ -28,9 +30,13 @@ namespace Jotar
 
 	private:
 
-		void RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount);
+		void RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount, std::vector<glm::ivec2>& spawnCells);
 		std::shared_ptr<GameObject> CreateUnbreakableWall(Scene& scene);
 		std::shared_ptr<GameObject> CreateBreakableWall(Scene& scene);
+
+		void CreateEnemies(Scene& scene);
+
+
 
 		std::string m_JsonFilePath;
 	};

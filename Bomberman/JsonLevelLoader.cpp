@@ -10,6 +10,14 @@
 #include "TextureComponent.h"
 #include <random>
 #include "GameManager.h"
+#include "MovementComponent.h"
+#include "AIBehaviorComponent.h"
+#include "AIAnimationControllerComponent.h"
+#include "AIPerceptionComponent.h"
+
+#include "HealthComponent.h"
+
+#include "DamageComponent.h"
 
 using json = nlohmann::json;
 
@@ -51,28 +59,32 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
         auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 
 
-        // Iterate over the layout array
-        for (size_t i = 0; i < layout.size(); ++i)
+        std::vector<glm::ivec2> spawnCells{};
+
+        for (int i = 0; i < layout.size(); ++i)
         {
             const std::string& row = layout[i];
 
-            // Iterate over the characters in the row
-            for (size_t j = 0; j < row.size(); ++j)
+            for (int j = 0; j < row.size(); ++j)
             {
                 char tile = row[j];
                 if (tile == '1')
                 {
                     auto wall = CreateUnbreakableWall(scene);
-                    auto& cell = worldGrid->GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    auto& cell = worldGrid->GetGridCellByID({ j, i });
                     cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
                 }
-                if (tile == '2')
+                else if (tile == '2')
                 {
                     auto wall = CreateBreakableWall(scene);
-                    auto& cell = worldGrid->GetGridCellByID({ static_cast<int>(j), static_cast<int>(i) });
+                    auto& cell = worldGrid->GetGridCellByID({ j, i });
                     cell.ObjectOnCell = wall;
                     wall->GetTransform()->SetPosition(cell.CenterCellPosition);
+                }
+                else if (tile == '3')
+                {
+                    spawnCells.emplace_back(glm::ivec2{j, i});
                 }
             }
         }
@@ -83,8 +95,12 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
         if (isRandomized)
         {
             const auto& amount = levelLayout["randomizeBreakableWalls"]["amount"];
-            RandomizeBreakableWalls(gridRows, gridColumns, scene, amount);
+            RandomizeBreakableWalls(gridRows, gridColumns, scene, amount, spawnCells);
         }
+
+        CreateEnemies(scene);
+
+
 
         return true;
     }
@@ -116,8 +132,35 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(S
     return wall;
 }
 
+void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene)
+{
+    std::vector <std::string> enemyTarget = { "Player" };
+    AnimationIndexesInfo animationInfo{ {3,5},{0, 2},{6, 6},{7, 10} };
 
-void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount)
+    for (float i = 0; i < 1; i++)
+    {
+        auto enemy = scene.CreateGameObject("enemy");
+        enemy->AddComponent<TextureComponent>("../Data/Sprites/Enemy/BalloomSpriteSheet.png", false, 1, 11 );
+        enemy->AddComponent<MovementComponent>(60.f);
+        auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+        auto perception = enemy->AddComponent< AIPerceptionComponent>(200.f, enemyTarget);
+        perception->AddObserver(behavior);
+        enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
+        auto healthComp = enemy->AddComponent<HealthComponent>(1);
+        healthComp->AddObserver(behavior);
+        auto collEnemy = enemy->AddComponent<ColliderComponent>(false, true);
+        collEnemy->SetTag("Enemy");
+        collEnemy->AddIgnoreCollisionTag("Enemy");
+
+        auto damageComp = enemy->AddComponent<DamageComponent>(1, enemyTarget);
+        collEnemy->AddObserver(damageComp);
+
+        enemy->GetTransform()->SetPosition(64.f * (i + 2.f), 100.f);
+    }
+}
+
+
+void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scene& scene, int amount, std::vector<glm::ivec2>& spawnCells)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -128,12 +171,21 @@ void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scen
 
     int wallsPlaced = 0;
  
+
     while (wallsPlaced < amount)
     {
-        int randomX = distribX(gen); // Generate random X coordinate
-        int randomY = distribY(gen); // Generate random Y coordinate
+        int randomX, randomY;
+        glm::ivec2 cellIndex;
 
-        auto& cell = worldGrid->GetGridCellByID({ randomX, randomY });
+        do
+        {
+            randomX = distribX(gen);
+            randomY = distribY(gen);
+            cellIndex = { randomX, randomY };
+        } while (std::find(spawnCells.begin(), spawnCells.end(), cellIndex) != spawnCells.end());
+
+
+        auto& cell = worldGrid->GetGridCellByID(cellIndex);
 
         if (cell.ObjectOnCell.expired())
         {

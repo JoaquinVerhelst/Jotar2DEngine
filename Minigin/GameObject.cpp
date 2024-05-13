@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-Jotar::GameObject::GameObject(Scene* pScene, const std::string& name)
+Jotar::GameObject::GameObject(Scene* pScene, const std::string& name, bool isMovingWithCamera)
 	: m_pComponents{}
 	, m_Name{name}
 	, m_pScene{pScene}
@@ -14,7 +14,7 @@ Jotar::GameObject::GameObject(Scene* pScene, const std::string& name)
 	, m_pParent{nullptr}
 	, m_pChildren{}
 {
-	m_pTransform = AddComponent<TransformComponent>();
+	m_pTransform = AddComponent<TransformComponent>(isMovingWithCamera);
 }
 
 Jotar::GameObject::~GameObject()
@@ -26,7 +26,8 @@ void Jotar::GameObject::Start()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
-		pComponent->Start();
+		if (!pComponent->IsDisabled())
+			pComponent->Start();
 	}
 
 	for (const auto& pChild : m_pChildren)
@@ -40,7 +41,8 @@ void Jotar::GameObject::Update()
 
 	for (const auto& pComponent : m_pComponents)
 	{
-		pComponent->Update();
+		if (!pComponent->IsDisabled())
+			pComponent->Update();
 	}
 
 	for (const auto& pChild : m_pChildren)
@@ -53,7 +55,8 @@ void Jotar::GameObject::FixedUpdate()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
-		pComponent->FixedUpdate();
+		if (!pComponent->IsDisabled())
+			pComponent->FixedUpdate();
 	}
 
 
@@ -67,7 +70,8 @@ void Jotar::GameObject::LateUpdate()
 {
 	for (const auto& pComponent : m_pComponents)
 	{
-		pComponent->LateUpdate();
+		if (!pComponent->IsDisabled())
+			pComponent->LateUpdate();
 	}
 
 
@@ -81,7 +85,8 @@ void Jotar::GameObject::Render() const
 {
 	for (const auto& pComponent : m_pComponents)
 	{
-		pComponent->Render();
+		if (!pComponent->IsDisabled())	
+			pComponent->Render();
 	}
 
 	for (const auto& pChild : m_pChildren)
@@ -117,9 +122,9 @@ void Jotar::GameObject::Destroy()
 }
 
 
-std::shared_ptr<Jotar::GameObject> Jotar::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition)
+std::shared_ptr<Jotar::GameObject> Jotar::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition, bool isMovingWithCamera)
 {
-	auto pGameObject{ std::make_shared<GameObject>(m_pScene, name) };
+	auto pGameObject{ std::make_shared<GameObject>(m_pScene, name, isMovingWithCamera) };
 
 	//pGameObject->GetTransform()->SetPositionDirty();
 

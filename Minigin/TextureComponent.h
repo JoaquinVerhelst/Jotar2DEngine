@@ -40,7 +40,11 @@ namespace Jotar
         void SetCurrentColumn(int currentColumn);
         void SetSize(glm::ivec2 size);
         void SetIsStatic(bool isStatic) { m_IsStatic = isStatic; }
-        bool GetIsStatic() { return m_IsStatic; }
+        bool GetIsStatic() const { return m_IsStatic; }
+
+        void SetAnimationSpeedInNrOfFramesPerSecond(int animSpeed);
+
+        void SetSelectedFrames(glm::ivec2 startAndEndFrames);
 
         void UpdateFrame();
 
@@ -53,7 +57,7 @@ namespace Jotar
         SpriteSheet m_SpriteSheet;
 
 
-
+        glm::ivec2 m_SelectedFramesIndexes;
         glm::ivec4 m_SrcRect;
 
         glm::ivec2 m_Size;

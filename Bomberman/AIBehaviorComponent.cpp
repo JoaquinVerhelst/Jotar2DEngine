@@ -9,6 +9,8 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "AIAnimationControllerComponent.h"
+#include <iostream>
 
 Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	:Component(owner)
@@ -16,18 +18,27 @@ Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	, m_IdleState{ std::make_unique<IdleAIState>(this) }
 	, m_GoToTargetState{ std::make_unique<GoToTargetAIState>(this) }
 	, m_ChaseTargetState{ std::make_unique<ChaseTargetAIState>(this) }
-	, m_CalculatePathState{ std::make_unique<CalculateNextTargetAIState>(this) }
-	, m_DeadState{ std::make_unique<DeadAIState>(this) }
-	, m_IsPlayerSeen{true}
+	, m_CalculateRandomPathState{ std::make_unique<CalculateRandomPathAIState>(this) }
+	, m_OnDamageAIState{ std::make_unique<OnDamageAIState>(this) }
+	, m_CalculatePathToPlayerState{ std::make_unique<CalculatePathToPlayerAIState>(this) }
+	, m_IsPlayerSeen{false}
+	, m_pAIAnimationControllerComponent{ nullptr }
+	, m_IsDamaged{ false }
 {
 	m_pCurrentState = m_IdleState.get();
+}
+
+void Jotar::AIBehaviorComponent::Start()
+{
+	if (GetOwner()->HasComponent<AIAnimationControllerComponent>())
+		m_pAIAnimationControllerComponent = GetOwner()->GetComponent<AIAnimationControllerComponent>();
 }
 
 void Jotar::AIBehaviorComponent::Update()
 {
 	if (m_pCurrentState == nullptr)
 	{
-		std::runtime_error("State is nullptr -> Something is WRONG in this");
+		std::runtime_error("State is nullptr in AIBehaviorComponent");
 		return;
 	}
 
@@ -65,6 +76,33 @@ void Jotar::AIBehaviorComponent::Render() const
 bool Jotar::AIBehaviorComponent::GetIsPlayerSeen() const
 {
 	return m_IsPlayerSeen;
+}
+
+void Jotar::AIBehaviorComponent::OnNotify(const AIPlayerSeenEvent& AiEvent)
+{
+	if (m_IsPlayerSeen) return;
+
+	if (typeid(AiEvent) == typeid(AIPlayerSeenEvent))
+	{
+		const AIPlayerSeenEvent& playerSeenEvent = static_cast<const AIPlayerSeenEvent&>(AiEvent);
+		std::cout << "PLAYER SEEN" << '\n';
+		m_IsPlayerSeen = true;
+		GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
+		m_pCurrentState = GetCalculatePathToPlayerState();
+	}
+
+}
+
+void Jotar::AIBehaviorComponent::OnNotify(const HealthEvent& healthEvent)
+{
+	if (m_IsDamaged) return;
+
+	if (typeid(healthEvent) == typeid(DamageHealthEvent))
+	{
+		m_IsDamaged = true;
+		m_pCurrentState = GetOnDamageAIState();
+		m_pCurrentState->OnEnter();
+	}
 }
 
 

@@ -151,9 +151,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIAnimationControllerComponent.cpp" />
     <ClCompile Include="AIBehaviorComponent.cpp" />
+    <ClCompile Include="AIPerceptionComponent.cpp" />
     <ClCompile Include="AIStates.cpp" />
-    <ClCompile Include="AIStatesAndConditions.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
     <ClCompile Include="BombermanComponent.cpp" />
@@ -164,7 +165,9 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthDisplayComponent.cpp" />
+    <ClCompile Include="HUDComponent.cpp" />
     <ClCompile Include="JsonLevelLoader.cpp" />
+    <ClCompile Include="MenuComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="NavigationSystem.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
@@ -172,12 +175,15 @@
     <ClCompile Include="PlaceBombComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreDisplayComponent.cpp" />
+    <ClCompile Include="UIButtonComponent.cpp" />
     <ClCompile Include="WorldGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIAnimationControllerComponent.h" />
     <ClInclude Include="AIBehaviorComponent.h" />
+    <ClInclude Include="AIEvents.h" />
+    <ClInclude Include="AIPerceptionComponent.h" />
     <ClInclude Include="AIStates.h" />
-    <ClInclude Include="AIStatesAndConditions.h" />
     <ClInclude Include="BombComponent.h" />
     <ClInclude Include="BombermanComponent.h" />
     <ClInclude Include="BreakableWallComponent.h" />
@@ -189,7 +195,9 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
     <ClInclude Include="HealthEvents.h" />
+    <ClInclude Include="HUDComponent.h" />
     <ClInclude Include="JsonLevelLoader.h" />
+    <ClInclude Include="MenuComponent.h" />
     <ClInclude Include="MovementCommand.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="NavigationSystem.h" />
@@ -198,6 +206,7 @@
     <ClInclude Include="PlaceBombComponent.h" />
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ScoreDisplayComponent.h" />
+    <ClInclude Include="UIButtonComponent.h" />
     <ClInclude Include="WorldGrid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

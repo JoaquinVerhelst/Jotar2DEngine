@@ -10,7 +10,7 @@ namespace Jotar
 	class DamageComponent : public Component, public Observer<CollisionEvent>
 	{
 	public:
-		DamageComponent(GameObject* owner, int amountOfDamage);
+		DamageComponent(GameObject* owner, int amountOfDamage, std::vector<std::string> tagsToHit);
 
 		void OnNotify(const CollisionEvent& event) override;
 
@@ -22,7 +22,7 @@ namespace Jotar
 	private:
 
 		int m_Damage;
-
+		std::vector<std::string> m_TagsToHit;
 	};
 
 }

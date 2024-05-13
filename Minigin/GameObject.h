@@ -23,7 +23,7 @@ namespace Jotar
 		void OnDestroy();
 
 
-		GameObject(Scene* pScene, const std::string& name);
+		GameObject(Scene* pScene, const std::string& name, bool isMovingWithCamera = true);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -57,7 +57,7 @@ namespace Jotar
 
 		// scenegraph
 
-		std::shared_ptr<GameObject> CreateChildGameObject(const std::string& name, bool keepWorldPosition);
+		std::shared_ptr<GameObject> CreateChildGameObject(const std::string& name, bool keepWorldPosition, bool isMovingWithCamera = true);
 
 		void SetParent(GameObject* parent, bool keepWorldPosition);
 		GameObject* GetParent() const { return m_pParent; }

@@ -49,7 +49,6 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 
 		for (auto connectedCell : worldGrid->GetConnectedCellsFromIndex(currentNode.CellIndex))
 		{
-			//std::cout << connectedCell.Index.x << " " << connectedCell.Index.y << '\n';
 
 			// if it has an object on it, blocking the path
 			if (!connectedCell.ObjectOnCell.expired()) continue;
@@ -59,6 +58,8 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 			costSoFar = currentNode.CostSoFar + costToMove;
 
 
+
+			// check if the connectedcell exist in the closed and openlist
 			auto inClosedList = [&closedList, &connectedCell](const Node& node) {
 				return node.CellIndex == connectedCell.Index && std::find(closedList.begin(), closedList.end(), node) != closedList.end();
 				};
@@ -67,9 +68,16 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 				return node.CellIndex == connectedCell.Index && std::find(openList.begin(), openList.end(), node) != openList.end();
 				};
 
+			//checks if there exists any node in the closedList
+			//If such a node exists, it means that the current connected cell has already been evaluated
+			// and added to the closed list, so the loop continues
 			if (std::any_of(closedList.begin(), closedList.end(), inClosedList))
 				continue;
 
+			//checks if there exists any node in the openList
+			//	If such a node exists, it means that the current connected cell has already been evaluated and added to the open list.
+			//	If the existing node in the open list has a cost(CostSoFar) greater than the current calculated cost(costSoFar),
+			//  it means the current path to this node is cheaper, so the existing node is removed from the open list(openList) to be replaced by the current node.
 			if (std::any_of(openList.begin(), openList.end(), inOpenList))
 			{
 				auto iter = std::find_if(openList.begin(), openList.end(), inOpenList);
@@ -78,54 +86,6 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 				openList.erase(iter);
 			}
 
-
-
-			////2.D: Check if any of those connections lead to a node already on the closed list
-			//for (size_t i = 0; i < closedList.size(); i++)
-			//{
-			//	//Check the closed list(pNode) and if This connection already points to a previously visited Node (already exist in the closed list)
-			//	if (connectedCell.IsConnected(closedList[i].CellIndex))
-			//	{
-			//		//Check if the already existing connection is cheaper(tip: use calculated G - Cost)
-			//		//If so, continue to the next connection
-			//		if (closedList[i].CostSoFar > costSoFar)
-			//		{
-			//			//Else remove it from the closedList
-			//			//(so it can be replaced)
-			//			closedList.erase(std::remove(closedList.begin(), closedList.end(), closedList[i]));
-			//		}
-			//		else
-			//			stopCurrentLoop = true;
-			//	}
-			//}
-			//if (stopCurrentLoop)
-			//{
-			//	stopCurrentLoop = false;
-			//	continue;
-			//}
-
-			////2.E: If 2.D check failed, check if any of those connections lead to a node already on the open list
-			//for (size_t i = 0; i < openList.size(); i++)
-			//{
-			//	//Check the open list(pNode) and if This connection already points to a previously visited Node (already exist in the open list)
-			//	if (connectedCell.IsConnected(openList[i].CellIndex))
-			//	{
-			//		//Check if the already existing connection is cheaper(tip: use calculated G - Cost)
-			//		//If so, continue to the next connection
-			//		if (openList[i].CostSoFar > costSoFar)
-			//		{
-			//			//Else remove it from the openList(so it can be replaced)
-			//			openList.erase(std::remove(openList.begin(), openList.end(), openList[i]));
-			//		}
-			//		else
-			//			stopCurrentLoop = true;
-			//	}
-			//}
-			//if (stopCurrentLoop)
-			//{
-			//	stopCurrentLoop = false;
-			//	continue;
-			//}
 
 			//2.F: At this point any expensive connection should be removed(if it existed).We create a new nodeRecord and add it to the openList*/
 			Node newNode{};
@@ -167,20 +127,6 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 		else
 			break;
 	}
-
-	//while (currentNode.CellIndex != glm::ivec2{-1, -1} && currentNode.CellIndex != startNode.CellIndex)
-	//{
-	//	//	Add each time the node of the currentRecord to the path
-	//	path.emplace_back(currentNode.Position);
-
-	//	for (size_t i = 0; i < closedList.size(); ++i)
-	//	{
-	//		if (WorldGrid::GetInstance().GetGridCellByID(currentNode.CellIndex).IsConnected(closedList[i].CellIndex))
-	//		{
-	//			currentNode = closedList[i];
-	//		}
-	//	}
-	//}
 
 	//	Add the startnode’s position to the vPath
 	path.emplace_back(startCell.CenterCellPosition);

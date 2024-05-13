@@ -17,7 +17,7 @@ namespace Jotar
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
-		std::shared_ptr<GameObject> CreateGameObject(std::string objectName);
+		std::shared_ptr<GameObject> CreateGameObject(std::string objectName, bool isMovingWithCamera = true);
 		void Add(std::shared_ptr<GameObject> object);
 		void Remove(std::shared_ptr<GameObject> object);
 		void RemoveAll();

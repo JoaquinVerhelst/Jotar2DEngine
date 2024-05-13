@@ -7,14 +7,12 @@
 
 namespace Jotar
 {
-	// TODO: I Will probs refactor this and/or move this code somehwre else or rename this 
-
-	class GLSDLManager /*: public Singleton<GLSDLManager>*/
+	class SDLManager /*: public Singleton<GLSDLManager>*/
 	{
 	public:
-		GLSDLManager();
+		SDLManager();
 		void Init();
-
+		void Update();
 
 		SDL_Window* GetWindow();
 		

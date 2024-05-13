@@ -25,6 +25,8 @@ namespace Jotar
 		Scene& GetScene(int SceneIndex) const;
 
 
+
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

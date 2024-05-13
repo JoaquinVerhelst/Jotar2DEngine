@@ -10,19 +10,10 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 	: Component(owner)
 	, m_IsStatic{ isStatic }
 	, m_IsTrigger{ isTrigger }
+	, m_CollisionRect{}
+	, m_pTransform{}
 {
 	m_pSubject = std::make_unique<Subject<CollisionEvent>>();
-
-
-	m_pTransform = GetOwner()->GetComponent<TransformComponent>();
-
-	auto& pos = m_pTransform->GetWorldPosition();
-	auto& size = m_pTransform->GetSize();
-
-	// x, y , z , w
-	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
-
-	SceneManager::GetInstance().GetScene(0).GetCollisionManager().AddCollider(this);
 }
 
 void Jotar::ColliderComponent::OnDestroy()
@@ -179,7 +170,16 @@ void Jotar::ColliderComponent::RemoveThisColliderFromManager()
 
 void Jotar::ColliderComponent::Start()
 {
-	UpdatePosition();
+
+	m_pTransform = GetOwner()->GetComponent<TransformComponent>();
+
+	auto& pos = m_pTransform->GetWorldPosition();
+	auto& size = m_pTransform->GetSize();
+
+	// x, y , z , w
+	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
+
+	SceneManager::GetInstance().GetScene(0).GetCollisionManager().AddCollider(this);
 }
 
 void Jotar::ColliderComponent::FixedUpdate()

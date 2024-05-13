@@ -97,6 +97,11 @@ void Jotar::TextureComponent::SetSize(glm::ivec2 size)
 	m_Size = size;
 }
 
+void Jotar::TextureComponent::SetSelectedFrames(glm::ivec2 startAndEndFrames)
+{
+	m_SelectedFramesIndexes = startAndEndFrames;
+}
+
 void Jotar::TextureComponent::UpdateFrame()
 {
 	m_AnimTime += WorldTimeManager::GetInstance().GetDeltaTime();
@@ -110,7 +115,11 @@ void Jotar::TextureComponent::UpdateFrame()
 			if (m_DestroyOnLastFrame)
 				CheckForDestroy(m_SpriteSheet.CurrentRow, m_SpriteSheet.TotalRows - 1);
 
-			++m_SpriteSheet.CurrentRow %= m_SpriteSheet.TotalRows;
+			++m_SpriteSheet.CurrentRow;
+
+			if (m_SpriteSheet.CurrentRow > m_SelectedFramesIndexes.y)
+				m_SpriteSheet.CurrentRow = m_SelectedFramesIndexes.x;
+			
 			m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
 			m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
 		}
@@ -119,7 +128,10 @@ void Jotar::TextureComponent::UpdateFrame()
 			if (m_DestroyOnLastFrame)
 				CheckForDestroy(m_SpriteSheet.CurrentColumn, m_SpriteSheet.TotalColumns - 1);
 
-			++m_SpriteSheet.CurrentColumn %= m_SpriteSheet.TotalColumns;
+			++m_SpriteSheet.CurrentColumn;
+			if (m_SpriteSheet.CurrentColumn > m_SelectedFramesIndexes.y)
+				m_SpriteSheet.CurrentColumn = m_SelectedFramesIndexes.x;
+
 			m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
 			m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
 		}
@@ -149,9 +161,20 @@ void Jotar::TextureComponent::Initizialize()
 {
 	glm::vec2 size = GetOwner()->GetTransform()->GetSize();
 	m_Size = size;
-	m_SrcRect.z = m_SpriteSheet.ClipWidth;
-	m_SrcRect.w = m_SpriteSheet.ClipHeight;
-							   
+
+	m_SrcRect.z = m_SpriteSheet.ClipHeight;
+	m_SrcRect.w = m_SpriteSheet.ClipWidth;
+					   
 	m_SrcRect.y = m_SpriteSheet.CurrentColumn * m_SpriteSheet.ClipHeight;
 	m_SrcRect.x = m_SpriteSheet.CurrentRow * m_SpriteSheet.ClipWidth;
+
+	if (m_SpriteSheet.Direction == SpriteSheet::SpriteSheetDirection::Right)
+		m_SelectedFramesIndexes = { 0, m_SpriteSheet.TotalRows };
+	else
+		m_SelectedFramesIndexes = { 0, m_SpriteSheet.TotalColumns };
+}
+
+void Jotar::TextureComponent::SetAnimationSpeedInNrOfFramesPerSecond(int animSpeed)
+{
+	m_NrFramesPerSec = animSpeed;
 }

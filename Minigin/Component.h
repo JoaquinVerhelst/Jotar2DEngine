@@ -22,6 +22,8 @@ namespace Jotar
 		virtual void Init() {};
 		virtual void Render() const {};
 
+		bool IsDisabled() const { return m_IsDisabled; }
+		void SetIsDisabled(bool isDisabled) { m_IsDisabled = isDisabled; }
 		virtual void OnDestroy() {};
 
 
@@ -35,6 +37,6 @@ namespace Jotar
 	private:
 
 		GameObject* m_pOwner{};
-
+		bool m_IsDisabled = false;
 	};
 }

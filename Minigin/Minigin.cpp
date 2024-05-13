@@ -83,6 +83,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 		sceneManager.LateUpdate();
 		SoundServiceLocator::GetSoundSystem().Update();
 
+		renderer.Update();
 		renderer.Render();
 
 		//SteamAPI_RunCallbacks();

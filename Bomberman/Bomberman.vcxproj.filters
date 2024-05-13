@@ -21,6 +21,9 @@
     <Filter Include="AI">
       <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFIles\Components\UI">
+      <UniqueIdentifier>{895d18b2-1bb3-4515-a880-7cbf3e9e9a28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonLevelLoader.cpp">
@@ -74,9 +77,6 @@
     <ClCompile Include="NavigationSystem.cpp">
       <Filter>AI</Filter>
     </ClCompile>
-    <ClCompile Include="AIStatesAndConditions.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="AIBehaviorComponent.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -88,6 +88,21 @@
     </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
       <Filter>GameFIles</Filter>
+    </ClCompile>
+    <ClCompile Include="AIPerceptionComponent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIAnimationControllerComponent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIButtonComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,9 +163,6 @@
     <ClInclude Include="NavigationSystem.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="AIStatesAndConditions.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="AIBehaviorComponent.h">
       <Filter>AI</Filter>
     </ClInclude>
@@ -162,6 +174,24 @@
     </ClInclude>
     <ClInclude Include="WorldGrid.h">
       <Filter>GameFIles</Filter>
+    </ClInclude>
+    <ClInclude Include="AIPerceptionComponent.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIEvents.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AIAnimationControllerComponent.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButtonComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

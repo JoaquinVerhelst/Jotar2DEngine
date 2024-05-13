@@ -85,10 +85,10 @@ void Scene::Render() const
 	}
 }
 
-std::shared_ptr<GameObject> Jotar::Scene::CreateGameObject(std::string objectName)
+std::shared_ptr<GameObject> Jotar::Scene::CreateGameObject(std::string objectName, bool isMovingWithCamera)
 {
 
-	auto gameObject = std::make_shared<Jotar::GameObject>(this, objectName);
+	auto gameObject = std::make_shared<Jotar::GameObject>(this, objectName, isMovingWithCamera);
 
 	Add(gameObject);
 

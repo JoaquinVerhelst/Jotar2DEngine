@@ -5,9 +5,10 @@
 #include "BombComponent.h"
 #include <iostream>
 
-Jotar::DamageComponent::DamageComponent(GameObject* owner, int amountOfDamage)
+Jotar::DamageComponent::DamageComponent(GameObject* owner, int amountOfDamage, std::vector<std::string> tagsToHit)
 	:Component(owner)
     , m_Damage{amountOfDamage}
+    , m_TagsToHit{ tagsToHit }
 {
 }
 
@@ -18,11 +19,12 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
         if (triggerEvent.GetOtherCollider() == nullptr) return;
         auto* otherCollider = triggerEvent.GetOtherCollider();
 
-        if (otherCollider->CompareTag("Killable") || otherCollider->CompareTag("Player"))
+        for (size_t i = 0; i < m_TagsToHit.size(); i++)
         {
-            triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
-
-            std::cout << "Takign Damagae" << '\n';
+            if (otherCollider->CompareTag(m_TagsToHit[i]))
+            {
+                triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
+            }
         }
     }
 

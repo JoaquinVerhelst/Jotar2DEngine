@@ -2,28 +2,30 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
-#include "GLSDLManager.h"
-#include "glad\glad.h"
+#include "SDLManager.h"
 
-int GetOpenGLDriverIndex()
-{
-	auto openglIndex = -1;
-	const auto driverCount = SDL_GetNumRenderDrivers();
-	for (auto i = 0; i < driverCount; i++)
-	{
-		SDL_RendererInfo info;
-		if (!SDL_GetRenderDriverInfo(i, &info))
-			if (!strcmp(info.name, "opengl"))
-				openglIndex = i;
-	}
-	return openglIndex;
-}
+#include <iostream>
+
+
+//int GetOpenGLDriverIndex()
+//{
+//	auto openglIndex = -1;
+//	const auto driverCount = SDL_GetNumRenderDrivers();
+//	for (auto i = 0; i < driverCount; i++)
+//	{
+//		SDL_RendererInfo info;
+//		if (!SDL_GetRenderDriverInfo(i, &info))
+//			if (!strcmp(info.name, "opengl"))
+//				openglIndex = i;
+//	}
+//	return openglIndex;
+//}
 
 void Jotar::Renderer::Init()
 {
-	m_GLSDLManager = std::make_unique<GLSDLManager>();
+	m_SDLManager = std::make_unique<SDLManager>();
 
-	SDL_Window* window = m_GLSDLManager->GetWindow();
+	SDL_Window* window = m_SDLManager->GetWindow();
 
 
 	m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -31,6 +33,10 @@ void Jotar::Renderer::Init()
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
+
+	m_pSubject = std::make_unique<Subject<WindowResizeEvent>>();
+
+
 
 	//ImguiWindowProperties properties{};
 
@@ -79,7 +85,41 @@ void Jotar::Renderer::Destroy()
 		m_Renderer = nullptr;
 	}
 
-	m_GLSDLManager->Destroy();
+	m_SDLManager->Destroy();
+}
+
+void Jotar::Renderer::Update()
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e) != 0)
+	{
+		if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || e.window.event == SDL_WINDOWEVENT_MAXIMIZED)
+		{
+			std::cout << "WINDOIW EVENT" << '\n';
+
+			int windowWidth, windowHeight;
+			SDL_GetWindowSize(m_SDLManager->GetWindow(), &windowWidth, &windowHeight);
+
+			float aspectRatio = static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
+
+			float zoomFactor = 1.f;
+			int logicalWidth = static_cast<int>(windowWidth * zoomFactor);
+			int logicalHeight = static_cast<int>(windowHeight * zoomFactor);
+
+			if (aspectRatio >= 1.0f) {
+				logicalWidth = static_cast<int>(logicalHeight * aspectRatio);
+			}
+			else {
+				logicalHeight = static_cast<int>(logicalWidth / aspectRatio);
+			}
+
+			SDL_RenderSetLogicalSize(m_Renderer, logicalWidth, logicalHeight);
+			SDL_RenderSetScale(m_Renderer, 1.0f / zoomFactor, 1.0f / zoomFactor);
+
+
+			m_pSubject->NotifyObservers(WindowResizeEvent());
+		}
+	}
 }
 
 void Jotar::Renderer::BeginRender() const
@@ -118,8 +158,8 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const float x, con
 
 void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& src, const glm::ivec4& dst) const
 {
-	SDL_Rect dstRect{ dst.x, dst.y, dst.w, dst.a };
-	SDL_Rect srcRect{ src.x, src.y, src.w, src.a };
+	SDL_Rect dstRect{ dst.x, dst.y, dst.w, dst.z };
+	SDL_Rect srcRect{ src.x, src.y, src.w, src.z };
 
 
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dstRect);
@@ -129,15 +169,9 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& 
 
 SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
-Jotar::GLSDLManager* Jotar::Renderer::GetGlSDLManager()
+Jotar::SDLManager* Jotar::Renderer::GetGlSDLManager()
 {
-	return m_GLSDLManager.get();
-}
-
-void Jotar::Renderer::SetViewportPos(SDL_Rect newviewportRect)
-{
-	m_ViewPortRect = newviewportRect;
-	//SDL_RenderSetViewport(m_Renderer, 
+	return m_SDLManager.get();
 }
 
 //void Jotar::Renderer::SetWireFrameOn(bool on)

@@ -127,7 +127,7 @@
     <ClInclude Include="ImguiRenderer.h">
       <Filter>Engine\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="GLSDLManager.h">
+    <ClInclude Include="SDLManager.h">
       <Filter>Engine\GL&amp;SDL</Filter>
     </ClInclude>
     <ClInclude Include="Mesh2DComponent.h">
@@ -208,11 +208,8 @@
     <ClInclude Include="SoundSystem.h">
       <Filter>Engine\ServiceLocator</Filter>
     </ClInclude>
-    <ClInclude Include="AIFiniteStateMachine.h">
-      <Filter>Engine\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="Blackboard.h">
-      <Filter>Engine\AI</Filter>
+    <ClInclude Include="WindowEvents.h">
+      <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,7 +273,7 @@
     <ClCompile Include="ImguiRenderer.cpp">
       <Filter>Engine\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="GLSDLManager.cpp">
+    <ClCompile Include="SDLManager.cpp">
       <Filter>Engine\GL&amp;SDL</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
@@ -341,9 +338,6 @@
     </ClCompile>
     <ClCompile Include="LoggingSoundSystem.cpp">
       <Filter>Engine\ServiceLocator</Filter>
-    </ClCompile>
-    <ClCompile Include="AIFiniteStateMachine.cpp">
-      <Filter>Engine\AI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

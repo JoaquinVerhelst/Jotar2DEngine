@@ -44,6 +44,8 @@
 #include "GameManager.h"
 #include "JsonLevelLoader.h"
 
+#include "AIPerceptionComponent.h"
+#include "HUDComponent.h"
 
 using namespace Jotar;
 
@@ -83,27 +85,32 @@ void load()
 
 
 
-	auto& scene = Jotar::SceneManager::GetInstance().CreateScene("Demo");
+
+
+
+
+
+	auto& scene = Jotar::SceneManager::GetInstance().CreateScene("Menu");
 
 
 	auto levelLoader = scene.CreateGameObject("Background");
 	levelLoader->AddComponent<JsonLevelLoader>(scene, "../Data/Json/Level1.json");
 
-
 	glm::ivec4 camRect = { 0, 0, 720, 1080 };
-	glm::ivec4 levelBounds = { 0, 0, 1000, 25*64 };
+	glm::ivec4 levelBounds = { 0, 0, 1000, 25 * 64 };
 
 	auto cameraObj = scene.CreateGameObject("Camera");
 	auto camera = cameraObj->AddComponent<Camera>(camRect, levelBounds);
 
 	scene.SetCamera(camera);
 
+
 	// logo
-	auto go = scene.CreateGameObject("Logo");
-	go->AddComponent<TextureComponent>("../Data/Sprites/logo.tga");
-	go->GetTransform()->SetPosition(216, 180);
-
-
+	//auto go = scene.CreateGameObject("Background", false );
+	////go->GetTransform()->SetPosition(0, 0);
+	//go->GetTransform()->SetSize(glm::vec2{ 800, 350 });
+	//go->AddComponent<TextureComponent>("../Data/Sprites/Backgrounds/MenuBackground.png");
+	//go->AddComponent<HUDComponent>();
 
 
 	auto font1 = Jotar::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
@@ -177,25 +184,29 @@ void load()
 	// bomb and explosion
 
 
-	auto explosion = scene.CreateGameObject("Explosion");
-	explosion->AddComponent<TextureComponent>("../Data/Sprites/Explosions.png", false, 4, 7);
-	explosion->GetTransform()->SetPosition(200, 50);
+	//auto explosion = scene.CreateGameObject("Explosion");
+	//explosion->AddComponent<TextureComponent>("../Data/Sprites/Explosions.png", false, 4, 7);
+	//explosion->GetTransform()->SetPosition(200, 50);
 
 	// AI - ENEMY
+	//std::vector <std::string> enemyTarget = { "Player" };
 
-	for (float i = 0; i < 3; i++)
-	{
 
-		auto enemy = scene.CreateGameObject("enemy");
-		enemy->AddComponent<TextureComponent>("../Data/Sprites/bomberman.png");
-		enemy->AddComponent<MovementComponent>(60.f);
-		enemy->AddComponent<AIBehaviorComponent>();
-		auto collEnemy = enemy->AddComponent<ColliderComponent>(false);
-		collEnemy->SetTag("Enemy");
-		collEnemy->AddIgnoreCollisionTag("Enemy");
-		enemy->GetTransform()->SetPosition(64.f * (i + 2.f), 100.f);
+	//for (float i = 0; i < 1; i++)
+	//{
 
-	}
+	//	auto enemy = scene.CreateGameObject("enemy");
+	//	enemy->AddComponent<TextureComponent>("../Data/Sprites/bomberman.png");
+	//	enemy->AddComponent<MovementComponent>(60.f);
+	//	auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+	//	auto perception = enemy->AddComponent< AIPerceptionComponent>(200.f, enemyTarget);
+	//	perception->AddObserver(behavior);
+	//	auto collEnemy = enemy->AddComponent<ColliderComponent>(false);
+	//	collEnemy->SetTag("Enemy");
+	//	collEnemy->AddIgnoreCollisionTag("Enemy");
+	//	enemy->GetTransform()->SetPosition(64.f * (i + 2.f), 100.f);
+
+	//}
 
 
 	//Playerss
@@ -222,7 +233,7 @@ void load()
 
 	GameManager::GetInstance().SetPlayerOne(player1);
 
-	camera->SetTarget(player1->GetTransform());
+	camera->SetTargets({ player1->GetTransform() });
 
 
 

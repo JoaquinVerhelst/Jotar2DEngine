@@ -1,20 +1,20 @@
 {
 	"level": {
 			"backgroundFilepath": "../Data/Sprites/Menu.png",
-			"player1PosIndex": [ 0, 0 ],
-			"player2PosIndex": [ 0, 0 ],
+			"player1PosIndex": [ 1, 1 ],
+			"player2PosIndex": [ 1, 2 ],
 		"levelLayout": {
 			"gridDimensions": [ 25, 11 ],
 			"gridSize": 64,
 			"randomizeBreakableWalls": {
 				"isRandomized": true,
-				"amount": 20
+				"amount": 40
 			},
 			"layout": [
 				"1111111111111111111111111",
-				"1000000000000000000000001",
-				"1010101010101010101010101",
-				"1000000000000000000000001",
+				"1333000000000000000000001",
+				"1310101010101010101010101",
+				"1300000000000000000000001",
 				"1010101010101010101010101",
 				"1000000000000000000000001",
 				"1010101010101010101010101",

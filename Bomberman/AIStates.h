@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 #include "NavigationSystem.h"
+#include "ColliderComponent.h"
+
 
 namespace Jotar
 {
@@ -50,18 +52,21 @@ namespace Jotar
 	public:
 		GoToTargetAIState(AIBehaviorComponent* pAiComp);
 
-		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
-		virtual void OnExit() override;
 		void SetPath(std::vector<glm::vec2>& path);
 		std::vector<glm::vec2> GetPath() const;
 
+		glm::ivec2 GetCurrentDirection();
+		void MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& pathPos);
+
 	protected:
-		void CalculateDirection(glm::vec2& pathPos, glm::vec2& AiPos);
-		virtual AIState* CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos);
+		void CalculateDirection(glm::vec2& pos, glm::vec2& pathPos);
+		virtual bool CheckDistanceToPoint(glm::vec2& pos, glm::vec2& pathPos);
+		void CheckForAnimationUpdate();
 
 		MovementComponent* m_pMovementComp;
 		std::vector<glm::vec2> m_Path{};
+		glm::ivec2 m_PreviousDirection{};
 		glm::ivec2 m_CurrentDirection{};
 	};
 
@@ -72,10 +77,6 @@ namespace Jotar
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
-		virtual void OnExit() override;
-
-	protected:
-		AIState* CheckDistanceToPoint(glm::vec2 pathPos, glm::vec2 AiPos) override;
 	private:
 
 		float m_TimerCounter;
@@ -84,34 +85,50 @@ namespace Jotar
 	};
 
 
-	class CalculateNextTargetAIState final : public AIState
+	class CalculateRandomPathAIState : public AIState
 	{
 	public:
-		CalculateNextTargetAIState(AIBehaviorComponent* pAiComp);
-
-		virtual void OnEnter() override;
+		CalculateRandomPathAIState(AIBehaviorComponent* pAiComp);
 		virtual AIState* OnHandle() override;
 
 	private:
 		int CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex);
-		glm::ivec2 GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange);
-		bool CalculatePath(const GridCell& startCell, const GridCell& endCell);
+		glm::ivec2 GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange) const;
 
+	protected:
+		bool CalculatePath(const GridCell& startCell, const GridCell& endCell);
 		std::unique_ptr<NavigationSystem> m_pNavigationSystem;
 		bool m_IsPathFound;
 	};
 
-
-
-
-	class DeadAIState final : public AIState
+	class CalculatePathToPlayerAIState final : public CalculateRandomPathAIState
 	{
 	public:
-		DeadAIState(AIBehaviorComponent* pAiComp);
+		CalculatePathToPlayerAIState(AIBehaviorComponent* pAiComp);
+		virtual AIState* OnHandle() override;
+
+		void SetTarget(ColliderComponent* targetCollider);
+
+	private:
+		ColliderComponent* m_pTargetCollider;
+
+	};
+
+
+
+	class OnDamageAIState final : public AIState
+	{
+	public:
+		OnDamageAIState(AIBehaviorComponent* pAiComp);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
 		virtual void OnExit() override;
+
+	private:
+		float m_DeathTimer;
+		float m_DeathWaitTime;
+		bool m_IsDeath;
 	};
 
 

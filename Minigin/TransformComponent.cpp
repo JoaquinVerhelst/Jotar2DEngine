@@ -6,9 +6,10 @@
 #include "Camera.h"
 
 
-Jotar::TransformComponent::TransformComponent(GameObject* owner)
+Jotar::TransformComponent::TransformComponent(GameObject* owner, bool moveWithCamera)
 	:Component(owner)
 	, m_IsPositionDirty{false}
+	, m_IsMovingWithCamera{ moveWithCamera }
 {
 }
 
@@ -25,16 +26,14 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 	
 	m_WorldProjectionPosition = m_WorldPosition;
 
-	//todo get rid of hardcocded index
-	auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
-	if (camObj != nullptr)
-		m_WorldProjectionPosition += camObj->GetOffset();
+	if (m_IsMovingWithCamera)
+	{
+		auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
+		if (camObj != nullptr)
+			m_WorldProjectionPosition += camObj->GetOffset();
+	}
 
-
-	if (GetOwner()->GetName() == ("Camera"))
-		return m_WorldPosition;
-	else
-		return m_WorldProjectionPosition;
+	return m_WorldProjectionPosition;
 }
 
 void Jotar::TransformComponent::SetPosition(float x, float y)
@@ -59,12 +58,12 @@ void Jotar::TransformComponent::Translate(const glm::vec2& position)
 	SetPositionDirty();
 }
 
-void Jotar::TransformComponent::SetSize(glm::vec2& size)
+void Jotar::TransformComponent::SetSize(glm::ivec2 size)
 {
 	m_Size = size;
 }
 
-glm::vec2& Jotar::TransformComponent::GetSize()
+glm::ivec2& Jotar::TransformComponent::GetSize()
 {
 	return m_Size;
 }
