@@ -154,6 +154,7 @@
     <ClCompile Include="AIAnimationControllerComponent.cpp" />
     <ClCompile Include="AIBehaviorComponent.cpp" />
     <ClCompile Include="AIPerceptionComponent.cpp" />
+    <ClCompile Include="AIScoreComponent.cpp" />
     <ClCompile Include="AIStates.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
@@ -161,8 +162,9 @@
     <ClCompile Include="BreakableWallComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="EventAddScore.cpp" />
-    <ClCompile Include="ExplosionComponent.cpp" />
+    <ClCompile Include="ExitComponent.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthDisplayComponent.cpp" />
     <ClCompile Include="HUDComponent.cpp" />
@@ -183,15 +185,17 @@
     <ClInclude Include="AIBehaviorComponent.h" />
     <ClInclude Include="AIEvents.h" />
     <ClInclude Include="AIPerceptionComponent.h" />
+    <ClInclude Include="AIScoreComponent.h" />
     <ClInclude Include="AIStates.h" />
     <ClInclude Include="BombComponent.h" />
     <ClInclude Include="BombermanComponent.h" />
     <ClInclude Include="BreakableWallComponent.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="EventAddScore.h" />
-    <ClInclude Include="ExplosionComponent.h" />
+    <ClInclude Include="ExitComponent.h" />
     <ClInclude Include="ExplosionEvent.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="HealthDisplayComponent.h" />
     <ClInclude Include="HealthEvents.h" />

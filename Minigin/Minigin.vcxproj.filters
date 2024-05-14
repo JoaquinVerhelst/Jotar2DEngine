@@ -178,9 +178,6 @@
     <ClInclude Include="TempCommand.h">
       <Filter>Engine\Command</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
-    </ClInclude>
     <ClInclude Include="ColliderComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
@@ -210,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="WindowEvents.h">
       <Filter>Engine\Observer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -312,9 +312,6 @@
     <ClCompile Include="KeyboardInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Engine\OpenGLGraphics%28NOTREADY%29</Filter>
-    </ClCompile>
     <ClCompile Include="ColliderComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
@@ -338,6 +335,9 @@
     </ClCompile>
     <ClCompile Include="LoggingSoundSystem.cpp">
       <Filter>Engine\ServiceLocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

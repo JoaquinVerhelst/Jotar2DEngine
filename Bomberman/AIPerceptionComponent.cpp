@@ -13,6 +13,12 @@ Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float vie
 {
 	m_pSubject = std::make_unique<Subject<AIPlayerSeenEvent>>();
 }
+
+Jotar::AIPerceptionComponent::~AIPerceptionComponent()
+{
+	m_pSubject->RemoveAllObservers();
+}
+
 void Jotar::AIPerceptionComponent::Start()
 {
 	m_pTransformComponent = GetOwner()->GetComponent<TransformComponent>();
@@ -24,7 +30,7 @@ void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
 	auto dir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
 	auto pos = m_pTransformComponent->GetWorldPosition();
 
-	ColliderComponent* collider = SceneManager::GetInstance().GetScene(0).GetCollisionManager().RaycastLookForCollider(pos, dir, m_ViewDistance, m_TargetTags);
+	ColliderComponent* collider = SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().RaycastLookForCollider(pos, dir, m_ViewDistance, m_TargetTags);
 
 	if (collider != nullptr)
 	{

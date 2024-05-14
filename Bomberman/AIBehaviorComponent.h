@@ -1,3 +1,4 @@
+
 #pragma once
 #include "Component.h"
 #include <vector>
@@ -6,6 +7,8 @@
 #include "Observer.h"
 #include "AIEvents.h"
 #include "HealthEvents.h"
+#include "Subject.h"
+#include "Event.h"
 
 
 namespace Jotar
@@ -23,11 +26,11 @@ namespace Jotar
 	public:
 
 		explicit AIBehaviorComponent(GameObject* owner);
-		~AIBehaviorComponent() = default;
+		~AIBehaviorComponent();
 
 		void Start() override;
 		void Update() override;
-		void Render() const override;
+
 
 		AIBehaviorComponent(const AIBehaviorComponent& other) = delete;
 		AIBehaviorComponent(AIBehaviorComponent&& other) = delete;
@@ -38,29 +41,42 @@ namespace Jotar
 		void OnNotify(const AIPlayerSeenEvent& event) override;
 		void OnNotify(const HealthEvent& event) override;
 
-		IdleAIState* GetIdleState() const { return m_IdleState.get(); }
-		GoToTargetAIState* GetGoToTargetState() const { return m_GoToTargetState.get(); }
-		OnDamageAIState* GetOnDamageAIState() const { return m_OnDamageAIState.get(); }
-		CalculateRandomPathAIState* GetCalculateRandomPathState() const { return m_CalculateRandomPathState.get(); }
-		ChaseTargetAIState* GetChaseTargetState() const { return m_ChaseTargetState.get(); }
-		CalculatePathToPlayerAIState* GetCalculatePathToPlayerState() const { return m_CalculatePathToPlayerState.get(); }
+		IdleAIState* GetIdleState() const { return m_pIdleState.get(); }
+		GoToTargetAIState* GetGoToTargetState() const { return m_pGoToTargetState.get(); }
+		CalculateRandomPathAIState* GetCalculateRandomPathState() const { return m_pCalculateRandomPathState.get(); }
+		ChaseTargetAIState* GetChaseTargetState() const { return m_pChaseTargetState.get(); }
+		CalculatePathToPlayerAIState* GetCalculatePathToPlayerState() const { return m_pCalculatePathToPlayerState.get(); }
 
 		AIAnimationControllerComponent* GetAnimatorController() { return m_pAIAnimationControllerComponent; }
+
+
+		Subject<AIDeathEvent>* GetSubject() { return m_pSubject.get(); }
+
+		void AddObserver(Observer<AIDeathEvent>* pObserver)
+		{
+			m_pSubject->AddObserver(pObserver);
+		}
+		void RemoveObserver(Observer<AIDeathEvent>* pObserver)
+		{
+			m_pSubject->RemoveObserver(pObserver);
+		}
+
 
 	private:
 
 		AIState* m_pCurrentState;
-		std::unique_ptr<IdleAIState> m_IdleState;
-		std::unique_ptr<GoToTargetAIState> m_GoToTargetState;
-		std::unique_ptr<OnDamageAIState> m_OnDamageAIState;
-		std::unique_ptr<CalculateRandomPathAIState> m_CalculateRandomPathState;
-		std::unique_ptr<CalculatePathToPlayerAIState> m_CalculatePathToPlayerState;
-		std::unique_ptr<ChaseTargetAIState> m_ChaseTargetState;
+		std::unique_ptr<IdleAIState> m_pIdleState;
+		std::unique_ptr<GoToTargetAIState> m_pGoToTargetState;
+		std::unique_ptr<CalculateRandomPathAIState> m_pCalculateRandomPathState;
+		std::unique_ptr<CalculatePathToPlayerAIState> m_pCalculatePathToPlayerState;
+		std::unique_ptr<ChaseTargetAIState> m_pChaseTargetState;
 
 		AIAnimationControllerComponent* m_pAIAnimationControllerComponent;
 
 		bool m_IsPlayerSeen;
 		bool m_IsDamaged;
 
+
+		std::unique_ptr<Subject<AIDeathEvent>> m_pSubject;
 	};
 }

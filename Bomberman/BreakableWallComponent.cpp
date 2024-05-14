@@ -16,7 +16,7 @@ Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
 void Jotar::BreakableWallComponent::OnDestroy()
 {
 	//TODO get rid of hardcoded index
-	auto& scene = SceneManager::GetInstance().GetScene(0);
+	auto& scene = SceneManager::GetInstance().GetSceneByID(0);
 	auto pickupObj = scene.CreateGameObject("PickUp");
 	auto pickupComp = pickupObj->AddComponent<PickUpComponent>();
 	auto collider = pickupObj->AddComponent<ColliderComponent>(true , true);

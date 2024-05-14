@@ -29,8 +29,9 @@ namespace Jotar
 		void SetPositionDirty();
 		bool IsDirty() const { return m_IsPositionDirty; }
 
-	private:
 		void UpdateWorldPosition();
+	private:
+
 
 		bool m_IsPositionDirty;
 		bool m_IsMovingWithCamera;

@@ -21,9 +21,11 @@ namespace Jotar
 
 		void Destroy();
 
+		Scene& SetGetCurrentSceneByName(const std::string& name);
 
-		Scene& GetScene(int SceneIndex) const;
-
+		Scene& GetCurrentScene() const;
+		Scene& GetSceneByID(int SceneIndex) const;
+		Scene& GetSceneByName(const std::string& name);
 
 
 
@@ -31,5 +33,8 @@ namespace Jotar
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
 		std::vector<std::shared_ptr<Scene>> m_scenes;
+
+		int m_CurrentSceneIndex{};
+
 	};
 }

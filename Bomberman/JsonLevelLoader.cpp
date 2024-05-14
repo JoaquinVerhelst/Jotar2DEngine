@@ -14,27 +14,24 @@
 #include "AIBehaviorComponent.h"
 #include "AIAnimationControllerComponent.h"
 #include "AIPerceptionComponent.h"
-
+#include "AIEvents.h"
 #include "HealthComponent.h"
 
+#include "HUDComponent.h"
+
+#include "MenuComponent.h"
+#include "AIScoreComponent.h"
 #include "DamageComponent.h"
 
 using json = nlohmann::json;
 
 
-Jotar::JsonLevelLoader::JsonLevelLoader(GameObject* owner, Scene& scene, const std::string& filePath)
-    : Component(owner)
+bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level)
 {
-    LoadLevelFromJson(scene, filePath);
-}
-
-
-bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& filePath)
-{
-    std::ifstream file(filePath);
+    std::ifstream file(m_GameLevelsFilePath);
     if (!file.is_open())
     {
-        std::cout << "Failed to open JSON file: " << filePath << std::endl;
+        std::cout << "Failed to open JSON file: " << m_GameLevelsFilePath << std::endl;
         return false;
     }
     try
@@ -43,10 +40,11 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
         file >> jsonData;
 
 
+        std::string levelID = "level" + std::to_string(level);
 
-        const auto& level = jsonData["level"];
+        const auto& levelData = jsonData["gameScenes"][levelID];
 
-        const auto& levelLayout = level["levelLayout"];
+        const auto& levelLayout = levelData["levelLayout"];
         const auto& gridSize = levelLayout["gridSize"];
 
         const auto& gridDimensions = levelLayout["gridDimensions"];
@@ -61,11 +59,11 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
 
         std::vector<glm::ivec2> spawnCells{};
 
-        for (int i = 0; i < layout.size(); ++i)
+        for (size_t i = 0; i < layout.size(); ++i)
         {
             const std::string& row = layout[i];
 
-            for (int j = 0; j < row.size(); ++j)
+            for (size_t j = 0; j < row.size(); ++j)
             {
                 char tile = row[j];
                 if (tile == '1')
@@ -106,11 +104,44 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, const std::string& 
     }
     catch (const json::exception& ex)
     {
-        std::cout << "Failed to parse JSON file: " << filePath << std::endl;
+        std::cout << "Failed to parse JSON file: " << m_GameLevelsFilePath << std::endl;
         std::cout << "Error: " << ex.what() << std::endl;
         return false;
     }
 
+}
+
+bool Jotar::JsonLevelLoader::LoadMenuFromJson(Scene& scene)
+{
+    auto bombermanFont = Jotar::ResourceManager::GetInstance().LoadFont("nes-field-combat.otf", 30);
+
+
+    //logo
+    auto title = scene.CreateGameObject("Background", false ); 
+    title->GetTransform()->SetSize(glm::vec2{ 800, 350 });
+    title->AddComponent<TextureComponent>("../Data/Sprites/Backgrounds/MenuBackground.png");
+    title->AddComponent<HUDComponent>(HUDPosition::CenterUp, glm::vec2 { 0.f, 350.f / 2 });
+
+
+
+
+
+    auto menuObj = scene.CreateGameObject("Menu", false);
+    //menuObj->GetTransform()->SetPosition(540.f, 360.f);
+    auto menuComp = menuObj->AddComponent<MenuComponent>();
+    menuObj->AddComponent<HUDComponent>(HUDPosition::Center);
+    menuComp->AddButton("SinglePlayer", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::SinglePlayer), {0, 0, 25, 150}, bombermanFont);
+    menuComp->AddButton("Coop", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Coop), { 0, 0, 25, 150 }, bombermanFont);
+    menuComp->AddButton("Versus", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Versus), { 0, 0, 25, 150 }, bombermanFont);
+    menuComp->AddButton("HighScore", nullptr, { 0, 0, 25, 150 }, bombermanFont);
+
+
+    return false;
+}
+
+void Jotar::JsonLevelLoader::SetGameLevelsFilePath(std::string filePath)
+{
+    m_GameLevelsFilePath = filePath;
 }
 
 std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall(Scene& scene)
@@ -137,12 +168,14 @@ void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene)
     std::vector <std::string> enemyTarget = { "Player" };
     AnimationIndexesInfo animationInfo{ {3,5},{0, 2},{6, 6},{7, 10} };
 
-    for (float i = 0; i < 1; i++)
+    for (float i = 0; i < 3; i++)
     {
         auto enemy = scene.CreateGameObject("enemy");
         enemy->AddComponent<TextureComponent>("../Data/Sprites/Enemy/BalloomSpriteSheet.png", false, 1, 11 );
         enemy->AddComponent<MovementComponent>(60.f);
         auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+
+
         auto perception = enemy->AddComponent< AIPerceptionComponent>(200.f, enemyTarget);
         perception->AddObserver(behavior);
         enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
@@ -155,7 +188,12 @@ void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene)
         auto damageComp = enemy->AddComponent<DamageComponent>(1, enemyTarget);
         collEnemy->AddObserver(damageComp);
 
-        enemy->GetTransform()->SetPosition(64.f * (i + 2.f), 100.f);
+
+        auto scoreComp = enemy->AddComponent<AIScoreComponent>(100);
+        behavior->AddObserver(scoreComp);
+
+
+        enemy->GetTransform()->SetPosition(64.f * (i * 3 + 2.f), 100.f);
     }
 }
 

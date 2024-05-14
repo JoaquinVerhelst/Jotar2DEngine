@@ -13,7 +13,10 @@
 #include "WorldTimeManager.h"
 #include "AIAnimationControllerComponent.h"
 
+#include "ScoreComponent.h"
 #include "HealthComponent.h"
+#include "AIEvents.h"
+
 
 // ------------------------------------------------------------------------------------- //
 //									IDLE STATE											 //
@@ -87,7 +90,7 @@ void Jotar::GoToTargetAIState::MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& p
 	pathPos = m_Path[0];
 
 	//todo get rid of hardcocded index
-	auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
+	auto camObj = SceneManager::GetInstance().GetSceneByID(0).GetCamera();
 	if (camObj != nullptr)
 		pathPos += camObj->GetOffset();
 
@@ -99,17 +102,13 @@ void Jotar::GoToTargetAIState::MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& p
 
 void Jotar::GoToTargetAIState::CalculateDirection(glm::vec2& pos, glm::vec2& pathPos)
 {
-	//Go to the next point of the path
 	glm::vec2 dir = pathPos - pos;
 
-	if (dir.x < 0) // Moving left
-		m_CurrentDirection = { -1, 0 };
-	else if (dir.x > 0) // Moving right
-		m_CurrentDirection = { 1, 0 };
-	else if (dir.y < 0) // Moving up
-		m_CurrentDirection = { 0, -1 };
-	else if (dir.y > 0) // Moving down
-		m_CurrentDirection = { 0, 1 };
+
+	dir = glm::normalize(dir);
+	
+
+	m_CurrentDirection = glm::ivec2(std::round(dir.x), std::round(dir.y));
 
 	CheckForAnimationUpdate();
 }
@@ -118,10 +117,10 @@ bool Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2& pos, glm::vec2& p
 {
 	auto distance = glm::distance(pos, pathPos);
 
-	if (distance * distance < 8)
+	if (distance * distance < 3)
 	{
 		m_Path.erase(m_Path.begin());
-		m_CurrentDirection = glm::vec2{ 0,0 };
+		//m_CurrentDirection = glm::vec2{ 0,0 };
 		return true;
 	}
 
@@ -142,10 +141,10 @@ void Jotar::GoToTargetAIState::CheckForAnimationUpdate()
 //								CHASE TARGET STATE										 //
 // ------------------------------------------------------------------------------------- //
 
-Jotar::ChaseTargetAIState::ChaseTargetAIState(AIBehaviorComponent* pAiComp)
+Jotar::ChaseTargetAIState::ChaseTargetAIState(AIBehaviorComponent* pAiComp, float updatePathTime)
 	: GoToTargetAIState(pAiComp)
 	, m_TimerCounter{}
-	, m_ResetPathTime{2.f}
+	, m_ResetPathTime{ updatePathTime }
 	, m_ShouldReset{false}
 {
 }
@@ -188,10 +187,11 @@ Jotar::AIState* Jotar::ChaseTargetAIState::OnHandle()
 // ------------------------------------------------------------------------------------- //
 
 
-Jotar::CalculateRandomPathAIState::CalculateRandomPathAIState(AIBehaviorComponent* pAiComp)
+Jotar::CalculateRandomPathAIState::CalculateRandomPathAIState(AIBehaviorComponent* pAiComp, int walkRange)
 	: AIState(pAiComp)
 	, m_pNavigationSystem{ std::make_unique<NavigationSystem>()}
 	, m_IsPathFound{ false }
+	, m_Range{ walkRange }
 {
 }
 
@@ -206,7 +206,7 @@ Jotar::AIState* Jotar::CalculateRandomPathAIState::OnHandle()
 	while (!m_IsPathFound)
 	{
 		//TODO Get rid of hardCoded range
-		auto randomCellIndex = GetNextRandomCellIndex(startCell.Index, 8);
+		auto randomCellIndex = GetNextRandomCellIndex(startCell.Index, m_Range);
 		const auto& endCell = worldGrid->GetGridCellByID(randomCellIndex);
 		if (!endCell.ObjectOnCell.expired()) continue;
 
@@ -221,17 +221,6 @@ Jotar::AIState* Jotar::CalculateRandomPathAIState::OnHandle()
 	return nullptr;
 }
 
-
-
-int Jotar::CalculateRandomPathAIState::CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex)
-{
-	int distanceX = std::abs(endIndex.x - startIndex.x);
-	int distanceY = std::abs(endIndex.y - startIndex.y);
-	int minPathLength = distanceX + distanceY;
-
-	// Each position is the middle point of a cell, so the minimum path length should be at least the Manhattan distance + 1
-	return minPathLength;
-}
 
 glm::ivec2 Jotar::CalculateRandomPathAIState::GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange) const
 {
@@ -274,7 +263,7 @@ bool Jotar::CalculateRandomPathAIState::CalculatePath(const GridCell& startCell,
 
 
 Jotar::CalculatePathToPlayerAIState::CalculatePathToPlayerAIState(AIBehaviorComponent* pAiComp)
-	:CalculateRandomPathAIState(pAiComp)
+	:CalculateRandomPathAIState(pAiComp, 0)
 	, m_pTargetCollider{ nullptr }
 {
 }
@@ -295,7 +284,7 @@ Jotar::AIState* Jotar::CalculatePathToPlayerAIState::OnHandle()
 
 	while (!m_IsPathFound)
 	{
-		const auto& endCell = worldGrid->GetGridCellByPosition(GameManager::GetInstance().GetPlayerOne()->GetTransform()->GetLocalPosition());
+		const auto& endCell = worldGrid->GetGridCellByPosition(m_pTargetCollider->GetTransform()->GetLocalPosition());
 
 		auto path = m_pNavigationSystem->FindPath(startCell, endCell);
 		if (!path.empty())
@@ -319,11 +308,12 @@ void Jotar::CalculatePathToPlayerAIState::SetTarget(ColliderComponent* targetCol
 //									DEAD STATE											 //
 // ------------------------------------------------------------------------------------- //
 
-Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp)
+Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp, GameObject* attacker, float deathWaitTime)
 	: AIState(pAiComp)
-	, m_DeathWaitTime{2.f}
+	, m_DeathWaitTime{ deathWaitTime }
 	, m_IsDeath{ false }
 	, m_DeathTimer{ 0 }
+	, m_Attacker{ attacker }
 {
 }
 
@@ -346,6 +336,7 @@ Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
 			m_IsDeath = true;
 			m_pAIBehaviorComp->GetAnimatorController()->SetDeathAnimation();
 			m_pAIBehaviorComp->GetAnimatorController()->SetDestroyOnLastFrame(true);
+			m_pAIBehaviorComp->GetSubject()->NotifyObservers(AIDeathEvent(m_Attacker));
 		}
 		else
 		{

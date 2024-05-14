@@ -24,7 +24,7 @@ namespace Jotar
 
 
 		int GetHealth() const;
-		void TakeDamage(int damage = 1);
+		void TakeDamage(int damage = 1, GameObject* attacker = nullptr);
 		void AddHealth(int health);
 
 

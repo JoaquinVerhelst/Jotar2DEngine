@@ -96,7 +96,7 @@ void Jotar::BombComponent::OnExplode(int range)
     auto centerIndex = centerCell.Index;
 
 
-    auto& scene = SceneManager::GetInstance().GetScene(0);
+    auto& scene = SceneManager::GetInstance().GetSceneByID(0);
 
     CreateChildExplosion(0, centerCell.CenterCellPosition, scene);
 
@@ -163,12 +163,14 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
     texture->SetDestroyOnLastFrame(true);
     texture->SetAnimationSpeedInNrOfFramesPerSecond(10);
     explosion->GetTransform()->SetPosition(pos);
-    auto triggerCollider = explosion->AddComponent<ColliderComponent>(false, true);
+    auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
     triggerCollider->SetTag("Explosion");
     int damage = 1;
     auto damageComp = explosion->AddComponent<DamageComponent>(damage, std::vector<std::string>{"Killable", "Player", "Enemy"});
 
     triggerCollider->AddObserver(damageComp);
+
+    explosion->Start();
 }
 
 int Jotar::BombComponent::CalculateSpriteSheetRow(int xDir, int yDir, int range, int currentRange)

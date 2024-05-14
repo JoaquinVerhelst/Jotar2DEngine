@@ -1,7 +1,7 @@
 #pragma once
 #include "Event.h"
 #include "ColliderComponent.h"
-
+#include "GameObject.h"
 
 namespace Jotar
 {
@@ -17,8 +17,15 @@ namespace Jotar
 	class AIDeathEvent : public AIEvents
 	{
 	public:
-		AIDeathEvent() = default;
+		AIDeathEvent(GameObject* attacker)
+			:m_Attacker{ attacker }
+		{}
+
 		virtual ~AIDeathEvent() = default;
+		GameObject* GetAttacker() const { return m_Attacker; }
+
+	private:
+		GameObject* m_Attacker;
 	};
 
 

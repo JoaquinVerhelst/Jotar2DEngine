@@ -13,7 +13,7 @@ namespace Jotar
 	{
 	public:
 		AIPerceptionComponent(GameObject* owner, float viewDistance, std::vector<std::string> targetTags);
-		~AIPerceptionComponent() = default;
+		~AIPerceptionComponent();
 		
 		void FixedUpdate() override;
 		void Start() override;

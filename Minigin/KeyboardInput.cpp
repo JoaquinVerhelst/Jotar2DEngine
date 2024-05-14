@@ -75,15 +75,9 @@ namespace Jotar
 
 	glm::ivec2 KeyboardInput::KeyboardInputImpl::GetMouseLocation() const
 	{
-		for (size_t i = 0; i < m_SDLFrameMouseEvents.size(); i++)
-		{
-			if (m_SDLFrameMouseEvents[i].type == SDL_MOUSEMOTION)
-			{
-				return glm::ivec2{ (int)m_SDLFrameMouseEvents[i].motion.x,(int)m_SDLFrameMouseEvents[i].motion.y };
-			}
-		}
-
-		return glm::ivec2{ 0,0 };
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		return glm::ivec2(x, y);
 	}
 
 	bool KeyboardInput::KeyboardInputImpl::IsMouseButtonUsed(SDL_EventType inputType) const

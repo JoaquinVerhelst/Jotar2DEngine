@@ -57,7 +57,7 @@ void Scene::Update()
 
 void Jotar::Scene::FixedUpdate()
 {
-
+	m_CollisionManager.FixedUpdate();
 
 	for (size_t i = 0; i < m_pObjects.size(); ++i)
 	{
@@ -65,7 +65,7 @@ void Jotar::Scene::FixedUpdate()
 	}	
 	
 	
-	m_CollisionManager.FixedUpdate();
+
 
 }
 
@@ -139,5 +139,10 @@ void Jotar::Scene::SetCamera(Camera* cameraObj)
 Camera* Jotar::Scene::GetCamera() const
 {
 	return m_pCameraObject;
+}
+
+const std::string& Jotar::Scene::GetName() const
+{
+	return m_Name;
 }
 

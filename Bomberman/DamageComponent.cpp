@@ -23,7 +23,7 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
         {
             if (otherCollider->CompareTag(m_TagsToHit[i]))
             {
-                triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage);
+                triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<HealthComponent>()->TakeDamage(m_Damage, triggerEvent.GetCollider()->GetOwner());
             }
         }
     }

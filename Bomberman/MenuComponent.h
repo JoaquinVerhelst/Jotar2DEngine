@@ -8,7 +8,6 @@
 namespace Jotar
 {
 	class GameObject;
-	class Scene;
 	class Font;
 	class UIButtonComponent;
 
@@ -18,11 +17,12 @@ namespace Jotar
 		MenuComponent(GameObject* owner);
 		~MenuComponent() = default;
 
-
+		void Start() override;
 		void Update() override;
 
 
-		void AddButton(Scene& scene, std::string buttonName, const std::function<void()>& buttonFunction, glm::ivec4 rectBonds, const std::shared_ptr<Font>& font);
+		void AddButton(std::string buttonName, const std::function<void()>& buttonFunction, glm::ivec4 rectBonds, const std::shared_ptr<Font>& font);
+		void SetMarkerChildObj(GameObject* pMarkerObj);
 
 		void ButtonSelectUp();
 		void ButtonSelectDown();
@@ -34,7 +34,12 @@ namespace Jotar
 
 	private:
 
-		std::vector<UIButtonComponent*> m_ButtonChildren;
+		void UpdateButtonPositions();
+		void SelectButton();
 
+		std::vector<UIButtonComponent*> m_pButtonChildren;
+		GameObject* m_pMarkerObject;
+
+		int m_CurrentButtonIndex;
 	};
 }

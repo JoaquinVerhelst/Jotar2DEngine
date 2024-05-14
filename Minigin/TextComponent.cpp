@@ -14,7 +14,9 @@ Jotar::TextComponent::TextComponent(GameObject* owner, const std::string& text, 
 	m_Text(text),
 	m_Font(font),
 	m_DoOnce{ true },
-	m_Color{color}
+	m_Color{color},
+	m_TextSize{}
+
 {
 	UpdateText();
 }
@@ -29,7 +31,9 @@ void Jotar::TextComponent::Update()
 
 void Jotar::TextComponent::Render() const
 {
-	const auto& pos = GetOwner()->GetTransform()->GetLocalPosition();
+	const auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
+
+
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }
 
@@ -64,4 +68,9 @@ void Jotar::TextComponent::UpdateText()
 	}
 	SDL_FreeSurface(surf);
 	m_Texture = std::make_unique<Texture2D>(texture);
+
+
+	GetOwner()->GetTransform()->SetSize(m_Texture->GetSize());
+
+
 }

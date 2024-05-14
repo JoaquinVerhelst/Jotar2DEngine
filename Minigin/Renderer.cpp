@@ -93,31 +93,41 @@ void Jotar::Renderer::Update()
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
-		if (e.window.event == SDL_WINDOWEVENT_RESIZED || e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED || e.window.event == SDL_WINDOWEVENT_MAXIMIZED)
+		if (e.type == SDL_WINDOWEVENT)
 		{
-			std::cout << "WINDOIW EVENT" << '\n';
+			if (e.window.event == SDL_WINDOWEVENT_RESIZED ||
+				e.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
+				e.window.event == SDL_WINDOWEVENT_MAXIMIZED)
+			{
+				std::cout << "WINDOW EVENT" << '\n';
 
-			int windowWidth, windowHeight;
-			SDL_GetWindowSize(m_SDLManager->GetWindow(), &windowWidth, &windowHeight);
+				int windowWidth, windowHeight;
+				SDL_GetWindowSize(m_SDLManager->GetWindow(), &windowWidth, &windowHeight);
 
-			float aspectRatio = static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
+				float aspectRatio = static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
 
-			float zoomFactor = 1.f;
-			int logicalWidth = static_cast<int>(windowWidth * zoomFactor);
-			int logicalHeight = static_cast<int>(windowHeight * zoomFactor);
+				float zoomFactor = 1.f;
+				int logicalWidth = static_cast<int>(windowWidth * zoomFactor);
+				int logicalHeight = static_cast<int>(windowHeight * zoomFactor);
 
-			if (aspectRatio >= 1.0f) {
-				logicalWidth = static_cast<int>(logicalHeight * aspectRatio);
+				if (aspectRatio >= 1.0f) {
+					logicalWidth = static_cast<int>(logicalHeight * aspectRatio);
+				}
+				else {
+					logicalHeight = static_cast<int>(logicalWidth / aspectRatio);
+				}
+
+				SDL_RenderSetLogicalSize(m_Renderer, logicalWidth, logicalHeight);
+				SDL_RenderSetScale(m_Renderer, 1.0f / zoomFactor, 1.0f / zoomFactor);
+
+				// Ensure m_pSubject and NotifyObservers are valid and implemented correctly
+				if (m_pSubject) {
+					m_pSubject->NotifyObservers(WindowResizeEvent());
+				}
+				else {
+					std::cerr << "m_pSubject is null" << '\n';
+				}
 			}
-			else {
-				logicalHeight = static_cast<int>(logicalWidth / aspectRatio);
-			}
-
-			SDL_RenderSetLogicalSize(m_Renderer, logicalWidth, logicalHeight);
-			SDL_RenderSetScale(m_Renderer, 1.0f / zoomFactor, 1.0f / zoomFactor);
-
-
-			m_pSubject->NotifyObservers(WindowResizeEvent());
 		}
 	}
 }

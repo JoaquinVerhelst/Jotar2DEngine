@@ -10,22 +10,28 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "AIAnimationControllerComponent.h"
-#include <iostream>
+
+
 
 Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	:Component(owner)
 	, m_pCurrentState{ nullptr }
-	, m_IdleState{ std::make_unique<IdleAIState>(this) }
-	, m_GoToTargetState{ std::make_unique<GoToTargetAIState>(this) }
-	, m_ChaseTargetState{ std::make_unique<ChaseTargetAIState>(this) }
-	, m_CalculateRandomPathState{ std::make_unique<CalculateRandomPathAIState>(this) }
-	, m_OnDamageAIState{ std::make_unique<OnDamageAIState>(this) }
-	, m_CalculatePathToPlayerState{ std::make_unique<CalculatePathToPlayerAIState>(this) }
+	, m_pIdleState{ std::make_unique<IdleAIState>(this) }
+	, m_pGoToTargetState{ std::make_unique<GoToTargetAIState>(this) }
+	, m_pChaseTargetState{ std::make_unique<ChaseTargetAIState>(this, 2.0f) }
+	, m_pCalculateRandomPathState{ std::make_unique<CalculateRandomPathAIState>(this, 3) }
+	, m_pCalculatePathToPlayerState{ std::make_unique<CalculatePathToPlayerAIState>(this) }
 	, m_IsPlayerSeen{false}
 	, m_pAIAnimationControllerComponent{ nullptr }
 	, m_IsDamaged{ false }
 {
-	m_pCurrentState = m_IdleState.get();
+	m_pCurrentState = m_pIdleState.get();
+	m_pSubject = std::make_unique<Subject<AIDeathEvent>>();
+}
+
+Jotar::AIBehaviorComponent::~AIBehaviorComponent()
+{
+	m_pSubject->RemoveAllObservers();
 }
 
 void Jotar::AIBehaviorComponent::Start()
@@ -50,29 +56,6 @@ void Jotar::AIBehaviorComponent::Update()
 	m_pCurrentState->OnEnter();
 }
 
-void Jotar::AIBehaviorComponent::Render() const
-{
-	int size = 16;
-	SDL_Renderer* renderer = Renderer::GetInstance().GetSDLRenderer();
-
-	const std::vector<glm::vec2>& path = GetChaseTargetState()->GetPath();
-	for (const auto& point : path)
-	{
-		auto pos = point;
-
-		auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
-
-		if (camObj != nullptr)
-			pos += camObj->GetOffset();
-
-
-		SDL_Rect rect = { static_cast<int>(pos.x), static_cast<int>(pos.y), size, size };
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &rect);
-	}
-
-}
-
 bool Jotar::AIBehaviorComponent::GetIsPlayerSeen() const
 {
 	return m_IsPlayerSeen;
@@ -85,7 +68,7 @@ void Jotar::AIBehaviorComponent::OnNotify(const AIPlayerSeenEvent& AiEvent)
 	if (typeid(AiEvent) == typeid(AIPlayerSeenEvent))
 	{
 		const AIPlayerSeenEvent& playerSeenEvent = static_cast<const AIPlayerSeenEvent&>(AiEvent);
-		std::cout << "PLAYER SEEN" << '\n';
+
 		m_IsPlayerSeen = true;
 		GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
 		m_pCurrentState = GetCalculatePathToPlayerState();
@@ -97,10 +80,13 @@ void Jotar::AIBehaviorComponent::OnNotify(const HealthEvent& healthEvent)
 {
 	if (m_IsDamaged) return;
 
-	if (typeid(healthEvent) == typeid(DamageHealthEvent))
+
+	const DamageHealthEvent* damageEvent = dynamic_cast<const DamageHealthEvent*>(&healthEvent);
+	if (damageEvent)
 	{
 		m_IsDamaged = true;
-		m_pCurrentState = GetOnDamageAIState();
+		auto damageState = std::make_unique<OnDamageAIState>(this, damageEvent->GetAttacker(), 2.0f);
+		m_pCurrentState = damageState.get();
 		m_pCurrentState->OnEnter();
 	}
 }

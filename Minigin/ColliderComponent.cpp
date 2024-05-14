@@ -19,7 +19,7 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 void Jotar::ColliderComponent::OnDestroy()
 {
 	//to do : Get Rid of hard coded scene index
-	SceneManager::GetInstance().GetScene(0).GetCollisionManager().RemoveCollider(this);
+	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().RemoveCollider(this);
 	m_pSubject->RemoveAllObservers();
 }
 
@@ -153,7 +153,15 @@ void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 
 void Jotar::ColliderComponent::UpdatePosition()
 {
-	auto& pos = m_pTransform->GetWorldPosition();
+	//if (m_IsStatic)
+	//{
+	//	if (GetOwner()->GetName() == "Bomb")
+	//	{
+	//		GetCollisionRect();
+	//	}
+	//}
+
+	auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
 	m_CollisionRect.x = pos.x;
 	m_CollisionRect.y = pos.y;
 }
@@ -165,13 +173,13 @@ void Jotar::ColliderComponent::SetTag(std::string tag)
 
 void Jotar::ColliderComponent::RemoveThisColliderFromManager()
 {
-	SceneManager::GetInstance().GetScene(0).GetCollisionManager().RemoveCollider(this);
+	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().RemoveCollider(this);
 }
 
 void Jotar::ColliderComponent::Start()
 {
 
-	m_pTransform = GetOwner()->GetComponent<TransformComponent>();
+	m_pTransform = GetOwner()->GetTransform();
 
 	auto& pos = m_pTransform->GetWorldPosition();
 	auto& size = m_pTransform->GetSize();
@@ -179,7 +187,7 @@ void Jotar::ColliderComponent::Start()
 	// x, y , z , w
 	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
 
-	SceneManager::GetInstance().GetScene(0).GetCollisionManager().AddCollider(this);
+	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().AddCollider(this);
 }
 
 void Jotar::ColliderComponent::FixedUpdate()

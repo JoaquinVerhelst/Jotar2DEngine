@@ -21,6 +21,7 @@ const glm::vec2& Jotar::TransformComponent::GetLocalPosition() const
 
 const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 {
+
 	if (m_IsPositionDirty)
 		UpdateWorldPosition();
 	
@@ -28,7 +29,7 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 
 	if (m_IsMovingWithCamera)
 	{
-		auto camObj = SceneManager::GetInstance().GetScene(0).GetCamera();
+		auto camObj = SceneManager::GetInstance().GetSceneByID(0).GetCamera();
 		if (camObj != nullptr)
 			m_WorldProjectionPosition += camObj->GetOffset();
 	}

@@ -36,6 +36,8 @@ namespace Jotar
 		void SetCamera(Camera* cameraObj);
 		Camera* GetCamera() const;
 
+		const std::string& GetName() const;
+
 	private: 
 		explicit Scene(const std::string& name);
 

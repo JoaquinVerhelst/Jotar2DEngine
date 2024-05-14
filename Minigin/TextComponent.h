@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <SDL_pixels.h>
-
+#include <glm/glm.hpp>
 
 namespace Jotar
 {
@@ -30,9 +30,9 @@ namespace Jotar
         void SetText(const std::string& text, const std::shared_ptr<Font>& font, bool needUpdating);
         void SetText(const std::string& text);
 
-
-    private:
         void UpdateText();
+    private:
+
 
 
         bool m_NeedsUpdate;
@@ -43,6 +43,7 @@ namespace Jotar
         std::shared_ptr<Font> m_Font;
 
         std::unique_ptr<Texture2D> m_Texture;
+        glm::ivec2 m_TextSize;
 
         SDL_Color m_Color{ 255, 255, 255, 255 };
     };

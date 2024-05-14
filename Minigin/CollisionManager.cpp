@@ -97,20 +97,10 @@ Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosit
 }
 
 
-
+///TODO: BUG LINE GOES THRROUGH WALLS
 Jotar::ColliderComponent* Jotar::CollisionManager::RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> tagsToFind)
 {
     glm::vec2 dir = glm::normalize(direction);
-
-
-    SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 255, 255, 255); // Set color to white
-
-    // Draw the ray
-    SDL_RenderDrawLine(Renderer::GetInstance().GetSDLRenderer(), static_cast<int>(startpos.x), static_cast<int>(startpos.y),
-        static_cast<int>(startpos.x + direction.x * distance), static_cast<int>(startpos.y + direction.y * distance));
-
-    SDL_RenderPresent(Renderer::GetInstance().GetSDLRenderer());
-
 
     for (const auto& collider : m_pSceneColliders)
     {

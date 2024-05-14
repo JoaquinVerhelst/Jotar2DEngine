@@ -100,6 +100,12 @@ void Jotar::TextureComponent::SetSize(glm::ivec2 size)
 void Jotar::TextureComponent::SetSelectedFrames(glm::ivec2 startAndEndFrames)
 {
 	m_SelectedFramesIndexes = startAndEndFrames;
+
+	if (m_SpriteSheet.Direction == SpriteSheet::SpriteSheetDirection::Right)
+		m_SpriteSheet.CurrentRow = m_SelectedFramesIndexes.x;
+	else
+		m_SpriteSheet.CurrentColumn = m_SelectedFramesIndexes.y;
+
 }
 
 void Jotar::TextureComponent::UpdateFrame()

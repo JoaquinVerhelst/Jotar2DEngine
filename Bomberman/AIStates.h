@@ -1,6 +1,8 @@
 #pragma once
 
 #include "glm/glm.hpp"
+
+
 #include <memory>
 #include <vector>
 #include "NavigationSystem.h"
@@ -73,7 +75,7 @@ namespace Jotar
 	class ChaseTargetAIState final : public GoToTargetAIState
 	{
 	public:
-		ChaseTargetAIState(AIBehaviorComponent* pAiComp);
+		ChaseTargetAIState(AIBehaviorComponent* pAiComp, float updatePathTime);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
@@ -88,17 +90,19 @@ namespace Jotar
 	class CalculateRandomPathAIState : public AIState
 	{
 	public:
-		CalculateRandomPathAIState(AIBehaviorComponent* pAiComp);
+		CalculateRandomPathAIState(AIBehaviorComponent* pAiComp, int walkRange);
 		virtual AIState* OnHandle() override;
 
 	private:
-		int CalculateMinPathLength(glm::ivec2 startIndex, glm::ivec2 endIndex);
 		glm::ivec2 GetNextRandomCellIndex(glm::ivec2 cellIndex, int wanderRange) const;
+
+		int m_Range;
 
 	protected:
 		bool CalculatePath(const GridCell& startCell, const GridCell& endCell);
 		std::unique_ptr<NavigationSystem> m_pNavigationSystem;
 		bool m_IsPathFound;
+
 	};
 
 	class CalculatePathToPlayerAIState final : public CalculateRandomPathAIState
@@ -119,13 +123,15 @@ namespace Jotar
 	class OnDamageAIState final : public AIState
 	{
 	public:
-		OnDamageAIState(AIBehaviorComponent* pAiComp);
+		OnDamageAIState(AIBehaviorComponent* pAiComp, GameObject* attacker, float deathWaitTime = 2.0f);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
 		virtual void OnExit() override;
 
 	private:
+
+		GameObject* m_Attacker;
 		float m_DeathTimer;
 		float m_DeathWaitTime;
 		bool m_IsDeath;

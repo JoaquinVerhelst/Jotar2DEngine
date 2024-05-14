@@ -17,10 +17,8 @@ namespace Jotar
 		UIButtonComponent(GameObject* owner, const std::function<void()>& buttonFunction);
 		~UIButtonComponent() = default;
 
-
+		void Render() const override;
 		void Start() override;
-
-
 
 		UIButtonComponent(const UIButtonComponent& other) = delete;
 		UIButtonComponent(UIButtonComponent&& other) = delete;

@@ -152,6 +152,9 @@ void Jotar::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 		m_pParent->RemoveChild(shared_from_this());
 	}
 
+	GetTransform()->UpdateWorldPosition();
+
+
 	m_pParent = newParent;
 
 	if (m_pParent)

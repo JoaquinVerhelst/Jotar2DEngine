@@ -1,46 +1,31 @@
 #include "SceneManager.h"
 #include "Scene.h"
-
+#include <stdexcept>
 
 
 void Jotar::SceneManager::Start()
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->Start();
-	}
+	m_scenes[m_CurrentSceneIndex]->Start();
 }
 
 void Jotar::SceneManager::Update()
 {
-	for(auto& scene : m_scenes)
-	{
-		scene->Update();
-	}
+	m_scenes[m_CurrentSceneIndex]->Update();
 }
 
 void Jotar::SceneManager::FixedUpdate()
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->FixedUpdate();
-	}
+	m_scenes[m_CurrentSceneIndex]->FixedUpdate();
 }
 
 void Jotar::SceneManager::LateUpdate()
 {
-	for (auto& scene : m_scenes)
-	{
-		scene->LateUpdate();
-	}
+	m_scenes[m_CurrentSceneIndex]->LateUpdate();
 }
 
 void Jotar::SceneManager::Render()
 {
-	for (const auto& scene : m_scenes)
-	{
-		scene->Render();
-	}
+	m_scenes[m_CurrentSceneIndex]->Render();
 }
 
 void Jotar::SceneManager::CleanUpDestroyedObjects()
@@ -67,7 +52,42 @@ void Jotar::SceneManager::Destroy()
 	}
 }
 
-Jotar::Scene& Jotar::SceneManager::GetScene(int SceneIndex) const
+Jotar::Scene& Jotar::SceneManager::GetCurrentScene() const
+{
+	return *m_scenes[m_CurrentSceneIndex];
+}
+
+Jotar::Scene& Jotar::SceneManager::GetSceneByID(int SceneIndex) const
 {
 	return *m_scenes[SceneIndex];
+}
+
+Jotar::Scene& Jotar::SceneManager::GetSceneByName(const std::string& name)
+{
+	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
+		return scene->GetName() == name;
+		});
+
+	if (it != m_scenes.end()) {
+		return **it;
+	}
+	else {
+		throw std::runtime_error("Scene not found: " + name);
+	}
+
+}
+
+Jotar::Scene& Jotar::SceneManager::SetGetCurrentSceneByName(const std::string& name)
+{
+	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
+		return scene->GetName() == name;
+		});
+
+	if (it != m_scenes.end()) {
+		m_CurrentSceneIndex = static_cast<int>(std::distance(m_scenes.begin(), it));
+		return **it;
+	}
+	else {
+		throw std::runtime_error("Scene not found: " + name);
+	}
 }

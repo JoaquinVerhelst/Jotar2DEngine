@@ -8,7 +8,7 @@
 #include "TextureComponent.h"
 #include "SoundServiceLocator.h"
 #include "GameManager.h"
-
+#include "ColliderComponent.h"
 
 #include <iostream>
 
@@ -45,7 +45,7 @@ void Jotar::PlaceBombComponent::GiveDetonator()
 
 void Jotar::PlaceBombComponent::PlaceBomb()
 {
-	if (m_BombsPlaced.size() >= m_MaxAmountOfBombs) return;
+	if (static_cast<int>(m_BombsPlaced.size()) >= m_MaxAmountOfBombs) return;
 
 	auto& cell = GameManager::GetInstance().GetWorldGrid()->GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
 
@@ -73,7 +73,7 @@ void Jotar::PlaceBombComponent::DetonateBomb()
 std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject(GridCell& cell)
 {
 	// TODO get rid of hardcoded scene index
-	Scene& scene = SceneManager::GetInstance().GetScene(0);
+	Scene& scene = SceneManager::GetInstance().GetSceneByID(0);
 	auto bombObj = scene.CreateGameObject("Bomb");
 	auto size = GameManager::GetInstance().GetWorldGrid()->GetCellSize();
 	glm::vec2 sizeVec = { size, size };
@@ -87,11 +87,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	colliderComp->AddObserver(bombComp);
 
 	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
-	//colliderComp->UpdatePosition();
 	cell.ObjectOnCell = bombObj;
-
-
-
 	SoundServiceLocator::GetSoundSystem().Play(0, 64);
 
 
@@ -99,6 +95,9 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	m_BombsPlaced.emplace_back(bombComp);
 
 	bombObj->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("Bomb"));
+
+
+	bombObj->Start();
 	return bombObj;
 }
 

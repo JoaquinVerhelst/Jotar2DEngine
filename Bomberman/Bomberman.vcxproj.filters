@@ -18,11 +18,14 @@
     <Filter Include="GameFIles\Commands">
       <UniqueIdentifier>{be6bfbed-6fd7-4198-8af7-f20cda54bebb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI">
-      <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFIles\Components\UI">
       <UniqueIdentifier>{895d18b2-1bb3-4515-a880-7cbf3e9e9a28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFIles\AI">
+      <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFIles\GameState">
+      <UniqueIdentifier>{ebb613d1-548a-45ac-88ad-c0bea502e92c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,9 +42,6 @@
       <Filter>GameFIles\Components</Filter>
     </ClCompile>
     <ClCompile Include="DamageComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ExplosionComponent.cpp">
       <Filter>GameFIles\Components</Filter>
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
@@ -75,25 +75,22 @@
       <Filter>GameFIles</Filter>
     </ClCompile>
     <ClCompile Include="NavigationSystem.cpp">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIBehaviorComponent.cpp">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIStates.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>GameFIles</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
       <Filter>GameFIles</Filter>
     </ClCompile>
     <ClCompile Include="AIPerceptionComponent.cpp">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIAnimationControllerComponent.cpp">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
     <ClCompile Include="HUDComponent.cpp">
       <Filter>GameFIles\Components\UI</Filter>
@@ -103,6 +100,18 @@
     </ClCompile>
     <ClCompile Include="MenuComponent.cpp">
       <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>GameFIles\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>GameFIles\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitComponent.cpp">
+      <Filter>GameFIles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AIScoreComponent.cpp">
+      <Filter>GameFIles\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,9 +129,6 @@
     </ClInclude>
     <ClInclude Include="EventAddScore.h">
       <Filter>GameFIles\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="ExplosionComponent.h">
-      <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="HealthComponent.h">
       <Filter>GameFIles\Components</Filter>
@@ -161,28 +167,25 @@
       <Filter>GameFIles\Event</Filter>
     </ClInclude>
     <ClInclude Include="NavigationSystem.h">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIBehaviorComponent.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>GameFIles</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIStates.h">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="WorldGrid.h">
       <Filter>GameFIles</Filter>
     </ClInclude>
     <ClInclude Include="AIPerceptionComponent.h">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIEvents.h">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIAnimationControllerComponent.h">
-      <Filter>AI</Filter>
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
     <ClInclude Include="HUDComponent.h">
       <Filter>GameFIles\Components\UI</Filter>
@@ -192,6 +195,18 @@
     </ClInclude>
     <ClInclude Include="MenuComponent.h">
       <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>GameFIles\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>GameFIles\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitComponent.h">
+      <Filter>GameFIles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AIScoreComponent.h">
+      <Filter>GameFIles\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

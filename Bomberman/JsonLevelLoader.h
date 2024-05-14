@@ -7,19 +7,20 @@
 
 namespace Jotar
 {
-	class GameObject;
 	class Scene;
 
-
-	class JsonLevelLoader final : public Component
+	class JsonLevelLoader final
 	{
 
 	public:
 
-		JsonLevelLoader(GameObject* owner, Scene& scene, const std::string& filePath);
+		JsonLevelLoader() = default;
 		~JsonLevelLoader() = default;
 
-		bool LoadLevelFromJson(Scene& scene, const std::string& filePath);
+		bool LoadLevelFromJson(Scene& scene, int level);
+		bool LoadMenuFromJson(Scene& scene);
+
+		void SetGameLevelsFilePath(std::string filePath);
 
 		//std::shared_ptr<GameObject> LoadPlayer(int index);
 
@@ -37,8 +38,7 @@ namespace Jotar
 		void CreateEnemies(Scene& scene);
 
 
-
-		std::string m_JsonFilePath;
+		std::string m_GameLevelsFilePath;
 	};
 
 }
