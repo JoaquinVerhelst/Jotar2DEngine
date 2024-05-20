@@ -2,21 +2,25 @@
 #include "Component.h"
 #include "Observer.h"
 #include "AIEvents.h"
+#include "CollisionEvents.h"
 
 namespace Jotar
 {
 	class GameObject;
 
 
-	class ExitComponent : public Component, Observer<AIDeathEvent>
+	class ExitComponent final : public Component, public Observer<AIDeathEvent>, public Observer<CollisionEvent>
 	{
 	public:
-		ExitComponent(GameObject* owner, int amountOfEnemies);
+		ExitComponent(GameObject* owner, std::string exitTextureFilePath);
 		~ExitComponent() = default;
 
+		void SetAmountOfEnemies(int totalEnemies);
 
 
 		void OnNotify(const AIDeathEvent& aiDeathEvent) override;
+		void OnNotify(const CollisionEvent& triggerEvent) override;
+		void RevealExit();
 
 		ExitComponent(const ExitComponent& other) = delete;
 		ExitComponent(ExitComponent&& other) = delete;
@@ -26,6 +30,7 @@ namespace Jotar
 
 	private:
 		int m_EnemiesRemaining;
-
+		std::string m_ExitTextureFilePath;
+		bool m_IsExitRevealed;
 	};
 }

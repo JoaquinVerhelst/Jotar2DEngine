@@ -13,6 +13,7 @@ namespace Jotar
 	class Scene;
 	class GameObject;
 	class Font;
+	class ExitComponent;
 
 	class JsonLevelLoader final
 	{
@@ -58,9 +59,12 @@ namespace Jotar
 
 		std::shared_ptr<GameObject> CreatePlayer(Scene& scene, const nlohmann::json& gameInfo, std::shared_ptr<GameObject> HUD, std::shared_ptr<Font> font, int cellSize, unsigned int playerIndex);
 		void CreateBalloomPlayer(Scene& scene);
-		void CreateEnemies(Scene& scene, const nlohmann::json& EnemyTypeInfo, GeneralLevelInfo& levelInfo);
+		int CreateEnemies(Scene& scene, const nlohmann::json& EnemyTypeInfo, GeneralLevelInfo& levelInfo, ExitComponent* exitComp);
 
-		void PlaceEnemyRandomly(std::shared_ptr<GameObject> enemy, GeneralLevelInfo& levelInfo);
+
+		void CreatePickUpObject(GameObject* owner);
+
+		void PlaceGameObjectRandomly(std::shared_ptr<GameObject> gameObject, GeneralLevelInfo& levelInfo, int minRangeAwayFromSpawn = 6, bool isStaticPlacedOnCell = false);
 
 		std::string m_GameLevelsFilePath;
 

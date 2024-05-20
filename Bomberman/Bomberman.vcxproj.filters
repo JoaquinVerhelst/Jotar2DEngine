@@ -21,11 +21,14 @@
     <Filter Include="GameFIles\Components\UI">
       <UniqueIdentifier>{895d18b2-1bb3-4515-a880-7cbf3e9e9a28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFIles\AI">
-      <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFIles\GameState">
       <UniqueIdentifier>{ebb613d1-548a-45ac-88ad-c0bea502e92c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFIles\Components\AI">
+      <UniqueIdentifier>{f70661b9-a769-4564-9ef3-0ad24fec4f46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFIles\Components\Player">
+      <UniqueIdentifier>{4abe46c9-4627-4d1c-a63f-a4f56574e43b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,22 +75,22 @@
       <Filter>GameFIles</Filter>
     </ClCompile>
     <ClCompile Include="NavigationSystem.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIBehaviorComponent.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIStates.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="WorldGrid.cpp">
       <Filter>GameFIles</Filter>
     </ClCompile>
     <ClCompile Include="AIPerceptionComponent.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="AIAnimationControllerComponent.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="HUDComponent.cpp">
       <Filter>GameFIles\Components\UI</Filter>
@@ -108,10 +111,16 @@
       <Filter>GameFIles\Components</Filter>
     </ClCompile>
     <ClCompile Include="AIScoreComponent.cpp">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
     <ClCompile Include="GameCommands.cpp">
       <Filter>GameFIles\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDeathComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathCheckerComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +143,6 @@
       <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="JsonLevelLoader.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementCommand.h">
       <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="MovementComponent.h">
@@ -164,25 +170,25 @@
       <Filter>GameFIles\Event</Filter>
     </ClInclude>
     <ClInclude Include="NavigationSystem.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIBehaviorComponent.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIStates.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="WorldGrid.h">
       <Filter>GameFIles</Filter>
     </ClInclude>
     <ClInclude Include="AIPerceptionComponent.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIEvents.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="AIAnimationControllerComponent.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="HUDComponent.h">
       <Filter>GameFIles\Components\UI</Filter>
@@ -203,9 +209,18 @@
       <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="AIScoreComponent.h">
-      <Filter>GameFIles\AI</Filter>
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
     <ClInclude Include="GameCommands.h">
+      <Filter>GameFIles\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDeathComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathCheckerComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementCommand.h">
       <Filter>GameFIles\Commands</Filter>
     </ClInclude>
   </ItemGroup>

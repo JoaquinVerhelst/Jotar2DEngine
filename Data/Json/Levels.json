@@ -73,6 +73,9 @@
 				}
 			}
 		},
+		"otherTextures": {
+			"exitTextureFilePath": "../Data/Sprites/Exit.png"
+		},
 		"fonts": {
 			"bombermanFont": {
 				"fontPath": "nes-field-combat.otf",
@@ -165,7 +168,7 @@
 					},
 					"enemyInfo": {
 						"balloom": {
-							"amount": 8,
+							"amount": 1,
 							"spriteSheetName": "Balloom",
 							"speed": 60,
 							"intelligence": {

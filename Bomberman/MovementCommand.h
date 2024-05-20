@@ -15,7 +15,7 @@ namespace Jotar
 		}
 		void Execute() override
 		{
-			if (m_pMovement) m_pMovement->Move(glm::vec3{ m_Dir.r,m_Dir.g,0 });
+			if (!m_pMovement->IsDisabled()) m_pMovement->Move(glm::vec3{ m_Dir.r,m_Dir.g,0 });
 		}
 
 	private:

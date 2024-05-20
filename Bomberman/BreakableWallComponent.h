@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include <functional>
+
 
 namespace Jotar
 {
@@ -11,7 +13,7 @@ namespace Jotar
 
 		void OnWallBreak();
 
-		explicit BreakableWallComponent(GameObject* owner);
+		explicit BreakableWallComponent(GameObject* owner, const std::function<void()>& OnWallBreak);
 		virtual ~BreakableWallComponent() = default;
 
 		virtual void OnDestroy() override;
@@ -22,7 +24,7 @@ namespace Jotar
 		BreakableWallComponent& operator=(BreakableWallComponent&& other) = delete;
 
 	private:
-
+		std::function<void()> m_OnWallBreak;
 	};
 }
 

@@ -34,6 +34,8 @@ namespace Jotar
         TextureComponent& operator=(TextureComponent&& other) = delete;
 
         void SetTexture(std::shared_ptr<Texture2D> texture);
+        void SetTexture(const std::string& filePath);
+
 
         void SetDestroyOnLastFrame(bool newValue);
         void SetCurrentRow(int currentRow);

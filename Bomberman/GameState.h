@@ -33,17 +33,25 @@ namespace Jotar
 	};
 
 
+	class TransitionState : public GameState
+	{
+	public:
+		void OnEnter(GameManager* gameManager) override;
+		GameState* OnHandle() override;
+		void OnExit(GameManager* gameManager) override;
+	};
+
+
+
 	class GameLevelState : public GameState
 	{
 	public:
-		GameLevelState(int AmountOfLevels);
+		GameLevelState();
 
 		void OnEnter(GameManager* gameManager) override;
 		GameState* OnHandle() override;
 		void OnExit(GameManager* gameManager) override;
 	private:
-		int m_CurrentLevel;
-		int m_AmountOfLevels;
 		bool m_IsGameModeInitialized;
 	};
 

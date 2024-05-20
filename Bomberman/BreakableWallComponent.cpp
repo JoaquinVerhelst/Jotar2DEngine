@@ -10,22 +10,12 @@
 
 void Jotar::BreakableWallComponent::OnWallBreak()
 {
-	auto& scene = SceneManager::GetInstance().GetCurrentScene();
-	auto pickupObj = scene.CreateGameObject("PickUp");
-	auto pickupComp = pickupObj->AddComponent<PickUpComponent>();
-	auto collider = pickupObj->AddComponent<ColliderComponent>(true, true);
-
-	collider->AddObserver(pickupComp);
-
-	auto& cell = GameManager::GetInstance().GetWorldGrid()->GetGridCellByPosition(GetOwner()->GetTransform()->GetLocalPosition());
-
-	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
-	collider->UpdatePosition();
-	pickupObj->Start();
+	m_OnWallBreak();
 }
 
-Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
+Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner, const std::function<void()>& onWallBreak)
 	: Component(owner)
+	, m_OnWallBreak{ onWallBreak }
 {
 }
 

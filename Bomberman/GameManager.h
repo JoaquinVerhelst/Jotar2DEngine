@@ -43,9 +43,12 @@ namespace Jotar
 		WorldGrid* GetWorldGrid();
 		JsonLevelLoader& GetLevelLoader();
 
+		int GetCurrentLevelID() const;
+		int GetCurrentTotalLevelsPlayed() const;
+
 
 		void StartAndSetGameMode(GameMode gameMode);
-		void NextLevel();
+		void LoadLevel(bool isNextLevel = true);
 		GameMode GetGamemode();
 
 	private:
@@ -60,6 +63,9 @@ namespace Jotar
 		GameMode m_GameMode{ GameMode::SinglePlayer };
 		JsonLevelLoader m_LevelLoader{};
 
+		int m_AmountOfLevelIDs;
+		int m_CurrentLevelID;
+		int m_CurrentTotalLevelsPlayed;
 
 		//STATE
 

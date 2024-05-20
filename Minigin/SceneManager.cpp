@@ -77,6 +77,20 @@ Jotar::Scene& Jotar::SceneManager::GetSceneByName(const std::string& name)
 
 }
 
+void Jotar::SceneManager::DestroyScene(Scene& scene)
+{
+	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
+		{
+			return ptr.get() == &scene;
+		});
+
+	if (it != m_scenes.end())
+	{
+		m_scenes.erase(it);
+	}
+}
+
+
 int Jotar::SceneManager::GetCurrentSceneID()
 {
 	return m_CurrentSceneIndex;
@@ -94,5 +108,21 @@ Jotar::Scene& Jotar::SceneManager::SetCurrentSceneByName(const std::string& name
 	}
 	else {
 		throw std::runtime_error("Scene not found: " + name);
+	}
+}
+
+void Jotar::SceneManager::SetCurrentSceneByScene(Scene& scene)
+{
+	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
+		{
+			return ptr.get() == &scene;
+		});
+
+	if (it != m_scenes.end())
+	{
+		m_CurrentSceneIndex = static_cast<int>(std::distance(m_scenes.begin(), it));
+	}
+	else {
+		throw std::runtime_error("Scene not found: " + scene.GetName());
 	}
 }

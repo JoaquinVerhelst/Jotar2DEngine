@@ -211,6 +211,9 @@
     <ClInclude Include="BaseTextureComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Coroutines.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -341,6 +344,9 @@
     </ClCompile>
     <ClCompile Include="BaseTextureComponent.cpp">
       <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

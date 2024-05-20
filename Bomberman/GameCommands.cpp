@@ -10,7 +10,7 @@
 void Jotar::SkipLevelCommand::Execute()
 {
 	std::cout << "Next Level" << '\n';
-	GameManager::GetInstance().NextLevel();
+	GameManager::GetInstance().LoadLevel();
 }
 
 void Jotar::MuteSoundCommand::Execute()

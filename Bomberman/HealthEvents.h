@@ -26,11 +26,19 @@ namespace Jotar
 			:HealthEvent(currentHealth)
 			, m_Attacker{ attacker }
 		{}
-		virtual ~DamageHealthEvent() = default;
+		~DamageHealthEvent() = default;
 
 		GameObject* GetAttacker() const { return m_Attacker; }
 	private:
 		GameObject* m_Attacker;
+	};
+
+	class OnDeathEvent final : public Event
+	{
+	public:
+		OnDeathEvent() = default;
+		~OnDeathEvent() = default;
+
 	};
 
 
@@ -39,7 +47,7 @@ namespace Jotar
 	public:
 		UpdateHealthEvent(int currentHealth)
 			:HealthEvent(currentHealth) {}
-		virtual ~UpdateHealthEvent() = default;
+		~UpdateHealthEvent() = default;
 	};
 
 }

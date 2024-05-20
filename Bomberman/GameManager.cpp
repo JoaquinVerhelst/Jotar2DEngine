@@ -9,8 +9,14 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 
     m_LevelLoader.InitGame();
 
+
+    m_AmountOfLevelIDs = 3;
+    m_CurrentLevelID = 1;
+    m_CurrentTotalLevelsPlayed = 0;
+
+
     m_pMainMenuState = std::make_unique<MainMenuState>();
-    m_pGameLevelState = std::make_unique<GameLevelState>(3);
+    m_pGameLevelState = std::make_unique<GameLevelState>();
     m_pHighScoreState = std::make_unique<HighscoreState>();
 
 
@@ -44,14 +50,32 @@ Jotar::JsonLevelLoader& Jotar::GameManager::GetLevelLoader()
     return m_LevelLoader;
 }
 
+int Jotar::GameManager::GetCurrentLevelID() const
+{
+    return m_CurrentLevelID;
+}
+
+int Jotar::GameManager::GetCurrentTotalLevelsPlayed() const
+{
+    return m_CurrentTotalLevelsPlayed;
+}
+
 void Jotar::GameManager::StartAndSetGameMode(GameMode gameMode)
 {
     m_GameMode = gameMode;
     ChangeState(m_pGameLevelState.get());
 }
 
-void Jotar::GameManager::NextLevel()
+void Jotar::GameManager::LoadLevel(bool isNextLevel)
 {
+    if (isNextLevel)
+    {
+         ++m_CurrentLevelID;
+        if (m_CurrentLevelID > m_AmountOfLevelIDs)
+           m_CurrentLevelID = 1;
+        
+        ++m_CurrentTotalLevelsPlayed;
+    }
     ChangeState(m_pGameLevelState.get());
 }
 

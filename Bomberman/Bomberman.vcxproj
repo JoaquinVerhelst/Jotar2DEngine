@@ -172,9 +172,11 @@
     <ClCompile Include="MenuComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="NavigationSystem.cpp" />
+    <ClCompile Include="DeathCheckerComponent.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlaceBombCommand.cpp" />
     <ClCompile Include="PlaceBombComponent.cpp" />
+    <ClCompile Include="PlayerDeathComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreDisplayComponent.cpp" />
     <ClCompile Include="UIButtonComponent.cpp" />
@@ -205,9 +207,11 @@
     <ClInclude Include="MovementCommand.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="NavigationSystem.h" />
+    <ClInclude Include="DeathCheckerComponent.h" />
     <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="PlaceBombCommand.h" />
     <ClInclude Include="PlaceBombComponent.h" />
+    <ClInclude Include="PlayerDeathComponent.h" />
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ScoreDisplayComponent.h" />
     <ClInclude Include="UIButtonComponent.h" />

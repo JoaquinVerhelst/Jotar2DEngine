@@ -36,9 +36,11 @@
 #include "MovementCommand.h"
 #include "PlaceBombCommand.h"
 #include "Renderer.h"
-
+#include "PickUpComponent.h"
 #include "GameCommands.h"
-
+#include "ExitComponent.h"
+#include "DeathCheckerComponent.h"
+#include "PlayerDeathComponent.h"
 
 #include "Font.h"
 
@@ -63,12 +65,14 @@ bool Jotar::JsonLevelLoader::InitGame()
 
         Jotar::SceneManager::GetInstance().CreateScene("mainMenu");
 
+       // Jotar::SceneManager::GetInstance().CreateScene("transition");
 
-        const auto& levels = jsonData["gameInfo"]["gameScenes"]["levels"];
-        for (json::const_iterator it = levels.begin(); it != levels.end(); ++it)
-        {
-            Jotar::SceneManager::GetInstance().CreateScene(it.key());
-        }
+
+        //const auto& levels = jsonData["gameInfo"]["gameScenes"]["levels"];
+        //for (json::const_iterator it = levels.begin(); it != levels.end(); ++it)
+        //{
+        //    Jotar::SceneManager::GetInstance().CreateScene(it.key());
+        //}
 
         Jotar::SceneManager::GetInstance().CreateScene("highScoreMenu");
 
@@ -179,8 +183,8 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
 
         if (!isGameModeInit)
             CreateGameMode(scene, levelInfo);
-        else
-            UpdateCamera(scene, levelInfo);
+        //else
+        //    UpdateCamera(scene, levelInfo);
 
 
         std::vector<glm::ivec2> spawnCells{};
@@ -223,10 +227,6 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
         }
 
 
-
-
-
-
         // Set the players on the right position
 
         auto players = GameManager::GetInstance().GetPlayers();
@@ -241,12 +241,56 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
         }
 
 
+        // Exit
+
+
+        auto exit = scene.CreateGameObject("Exit Wall");
+        auto collider = exit->AddComponent<ColliderComponent>(true);
+        collider->SetTag("Destroyable");
+        auto exitComp = exit->AddComponent<ExitComponent>(jsonData["gameInfo"]["otherTextures"]["exitTextureFilePath"]);
+
+        collider->AddObserver(exitComp);
+
+        exit->AddComponent<BreakableWallComponent>(
+            [exitComp]() {
+                exitComp->RevealExit();
+            }
+        );
+
+        exit->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("BreakableWall"));
+
+        PlaceGameObjectRandomly(exit, levelInfo, 8, true);
+
+
+
+        // DeathCkecker
+
+
+        auto deathCkeckerObj = scene.CreateGameObject("Death Ckecker");
+        auto deatchCheckerComp = deathCkeckerObj->AddComponent<DeathCheckerComponent>();
+
+
+        for (auto& player : players)
+        {
+            player->GetOwner()->GetComponent<PlayerDeathComponent>()->AddObserver(deatchCheckerComp);
+        }
+
+
+
+        //Camera
+
+        glm::ivec4 camRect = { 0, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth };
+        glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
+
+        auto cameraObj = scene.CreateGameObject("Camera");
+        auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
+        scene.SetCamera(camera);
+        camera->SetTargets(players);
+
 
         // Enemies
-
-   
-
-        CreateEnemies(scene, levelData["enemyInfo"], levelInfo);
+        int totalEnemies = CreateEnemies(scene, levelData["enemyInfo"], levelInfo, exitComp);
+        exitComp->SetAmountOfEnemies(totalEnemies);
 
         return true;
     }
@@ -307,7 +351,8 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(S
     auto wall = scene.CreateGameObject("Breakable Wall");
     auto collider = wall->AddComponent<ColliderComponent>(true);
     collider->SetTag("Destroyable");
-    wall->AddComponent<BreakableWallComponent>();
+
+    wall->AddComponent<BreakableWallComponent>(std::bind(&JsonLevelLoader::CreatePickUpObject, &GameManager::GetInstance().GetLevelLoader(), wall.get()));
     wall->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("BreakableWall"));
     return wall;
 }
@@ -346,15 +391,6 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
 
 
 
-        //// Camera
-        glm::ivec4 camRect = { 0, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth };
-        glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
-
-        auto cameraObj = scene.CreateGameObject("Camera");
-        cameraObj->SetDestroyOnLoad(false);
-        auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
-        scene.SetCamera(camera);
-
 
 
         const auto& gameInfo = jsonData["gameInfo"];
@@ -387,8 +423,11 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
         fpsCounter->AddComponent<HUDComponent>(HUDPosition::LeftUp);
         fpsCounter->AddComponent<Jotar::FPSComponent>();
 
-        // Time Left
 
+
+
+
+        // Time Left
         auto TimeLeftObj = HUD->CreateChildGameObject("TimeLeft", true, false);
         textComp = TimeLeftObj->AddComponent<TextComponent>("TimeLeft: ", bombermanFont);
         textComp->SetLayer(10);
@@ -396,27 +435,19 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
 
 
         // Player 0
-
         auto player0Obj = CreatePlayer(scene, gameInfo, HUD, bombermanFont, levelInfo.CellSize, 0);
         player0Obj->SetDestroyOnLoad(false);
-
         gameManager.AddPlayer(player0Obj->GetTransform());
-
-        // in cam component we set on start, tha tthe current scene is this cameras camera and dontdestoryonload
-        camera->SetTargets({ player0Obj->GetTransform() });
 
 
         // gameMode
-
         if (gameManager.GetGamemode() == GameMode::Coop)
         {
             // player 1
-
             auto player1Obj = CreatePlayer(scene, gameInfo, HUD, bombermanFont, levelInfo.CellSize, 1);
             player1Obj->SetDestroyOnLoad(false);
 
             gameManager.AddPlayer(player1Obj->GetTransform());
-            camera->SetTargets({ player1Obj->GetTransform() });
         }
         else if (gameManager.GetGamemode() == GameMode::Versus)
         {
@@ -478,6 +509,8 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     auto playerObj = scene.CreateGameObject("Bomberman" + std::to_string(playerIndex));
 
+    playerObj->GetTransform()->SetSize({ 60,60 });
+
     auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"]["playerSprite"]);
     textureComp->SetLayer(10);
 
@@ -489,6 +522,10 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     auto scoreCompPlayer = playerObj->AddComponent<ScoreComponent>();
     scoreCompPlayer->AddObserver(playerScoreDisplay);
+
+
+    auto deathComp = playerObj->AddComponent<PlayerDeathComponent>(2.f);
+    healthCompPlayer->AddObserver(deathComp);
 
 
     auto placeBombComp = playerObj->AddComponent<PlaceBombComponent>();
@@ -521,13 +558,13 @@ void Jotar::JsonLevelLoader::CreateBalloomPlayer(Scene& )
 {
 }
 
-void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& EnemyInfo, GeneralLevelInfo& levelInfo)
+int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& EnemyInfo, GeneralLevelInfo& levelInfo, ExitComponent* exitComp)
 {
 
     std::vector <std::string> enemyTarget = { "Player" };
     AnimationIndexesInfo animationInfo{ {3,5},{0, 2},{6, 6},{7, 10} };
     std::string enemyTag = "Enemy";
-
+    int totalEnemies{};
 
     for (const auto& enemyTypeInfo : EnemyInfo.items())
     {
@@ -567,12 +604,36 @@ void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& E
             damageCollComp->AddObserver(damageComp);
 
 
-            PlaceEnemyRandomly(enemy, levelInfo);
+            behavior->AddObserver(exitComp);
+
+
+
+            PlaceGameObjectRandomly(enemy, levelInfo);
+
+            ++totalEnemies;
         }
     }
+
+    return totalEnemies;
 }
 
-void Jotar::JsonLevelLoader::PlaceEnemyRandomly(std::shared_ptr<GameObject> enemy, GeneralLevelInfo& levelInfo)
+void Jotar::JsonLevelLoader::CreatePickUpObject(GameObject* owner)
+{
+    auto& scene = SceneManager::GetInstance().GetCurrentScene();
+    auto pickupObj = scene.CreateGameObject("PickUp");
+    auto pickupComp = pickupObj->AddComponent<PickUpComponent>();
+    auto collider = pickupObj->AddComponent<ColliderComponent>(true, true);
+
+    collider->AddObserver(pickupComp);
+
+    auto& cell = GameManager::GetInstance().GetWorldGrid()->GetGridCellByPosition(owner->GetTransform()->GetLocalPosition());
+
+    pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
+    collider->UpdatePosition();
+    pickupObj->Start();
+}
+
+void Jotar::JsonLevelLoader::PlaceGameObjectRandomly(std::shared_ptr<GameObject> gameObject, GeneralLevelInfo& levelInfo, int minRangeAwayFromSpawn, bool isStaticPlacedOnCell)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -591,7 +652,7 @@ void Jotar::JsonLevelLoader::PlaceEnemyRandomly(std::shared_ptr<GameObject> enem
         {
             randomX = distribX(gen);
             randomY = distribY(gen);
-        } while (randomX < 6 || randomY < 6);
+        } while (randomX < minRangeAwayFromSpawn && randomY < minRangeAwayFromSpawn);
 
         cellIndex = { randomX, randomY };
 
@@ -599,7 +660,13 @@ void Jotar::JsonLevelLoader::PlaceEnemyRandomly(std::shared_ptr<GameObject> enem
 
         if (cell.ObjectOnCell.expired())
         {
-            enemy->GetTransform()->SetPosition(cell.CenterCellPosition);
+            gameObject->GetTransform()->SetPosition(cell.CenterCellPosition);
+
+            if (isStaticPlacedOnCell)
+            {
+                cell.ObjectOnCell = gameObject;
+            }
+
             isPlaced = true;
         }
     }

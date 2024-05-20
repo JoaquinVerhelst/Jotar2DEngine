@@ -27,6 +27,14 @@ void Jotar::HealthComponent::TakeDamage(int damage, GameObject* attacker)
 	m_CurrentHealth -= damage;
 
 	m_pSubject->NotifyObservers(DamageHealthEvent{m_CurrentHealth, attacker});
+
+
+	// stop moving
+
+
+	// reloadlevel
+
+
 }
 
 

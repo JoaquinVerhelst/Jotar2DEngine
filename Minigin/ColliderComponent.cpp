@@ -17,6 +17,21 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 	m_pSubject = std::make_unique<Subject<CollisionEvent>>();
 }
 
+void Jotar::ColliderComponent::Start()
+{
+	m_SceneID = SceneManager::GetInstance().GetCurrentSceneID();
+	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().AddCollider(this);
+
+	m_pTransform = GetOwner()->GetTransform();
+
+	auto& pos = m_pTransform->GetWorldPosition();
+	auto& size = m_pTransform->GetSize();
+
+	// x, y , z , w
+	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
+}
+
+
 void Jotar::ColliderComponent::OnDestroy()
 {
 	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RemoveCollider(this);
@@ -166,19 +181,6 @@ void Jotar::ColliderComponent::RemoveThisColliderFromManager()
 	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RemoveCollider(this);
 }
 
-void Jotar::ColliderComponent::Start()
-{
-	m_SceneID = SceneManager::GetInstance().GetCurrentSceneID();
-	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().AddCollider(this);
-
-	m_pTransform = GetOwner()->GetTransform();
-
-	auto& pos = m_pTransform->GetWorldPosition();
-	auto& size = m_pTransform->GetSize();
-
-	// x, y , z , w
-	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
-}
 
 void Jotar::ColliderComponent::Reset()
 {

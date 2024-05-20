@@ -32,47 +32,65 @@ void Jotar::MainMenuState::OnExit(GameManager* )
 }
 
 
+// ------------------------------------------------------------------------------------- //
+//								 TRANSITION  STATE										 //
+// ------------------------------------------------------------------------------------- //
+
+
+void Jotar::TransitionState::OnEnter(GameManager* )
+{
+
+}
+
+Jotar::GameState* Jotar::TransitionState::OnHandle()
+{
+	return nullptr;
+}
+
+void Jotar::TransitionState::OnExit(GameManager* )
+{
+}
+
+
+
 
 // ------------------------------------------------------------------------------------- //
 //									Game Level STATE									 //
 // ------------------------------------------------------------------------------------- //
 
 
-Jotar::GameLevelState::GameLevelState(int amountofLevels)
-	: m_CurrentLevel{ 0 }
-	, m_AmountOfLevels{ amountofLevels }
-	, m_IsGameModeInitialized{ false }
+Jotar::GameLevelState::GameLevelState()
+	:  m_IsGameModeInitialized{ false }
 {
 }
 
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
-	++m_CurrentLevel;
-	if (m_CurrentLevel > m_AmountOfLevels)
-	{
-		m_CurrentLevel = 1;
-	}
 
-	std::string levelName = "level" + std::to_string(m_CurrentLevel);
+
+	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
 
 	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
 
-	auto& nextScene = SceneManager::GetInstance().GetSceneByName(levelName);
-	nextScene.RemoveAll();
+	auto& nextScene = SceneManager::GetInstance().CreateScene(levelName);
 
 	prevScene.HandleDontDestroyOnLoadObjects(nextScene);
-
 	prevScene.Reset();
 
 
-
-	SceneManager::GetInstance().SetCurrentSceneByName(levelName);
-
-
-	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, m_CurrentLevel, m_IsGameModeInitialized);
+	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, gameManager->GetCurrentLevelID(), m_IsGameModeInitialized);
 	m_IsGameModeInitialized = true;
 
+
+	if (prevScene.GetName() != "mainMenu")
+	{
+		SceneManager::GetInstance().DestroyScene(prevScene);
+	}
+
+	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
+
 	nextScene.Start();
+
 }
 
 Jotar::GameState* Jotar::GameLevelState::OnHandle()
@@ -88,7 +106,7 @@ void Jotar::GameLevelState::OnExit(GameManager* )
 
 
 // ------------------------------------------------------------------------------------- //
-//								 HighScore State STATE									 //
+//								 HIGHSCORE  STATE										 //
 // ------------------------------------------------------------------------------------- //
 
 
@@ -105,3 +123,6 @@ Jotar::GameState* Jotar::HighscoreState::OnHandle()
 void Jotar::HighscoreState::OnExit(GameManager* )
 {
 }
+
+
+

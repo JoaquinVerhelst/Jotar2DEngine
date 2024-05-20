@@ -9,5 +9,5 @@ Jotar::PlaceBombCommand::PlaceBombCommand(PlaceBombComponent* bomb)
 
 void Jotar::PlaceBombCommand::Execute()
 {
-	m_pBombComp->PlaceBomb();
+	if (!m_pBombComp->IsDisabled()) m_pBombComp->PlaceBomb();
 }

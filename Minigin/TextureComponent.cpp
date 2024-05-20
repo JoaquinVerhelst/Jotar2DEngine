@@ -76,6 +76,13 @@ void Jotar::TextureComponent::SetTexture(std::shared_ptr<Texture2D> texture)
 	Initizialize();
 }
 
+void Jotar::TextureComponent::SetTexture(const std::string& filePath)
+{
+	m_SpriteSheet.m_pTexture = std::make_shared<Texture2D>(filePath);
+	InitSpriteSheet(1, 1);
+	Initizialize();
+}
+
 void Jotar::TextureComponent::SetDestroyOnLastFrame(bool newValue)
 {
 	m_DestroyOnLastFrame = newValue;
