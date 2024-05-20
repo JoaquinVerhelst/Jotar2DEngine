@@ -16,7 +16,7 @@ namespace Jotar
 	{
 	public:
 
-		explicit BombComponent(GameObject* owner, float explodeTime, int range);
+		explicit BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range);
 		virtual ~BombComponent() = default;
 
 
@@ -51,6 +51,6 @@ namespace Jotar
 		float m_ExplodeTime;
 		float m_TimeCounter;
 		bool m_IsExploded;
-
+		GameObject* m_BombPlacer;
 	};
 }

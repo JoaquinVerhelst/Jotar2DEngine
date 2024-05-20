@@ -14,12 +14,13 @@
 
 #include "GameManager.h"
 
-Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime, int range)
+Jotar::BombComponent::BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range)
 	: Component(owner)
 	, m_ExplodeTime{ explodeTime }
 	, m_IsExploded { false }
 	, m_TimeCounter { 0 }
     , m_Range{ range }
+    , m_BombPlacer{ bombPlacer }
 {
     m_pSubject = std::make_unique<Subject<ExplosionEvent>>();
 
@@ -168,7 +169,7 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
     auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
     triggerCollider->SetTag("Explosion");
     int damage = 1;
-    auto damageComp = explosion->AddComponent<DamageComponent>(damage, std::vector<std::string>{"Killable", "Player", "Enemy"});
+    auto damageComp = explosion->AddComponent<DamageComponent>(damage, std::vector<std::string>{"Killable", "Player", "Enemy"}, m_BombPlacer);
 
     triggerCollider->AddObserver(damageComp);
 

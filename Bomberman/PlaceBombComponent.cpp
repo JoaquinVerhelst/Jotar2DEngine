@@ -81,7 +81,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	auto colliderComp = bombObj->AddComponent<ColliderComponent>(true, true);
 	colliderComp->SetTag("Bomb");
 
-	auto bombComp = bombObj->AddComponent<BombComponent>(m_BombTimer, m_AmountOfFlames);
+	auto bombComp = bombObj->AddComponent<BombComponent>(GetOwner(), m_BombTimer, m_AmountOfFlames);
 
 	colliderComp->AddObserver(bombComp);
 

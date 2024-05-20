@@ -21,6 +21,7 @@ void Jotar::BreakableWallComponent::OnWallBreak()
 
 	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	collider->UpdatePosition();
+	pickupObj->Start();
 }
 
 Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
