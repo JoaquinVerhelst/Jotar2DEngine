@@ -9,7 +9,7 @@
 
 
 Jotar::TextComponent::TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color, bool needUpdating)
-	: Component(owner),
+	: BaseTextureComponent(owner),
 	m_NeedsUpdate(needUpdating),
 	m_Text(text),
 	m_Font(font),

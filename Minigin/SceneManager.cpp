@@ -77,7 +77,12 @@ Jotar::Scene& Jotar::SceneManager::GetSceneByName(const std::string& name)
 
 }
 
-Jotar::Scene& Jotar::SceneManager::SetGetCurrentSceneByName(const std::string& name)
+int Jotar::SceneManager::GetCurrentSceneID()
+{
+	return m_CurrentSceneIndex;
+}
+
+Jotar::Scene& Jotar::SceneManager::SetCurrentSceneByName(const std::string& name)
 {
 	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
 		return scene->GetName() == name;

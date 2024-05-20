@@ -19,6 +19,10 @@ namespace Jotar
 		virtual void SetMusicVolume(int volume) = 0;
 		virtual void SetSoundEffectsVolume(int volume) = 0;
 		virtual void MuteSound() = 0;
+
+		virtual int GetMusicVolume() const = 0;
+		virtual int GetSoundEffectsVolume() const = 0;
+
 	};
 
 
@@ -39,6 +43,9 @@ namespace Jotar
 		void SetMusicVolume(int volume);
 		void SetSoundEffectsVolume(int volume) override;
 		void MuteSound() override;
+
+		int GetMusicVolume() const override;
+		int GetSoundEffectsVolume() const override;
 	};
 
 
@@ -57,6 +64,8 @@ namespace Jotar
 		void SetSoundEffectsVolume(int volume) override;
 		void MuteSound() override;
 
+		int GetMusicVolume() const override;
+		int GetSoundEffectsVolume( ) const override;
 	};
 
 
@@ -71,6 +80,9 @@ namespace Jotar
 		virtual void SetMusicVolume(int ) override {}
 		virtual void SetSoundEffectsVolume(int ) override {}
 		virtual void MuteSound() override {}
+
+		virtual int GetMusicVolume() const override { return 0; };
+		virtual int GetSoundEffectsVolume() const override { return 0; };
 	};
 
 

@@ -12,9 +12,7 @@
 #include "ImguiRenderer.h"
 #include "SoundServiceLocator.h"
 #include "SoundSystem.h"
-#include "SteamAchievements.h"
 
-//#include <steam_api.h>
 
 Jotar::Minigin::Minigin(const std::string &dataPath)
 {
@@ -58,7 +56,7 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 
 
 
-	sceneManager.Start();
+	//sceneManager.Start();
 
 	while (doContinue)
 	{
@@ -86,11 +84,6 @@ void Jotar::Minigin::Run(const std::function<void()>& load)
 		renderer.Update();
 		renderer.Render();
 
-		//SteamAPI_RunCallbacks();
-
-		//imgui.Render();
-
-		//renderer.EndRender();
 
 		sceneManager.CleanUpDestroyedObjects();
 

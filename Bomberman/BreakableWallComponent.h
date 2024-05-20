@@ -7,6 +7,10 @@ namespace Jotar
 	{
 	public:
 
+
+
+		void OnWallBreak();
+
 		explicit BreakableWallComponent(GameObject* owner);
 		virtual ~BreakableWallComponent() = default;
 

@@ -37,7 +37,6 @@
 #include <iostream>
 #include "Enums.h"
 #include "ColliderComponent.h"
-#include "Camera.h"
 
 #include "AIBehaviorComponent.h"
 
@@ -67,36 +66,9 @@ void load()
 
 
 
-	// Shared Textures
-
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/Bomb.png", "Bomb");
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/BreakableWall.png", "BreakableWall");
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/UnbreakableWall.png", "UnbreakableWall");
-
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/ExtraBombPickUp.png", "ExtraBombPickUp");
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/ExplosionRangePickUp.png", "ExplosionRangePickUp");
-	ResourceManager::GetInstance().AddSharedTexture("../Data/Sprites/DetonatorPickUp.png", "DetonatorPickUp");
-
-
-	SpriteSheet explosionSheet{};
-	explosionSheet.TotalColumns = 4;
-	explosionSheet.TotalRows = 7;
-	explosionSheet.Direction = SpriteSheet::SpriteSheetDirection::Down;
-
-	ResourceManager::GetInstance().AddSharedSpriteSheet("../Data/Sprites/Explosions.png", explosionSheet, "Explosion");
-
-
-
-
-
-
-
-	auto& scene = Jotar::SceneManager::GetInstance().CreateScene("MainMenu");
-	Jotar::SceneManager::GetInstance().CreateScene("Level1");
-	Jotar::SceneManager::GetInstance().CreateScene("Level2");
-	Jotar::SceneManager::GetInstance().CreateScene("Level3");
-
 	GameManager::GetInstance().Init("../Data/Json/Levels.json");
+
+
 
 
 
@@ -125,22 +97,22 @@ void load()
 
 
 	//auto font1 = Jotar::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto font2 = Jotar::ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
+	//auto font2 = Jotar::ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
 
 
-	//// HUD
-	auto HUD = scene.CreateGameObject("HUD");
+	////// HUD
+	//auto HUD = scene.CreateGameObject("HUD");
 
 
-	//auto prog4Text = HUD->CreateChildGameObject("Prog4Text", false);
-	//prog4Text->AddComponent<TextComponent>("Programming 4 Assignment", font1, SDL_Color(255, 255, 0, 255), false);
-	//prog4Text->GetTransform()->SetPosition(80, 20);
+	////auto prog4Text = HUD->CreateChildGameObject("Prog4Text", false);
+	////prog4Text->AddComponent<TextComponent>("Programming 4 Assignment", font1, SDL_Color(255, 255, 0, 255), false);
+	////prog4Text->GetTransform()->SetPosition(80, 20);
 
 
-	auto fpsCounter = HUD->CreateChildGameObject("FPScounter", false);
-	fpsCounter->AddComponent<TextComponent>("", font2, SDL_Color(0, 255, 0, 255));
-	fpsCounter->AddComponent<Jotar::FPSComponent>();
-	fpsCounter->GetTransform()->SetPosition(10, 10);
+	//auto fpsCounter = HUD->CreateChildGameObject("FPScounter", false);
+	//fpsCounter->AddComponent<TextComponent>("", font2, SDL_Color(0, 255, 0, 255));
+	//fpsCounter->AddComponent<Jotar::FPSComponent>();
+	//fpsCounter->GetTransform()->SetPosition(10, 10);
 
 
 	//// PLAYER 1 HUD

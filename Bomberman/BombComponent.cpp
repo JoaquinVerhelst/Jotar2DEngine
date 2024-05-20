@@ -10,9 +10,9 @@
 #include "Scene.h"
 #include "SoundServiceLocator.h"
 #include "ExplosionEvent.h"
+#include "BreakableWallComponent.h"
 
 #include "GameManager.h"
-#include <iostream>
 
 Jotar::BombComponent::BombComponent(GameObject* owner, float explodeTime, int range)
 	: Component(owner)
@@ -72,7 +72,8 @@ void Jotar::BombComponent::OnExplode(int range)
 {
     m_IsExploded = true;
 
-    SoundServiceLocator::GetSoundSystem().Play(1, 100);
+    SoundServiceLocator::GetSoundSystem().Play(1);
+
     ExplosionEvent explosionevent{};
     m_pSubject->NotifyObservers(explosionevent);
 
@@ -96,7 +97,7 @@ void Jotar::BombComponent::OnExplode(int range)
     auto centerIndex = centerCell.Index;
 
 
-    auto& scene = SceneManager::GetInstance().GetSceneByID(0);
+    auto& scene = SceneManager::GetInstance().GetCurrentScene();
 
     CreateChildExplosion(0, centerCell.CenterCellPosition, scene);
 
@@ -126,6 +127,7 @@ void Jotar::BombComponent::OnExplode(int range)
                         break;
                     else if (collider->CompareTag("Destroyable"))
                     {
+                        objPtr->GetComponent<BreakableWallComponent>()->OnWallBreak();
                         objPtr->Destroy();
                         break;
                     }

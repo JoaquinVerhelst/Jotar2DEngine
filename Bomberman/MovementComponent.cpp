@@ -4,9 +4,10 @@
 #include "TransformComponent.h"
 #include "WorldGrid.h"
 
-Jotar::MovementComponent::MovementComponent(GameObject* owner, float movementSpeed )
+Jotar::MovementComponent::MovementComponent(GameObject* owner, float movementSpeed, int cellsize)
 	: Component(owner)
 	, m_MovementSpeed{movementSpeed}
+	, m_CellSize{ cellsize}
 {
 	m_pTransformComponent = GetOwner()->GetTransform();
     
@@ -17,8 +18,6 @@ void Jotar::MovementComponent::Move(const glm::ivec2& dir)
 	glm::vec2 ourPos{ m_pTransformComponent->GetLocalPosition() };
 
 	auto newPos = Walk(dir, ourPos);
-	//newPos += static_cast<glm::vec2>(dir) * m_MovementSpeed * WorldTimeManager::GetInstance().GetDeltaTime();
-
 	m_pTransformComponent->Translate(newPos);
 }
 
@@ -35,23 +34,23 @@ glm::vec2 Jotar::MovementComponent::Walk(glm::ivec2 direction, const glm::vec2& 
 
     if (direction.x != 0)
     {
-		newPos = CalculateWalk(direction.x, currentPosition.y, currentPosition.x);
+		newPos = CalculateWalk(direction.x, currentPosition.y);
 		return { newPos.y, newPos.x };
     }
     else if (direction.y != 0)
     {
-		newPos = CalculateWalk(direction.y, currentPosition.x, currentPosition.y);
+		newPos = CalculateWalk(direction.y, currentPosition.x);
 		return newPos;
     }
 
 	return { 0,0 };
 }
 //
-glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float x, float )
+glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float axis )
 {
 	float deltaTime = WorldTimeManager::GetInstance().GetDeltaTime();
 
-	double offset = std::round((static_cast<int>(x) + 32) % static_cast<int>(64));
+	double offset = std::round((static_cast<int>(axis) + m_CellSize/2) % static_cast<int>(m_CellSize));
 
     glm::vec2 newPos{ };
 
@@ -62,7 +61,7 @@ glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float x, float 
 	}
 	else
 	{
-        newPos.x = (offset >= 64 / 2.f ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
+        newPos.x = (offset >= m_CellSize / 2.f ? m_MovementSpeed * deltaTime : -m_MovementSpeed * deltaTime);
         newPos.y = 0;
 	}
 

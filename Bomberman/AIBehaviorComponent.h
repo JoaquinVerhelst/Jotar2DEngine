@@ -46,6 +46,7 @@ namespace Jotar
 		CalculateRandomPathAIState* GetCalculateRandomPathState() const { return m_pCalculateRandomPathState.get(); }
 		ChaseTargetAIState* GetChaseTargetState() const { return m_pChaseTargetState.get(); }
 		CalculatePathToPlayerAIState* GetCalculatePathToPlayerState() const { return m_pCalculatePathToPlayerState.get(); }
+		OnDamageAIState* GetOnDamageState() { return m_pOnDamageState.get(); }
 
 		AIAnimationControllerComponent* GetAnimatorController() { return m_pAIAnimationControllerComponent; }
 
@@ -70,6 +71,8 @@ namespace Jotar
 		std::unique_ptr<CalculateRandomPathAIState> m_pCalculateRandomPathState;
 		std::unique_ptr<CalculatePathToPlayerAIState> m_pCalculatePathToPlayerState;
 		std::unique_ptr<ChaseTargetAIState> m_pChaseTargetState;
+		std::unique_ptr<OnDamageAIState> m_pOnDamageState;
+
 
 		AIAnimationControllerComponent* m_pAIAnimationControllerComponent;
 

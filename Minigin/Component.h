@@ -22,17 +22,19 @@ namespace Jotar
 		virtual void Init() {};
 		virtual void Render() const {};
 
+		// For objects that dont get destroyed on Load, so they go to next scene
+		virtual void Reset() {};
+
 		bool IsDisabled() const { return m_IsDisabled; }
 		void SetIsDisabled(bool isDisabled) { m_IsDisabled = isDisabled; }
-		virtual void OnDestroy() {};
 
+		virtual void OnDestroy() {};
 
 		GameObject* GetOwner() const { return m_pOwner; }
 
 	protected:
 
 		explicit Component(GameObject* pOwner);
-
 
 	private:
 

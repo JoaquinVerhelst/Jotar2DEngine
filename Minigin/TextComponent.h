@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.h"
+#include "BaseTextureComponent.h"
 #include <memory>
 #include <string>
 #include <SDL_pixels.h>
@@ -12,14 +12,14 @@ namespace Jotar
     class string;
     class Font;
 
-    class TextComponent final : public Component {
+    class TextComponent final : public BaseTextureComponent {
     public:
 
         explicit TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color = SDL_Color{ 255, 255, 255, 255 }, bool needUpdating = false);
         virtual ~TextComponent() override = default;
 
 
-        virtual void Update() override;
+        void Update() override;
         void Render() const override;
 
         TextComponent(const TextComponent& other) = delete;

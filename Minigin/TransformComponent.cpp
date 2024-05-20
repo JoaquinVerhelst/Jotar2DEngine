@@ -3,7 +3,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-#include "Camera.h"
+#include "CameraComponent.h"
 
 
 Jotar::TransformComponent::TransformComponent(GameObject* owner, bool moveWithCamera)
@@ -29,7 +29,7 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 
 	if (m_IsMovingWithCamera)
 	{
-		auto camObj = SceneManager::GetInstance().GetSceneByID(0).GetCamera();
+		auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera();
 		if (camObj != nullptr)
 			m_WorldProjectionPosition += camObj->GetOffset();
 	}

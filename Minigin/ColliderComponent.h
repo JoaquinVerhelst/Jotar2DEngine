@@ -18,9 +18,10 @@ namespace Jotar
 		ColliderComponent(GameObject* owner, bool isStatic = true, bool isTrigger = false);
 		~ColliderComponent() = default;
 
-		virtual void Start() override;
-		virtual void FixedUpdate() override;
-		virtual void OnDestroy() override;
+		void Start() override;
+		void Reset() override;
+		void FixedUpdate() override;
+		void OnDestroy() override;
 
 		void AddObserver(Observer<CollisionEvent>* pObserver);
 		void RemoveObserver(Observer<CollisionEvent>* pObserver);
@@ -60,7 +61,7 @@ namespace Jotar
 		bool m_IsStatic;
 		bool m_IsTrigger;
 		std::unique_ptr<Subject<CollisionEvent>> m_pSubject;
-
+		int m_SceneID;
 
 		std::vector<ColliderComponent*> m_pCollidingColliders;
 		std::vector<ColliderComponent*> m_pCollidingCollidersThisFrame;

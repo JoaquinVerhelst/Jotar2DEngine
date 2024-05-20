@@ -37,6 +37,11 @@ namespace Jotar
         void PlayMusic(const char* path);
         void SetMusicVolume(int volume);
         void SetSoundEffectsVolume(int volume);
+
+        int GetMusicVolume() const;
+        int GetSoundEffectsVolume() const;
+
+
         void MuteSound();
         void EnqueueTask(std::function<void()> task);
 
@@ -289,6 +294,16 @@ namespace Jotar
         Mix_VolumeMusic(m_SoundEffectVolume);
     }
 
+    int SDL_SoundSystem::SDL_SoundSystemImpl::GetMusicVolume() const
+    {
+        return m_MusicVolume;
+    }
+
+    int SDL_SoundSystem::SDL_SoundSystemImpl::GetSoundEffectsVolume() const
+    {
+        return m_SoundEffectVolume;
+    }
+
     void SDL_SoundSystem::SDL_SoundSystemImpl::MuteSound()
     {
         if (!m_SoundMuted)
@@ -363,6 +378,13 @@ namespace Jotar
     }
 
 
+    int SDL_SoundSystem::GetMusicVolume() const
+    {
+        return pImpl->GetMusicVolume();
+    }
 
-
+    int SDL_SoundSystem::GetSoundEffectsVolume() const
+    {
+       return pImpl->GetSoundEffectsVolume();
+    }
 }

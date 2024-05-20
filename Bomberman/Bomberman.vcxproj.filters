@@ -35,9 +35,6 @@
     <ClCompile Include="BombComponent.cpp">
       <Filter>GameFIles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="BombermanComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
     <ClCompile Include="BreakableWallComponent.cpp">
       <Filter>GameFIles\Components</Filter>
     </ClCompile>
@@ -113,12 +110,12 @@
     <ClCompile Include="AIScoreComponent.cpp">
       <Filter>GameFIles\AI</Filter>
     </ClCompile>
+    <ClCompile Include="GameCommands.cpp">
+      <Filter>GameFIles\Commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BombermanComponent.h">
       <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="BreakableWallComponent.h">
@@ -207,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="AIScoreComponent.h">
       <Filter>GameFIles\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCommands.h">
+      <Filter>GameFIles\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

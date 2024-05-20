@@ -1,65 +1,299 @@
 {
-	"gameScenes": {
-		"mainMenu": {
-
-		},
-		"level1": {
-			"backgroundFilepath": "../Data/Sprites/Menu.png",
-			"player1PosIndex": [ 1, 1 ],
-			"player2PosIndex": [ 1, 2 ],
-			"levelLayout": {
-				"gridDimensions": [ 25, 11 ],
-				"gridSize": 64,
-				"randomizeBreakableWalls": {
-					"isRandomized": true,
-					"amount": 15
-				},
-				"layout": [
-					"1111111111111111111111111",
-					"1333000000000000000000001",
-					"1310101010101010101010101",
-					"1300000000000000000000001",
-					"1010101010101010101010101",
-					"1000000000000000000000001",
-					"1010101010101010101010101",
-					"1000000000000000000000001",
-					"1010101010101010101010101",
-					"1000000000000000000000001",
-					"1111111111111111111111111"
-				]
+	"gameInfo": {
+		"sharedTextures": {
+			"bomb": {
+				"name": "Bomb",
+				"filePath": "../Data/Sprites/Bomb.png"
+			},
+			"breakableWall": {
+				"name": "BreakableWall",
+				"filePath": "../Data/Sprites/BreakableWall.png"
+			},
+			"unbreakableWall": {
+				"name": "UnbreakableWall",
+				"filePath": "../Data/Sprites/UnbreakableWall.png"
+			},
+			"extraBombPickUp": {
+				"name": "ExtraBombPickUp",
+				"filePath": "../Data/Sprites/ExtraBombPickUp.png"
+			},
+			"explosionRangePickUp": {
+				"name": "ExplosionRangePickUp",
+				"filePath": "../Data/Sprites/ExplosionRangePickUp.png"
+			},
+			"detonatorPickUp": {
+				"name": "DetonatorPickUp",
+				"filePath": "../Data/Sprites/DetonatorPickUp.png"
 			}
-
 		},
-		"level2": {
-			"backgroundFilepath": "../Data/Sprites/Menu.png",
-			"player1PosIndex": [ 1, 1 ],
-			"player2PosIndex": [ 1, 2 ],
-			"levelLayout": {
-				"gridDimensions": [ 31, 11 ],
-				"gridSize": 64,
-				"randomizeBreakableWalls": {
-					"isRandomized": true,
-					"amount": 40
-				},
-				"layout": [
-					"1111111111111111111111111111111",
-					"1333000000000000000000000000001",
-					"1310101010101010101010101010101",
-					"1300000000000000000000000000001",
-					"1010101010101010101010101010101",
-					"1000000000000000000000000000001",
-					"1010101010101010101010101010101",
-					"1000000000000000000000000000001",
-					"1010101010101010101010101010101",
-					"1000000000000000000000000000001",
-					"1111111111111111111111111111111"
-				]
+		"sharedSpriteSheet": {
+			"explosions": {
+				"name": "Explosion",
+				"filePath": "../Data/Sprites/Explosions.png",
+				"spriteSheet": {
+					"rows": 7,
+					"columns": 4,
+					"isDirectionDown": true
+				}
+			},
+			"balloom": {
+				"name": "Balloom",
+				"filePath": "../Data/Sprites/Enemy/BalloomSpriteSheet.png",
+				"spriteSheet": {
+					"rows": 11,
+					"columns": 1,
+					"isDirectionDown": false
+				}
+			},
+			"doll": {
+				"name": "Doll",
+				"filePath": "../Data/Sprites/Enemy/DollSpriteSheet.png",
+				"spriteSheet": {
+					"rows": 11,
+					"columns": 1,
+					"isDirectionDown": false
+				}
+			},
+			"minvo": {
+				"name": "Minvo",
+				"filePath": "../Data/Sprites/Enemy/MinvoSpriteSheet.png",
+				"spriteSheet": {
+					"rows": 11,
+					"columns": 1,
+					"isDirectionDown": false
+				}
+			},
+			"oneal": {
+				"name": "Oneal",
+				"filePath": "../Data/Sprites/Enemy/OnealSpriteSheet.png",
+				"spriteSheet": {
+					"rows": 11,
+					"columns": 1,
+					"isDirectionDown": false
+				}
 			}
+		},
+		"fonts": {
+			"bombermanFont": {
+				"fontPath": "nes-field-combat.otf",
+				"size": 20
+			},
+			"fpsFont": {
+				"fontPath": "Lingua.otf",
+				"size": 15,
+				"color": [ 0, 255, 0, 255 ]
+			}
+		},
+		"generalInput": {
+			"mute": 109,
+			"skipLevel": 1073741882,
 
+			"increaseMusicVolume": 93,
+			"decreaseMusicVolume": 91,
+			"increaseSoundEffectsVolume": 43,
+			"decreaseSoundEffectsVolume": 45
+		},
+		"UI": {
+			"heightPercent": 0.2,
+			"UIBackground": "../Data/Sprites/UIBackground.png",
+			"playerInfoBarOffset0": [ -150, 30 ],
+			"playerInfoBarOffset1": [ -150, 80 ],
+			"spacing": 30
+		},
+		"playerInfo": {
+			"speed": 120,
+			"sprites": {
+				"playerSprite": "../Data/Sprites/bomberman.png"
+			},
+			"health": 3,
+			"score": {
+				"fontpath": "../Data/Lingua.otf",
+				"size": 30,
+				"position1": [ 20, 20 ],
+				"position2": [ 900, 20 ]
+			},
+			"keyboardKeys": {
+				"player0": {
+					"forward": 119,
+					"backward": 115,
+					"left": 97,
+					"right": 100,
+					"placeBomb": 101
+				},
+				"player1": {
+					"forward": 1073741906,
+					"backward": 1073741905,
+					"left": 1073741904,
+					"right": 1073741903,
+					"placeBomb": 225
+				}
+			}
+		},
+		"playerEnemy": {
+			"speed": 75,
+			"sprites": {
+				"enemySprite": "../Data/Sprites/Enemy.png"
+			}
+		},
+		"gameScenes": {
+			"mainMenu": {},
+			"levels": {
+				"level1": {
+					"backgroundFilepath": "../Data/Sprites/Menu.png",
+					"playerPosIndex0": [ 1, 1 ],
+					"playerPosIndex1": [ 1, 2 ],
+					"levelLayout": {
+						"gridDimensions": [ 25, 11 ],
+						"cellSize": 64,
+						"randomizeBreakableWalls": {
+							"isRandomized": true,
+							"amount": 15
+						},
+						"layout": [
+							"1111111111111111111111111",
+							"1333000000000000000000001",
+							"1310101010101010101010101",
+							"1300000000000000000000001",
+							"1010101010101010101010101",
+							"1000000000000000000000001",
+							"1010101010101010101010101",
+							"1000000000000000000000001",
+							"1010101010101010101010101",
+							"1000000000000000000000001",
+							"1111111111111111111111111"
+						]
+					},
+					"enemyInfo": {
+						"balloom": {
+							"amount": 8,
+							"spriteSheetName": "Balloom",
+							"speed": 60,
+							"intelligence": {
+								"level": 0,
+								"viewDistance": 200
+							},
+							"points": 100
+						}
+					}
+				},
+				"level2": {
+					"backgroundFilepath": "../Data/Sprites/Menu.png",
+					"playerPosIndex0": [ 1, 1 ],
+					"playerPosIndex1": [ 1, 2 ],
+					"levelLayout": {
+						"gridDimensions": [ 31, 11 ],
+						"cellSize": 64,
+						"randomizeBreakableWalls": {
+							"isRandomized": true,
+							"amount": 40
+						},
+						"layout": [
+							"1111111111111111111111111111111",
+							"1333000000000000000000000000001",
+							"1310101010101010101010101010101",
+							"1300000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1111111111111111111111111111111"
+						]
+					},
+					"enemyInfo": {
+						"balloom": {
+							"amount": 4,
+							"spriteSheetName": "Balloom",
+							"speed": 60,
+							"intelligence": {
+								"level": 0,
+								"viewDistance": 200
+							},
+							"points": 100
+						},
+						"oneal": {
+							"amount": 4,
+							"spriteSheetName": "Oneal",
+							"speed": 120,
+							"intelligence": {
+								"level": 1,
+								"viewDistance": 200
+							},
+							"points": 200
+						}
+					}
+				},
+				"level3": {
+					"backgroundFilepath": "../Data/Sprites/Menu.png",
+					"playerPosIndex0": [ 1, 1 ],
+					"playerPosIndex1": [ 1, 2 ],
+					"levelLayout": {
+						"gridDimensions": [ 31, 11 ],
+						"cellSize": 64,
+						"randomizeBreakableWalls": {
+							"isRandomized": true,
+							"amount": 40
+						},
+						"layout": [
+							"1111111111111111111111111111111",
+							"1333000000000000000000000000001",
+							"1310101010101010101010101010101",
+							"1300000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1010101010101010101010101010101",
+							"1000000000000000000000000000001",
+							"1111111111111111111111111111111"
+						]
+					},
+					"enemyInfo": {
+						"balloom": {
+							"amount": 2,
+							"spriteSheetName": "Balloom",
+							"speed": 60,
+							"intelligence": {
+								"level": 0,
+								"viewDistance": 200
+							},
+							"points": 100
+						},
+						"oneal": {
+							"amount": 2,
+							"spriteSheetName": "Oneal",
+							"speed": 120,
+							"intelligence": {
+								"level": 1,
+								"viewDistance": 200
+							},
+							"points": 200
+						},
+						"doll": {
+							"amount": 3,
+							"spriteSheetName": "Doll",
+							"speed": 120,
+							"intelligence": {
+								"level": 0,
+								"viewDistance": 400
+							},
+							"points": 200
+						},
+						"minvo": {
+							"amount": 2,
+							"spriteSheetName": "Minvo",
+							"speed": 120,
+							"intelligence": {
+								"level": 1,
+								"viewDistance": 200
+							},
+							"points": 800
+						}
+					}
+				}
+
+			}
 		}
-
-
-
-
 	}
 }

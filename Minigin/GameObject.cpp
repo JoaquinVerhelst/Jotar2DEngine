@@ -13,6 +13,7 @@ Jotar::GameObject::GameObject(Scene* pScene, const std::string& name, bool isMov
 	, m_IsDestroyed{ false }
 	, m_pParent{nullptr}
 	, m_pChildren{}
+	, m_DestroyOnLoad{ true }
 {
 	m_pTransform = AddComponent<TransformComponent>(isMovingWithCamera);
 }
@@ -33,6 +34,19 @@ void Jotar::GameObject::Start()
 	for (const auto& pChild : m_pChildren)
 	{
 		pChild->Start();
+	}
+}
+
+void Jotar::GameObject::Reset()
+{
+	for (const auto& pComponent : m_pComponents)
+	{
+		pComponent->Reset();
+	}
+
+	for (const auto& pChild : m_pChildren)
+	{
+		pChild->Reset();
 	}
 }
 

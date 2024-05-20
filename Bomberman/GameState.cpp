@@ -10,8 +10,8 @@
 
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
-	auto& scene = SceneManager::GetInstance().SetGetCurrentSceneByName("MainMenu");
-	scene.RemoveAll();
+	auto& scene = SceneManager::GetInstance().SetCurrentSceneByName("mainMenu");
+	scene.MarkAllForDestroy();
 
 
 	gameManager->GetLevelLoader().LoadMenuFromJson(scene);
@@ -27,8 +27,8 @@ Jotar::GameState* Jotar::MainMenuState::OnHandle()
 
 void Jotar::MainMenuState::OnExit(GameManager* )
 {
-	auto& scene = SceneManager::GetInstance().GetSceneByName("MainMenu");
-	scene.RemoveAll();
+	auto& scene = SceneManager::GetInstance().GetCurrentScene();
+	scene.MarkAllForDestroy();
 }
 
 
@@ -38,13 +38,14 @@ void Jotar::MainMenuState::OnExit(GameManager* )
 // ------------------------------------------------------------------------------------- //
 
 
-Jotar::GameLevelState::GameLevelState(int amountofLevels )
+Jotar::GameLevelState::GameLevelState(int amountofLevels)
 	: m_CurrentLevel{ 0 }
 	, m_AmountOfLevels{ amountofLevels }
+	, m_IsGameModeInitialized{ false }
 {
 }
 
-void Jotar::GameLevelState::OnEnter(GameManager* gameManager )
+void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
 	++m_CurrentLevel;
 	if (m_CurrentLevel > m_AmountOfLevels)
@@ -52,15 +53,26 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager )
 		m_CurrentLevel = 1;
 	}
 
-	auto& scene = SceneManager::GetInstance().SetGetCurrentSceneByName("Level" + std::to_string(m_CurrentLevel));
-	scene.RemoveAll();
+	std::string levelName = "level" + std::to_string(m_CurrentLevel);
 
-	// Set up Input
+	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
 
-	gameManager->GetLevelLoader().LoadLevelFromJson(scene, m_CurrentLevel);
+	auto& nextScene = SceneManager::GetInstance().GetSceneByName(levelName);
+	nextScene.RemoveAll();
+
+	prevScene.HandleDontDestroyOnLoadObjects(nextScene);
+
+	prevScene.Reset();
 
 
-	scene.Start();
+
+	SceneManager::GetInstance().SetCurrentSceneByName(levelName);
+
+
+	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, m_CurrentLevel, m_IsGameModeInitialized);
+	m_IsGameModeInitialized = true;
+
+	nextScene.Start();
 }
 
 Jotar::GameState* Jotar::GameLevelState::OnHandle()
@@ -70,8 +82,8 @@ Jotar::GameState* Jotar::GameLevelState::OnHandle()
 
 void Jotar::GameLevelState::OnExit(GameManager* )
 {
-	auto& scene = SceneManager::GetInstance().GetSceneByName("Level" + std::to_string(m_CurrentLevel));
-	scene.RemoveAll();
+	//auto& scene = SceneManager::GetInstance().GetCurrentScene();
+
 }
 
 

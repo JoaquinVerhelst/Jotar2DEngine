@@ -44,6 +44,7 @@ namespace Jotar
 	private:
 		int m_CurrentLevel;
 		int m_AmountOfLevels;
+		bool m_IsGameModeInitialized;
 	};
 
 	class HighscoreState : public GameState

@@ -3,23 +3,12 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "SDLManager.h"
+#include <algorithm>
+
+
+#include "BaseTextureComponent.h"
 
 #include <iostream>
-
-
-//int GetOpenGLDriverIndex()
-//{
-//	auto openglIndex = -1;
-//	const auto driverCount = SDL_GetNumRenderDrivers();
-//	for (auto i = 0; i < driverCount; i++)
-//	{
-//		SDL_RendererInfo info;
-//		if (!SDL_GetRenderDriverInfo(i, &info))
-//			if (!strcmp(info.name, "opengl"))
-//				openglIndex = i;
-//	}
-//	return openglIndex;
-//}
 
 void Jotar::Renderer::Init()
 {
@@ -35,50 +24,25 @@ void Jotar::Renderer::Init()
 	}
 
 	m_pSubject = std::make_unique<Subject<WindowResizeEvent>>();
-
-
-
-	//ImguiWindowProperties properties{};
-
-	//m_ImguiRenderer = std::make_unique<ImguiRenderer>();
-
-	//ImguiRenderer::GetInstance().Init(window, properties);
-
 }
 
 void Jotar::Renderer::Render() const
 {
-
-	// open gl testing ///////////////////////////
-
-	//BeginRender();
-
-
-	//SceneManager::GetInstance().Render();
-
-
-	//EndRender();
-
-	//SDL RENDER //////////////////
-
-
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 
-	SceneManager::GetInstance().Render();
-	//m_ImguiRenderer->Render();
+	for (const auto& layer : m_LayeredTextures) {
+		for (const auto& textureComponent : layer.second) {
+			textureComponent->Render();
+		}
+	}
 
 	SDL_RenderPresent(m_Renderer);
-
 }
 
 void Jotar::Renderer::Destroy()
 {
-	//m_ImguiRenderer->Destroy();
-
-	//SDL_DestroyTexture(m_GameTexture);
-
 	if (m_Renderer != nullptr)
 	{
 		SDL_DestroyRenderer(m_Renderer);
@@ -175,6 +139,37 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& 
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dstRect);
 }
 
+void Jotar::Renderer::AddTextureToRender(BaseTextureComponent* textureComponent)
+{
+	int layer = textureComponent->GetLayer();
+
+	m_LayeredTextures[layer].emplace_back(textureComponent);
+
+	std::sort(m_LayeredTextures[layer].begin(), m_LayeredTextures[layer].end(), [](const auto& a, const auto& b) {
+		return a->GetLayer() < b->GetLayer();
+	});
+}
+
+void Jotar::Renderer::RemoveTextureToRender(BaseTextureComponent* textureComponent)
+{
+	int layer = textureComponent->GetLayer();
+
+	auto it = m_LayeredTextures.find(layer);
+	if (it != m_LayeredTextures.end()) {
+		// Find and remove the texture from the layer's vector
+		auto& textures = it->second;
+		textures.erase(std::remove_if(textures.begin(), textures.end(),
+			[textureComponent](BaseTextureComponent* tc) {
+				return tc == textureComponent;
+			}), textures.end());
+
+		// If the vector is empty after removal, erase the layer from the map
+		if (textures.empty()) {
+			m_LayeredTextures.erase(it);
+		}
+	}
+}
+
 
 
 SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
@@ -183,19 +178,6 @@ Jotar::SDLManager* Jotar::Renderer::GetGlSDLManager()
 {
 	return m_SDLManager.get();
 }
-
-//void Jotar::Renderer::SetWireFrameOn(bool on)
-//{
-//	if (on)
-//	{
-//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//	}
-//	else
-//	{
-//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//	}
-//}
-
 
 
 void Jotar::Renderer::Clear() const

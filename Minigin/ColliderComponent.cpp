@@ -12,14 +12,14 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 	, m_IsTrigger{ isTrigger }
 	, m_CollisionRect{}
 	, m_pTransform{}
+	, m_SceneID{0}
 {
 	m_pSubject = std::make_unique<Subject<CollisionEvent>>();
 }
 
 void Jotar::ColliderComponent::OnDestroy()
 {
-	//to do : Get Rid of hard coded scene index
-	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().RemoveCollider(this);
+	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RemoveCollider(this);
 	m_pSubject->RemoveAllObservers();
 }
 
@@ -98,8 +98,6 @@ void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 	}
 
 	m_pCollidingCollidersThisFrame.emplace_back(triggerEvent.GetOtherCollider());
-
-	//m_pSubject->NotifyObservers(triggerEvent);
 }
 
 void Jotar::ColliderComponent::OnTriggerEnd(TriggerEndEvent& endOverlap)
@@ -153,14 +151,6 @@ void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 
 void Jotar::ColliderComponent::UpdatePosition()
 {
-	//if (m_IsStatic)
-	//{
-	//	if (GetOwner()->GetName() == "Bomb")
-	//	{
-	//		GetCollisionRect();
-	//	}
-	//}
-
 	auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
 	m_CollisionRect.x = pos.x;
 	m_CollisionRect.y = pos.y;
@@ -173,11 +163,13 @@ void Jotar::ColliderComponent::SetTag(std::string tag)
 
 void Jotar::ColliderComponent::RemoveThisColliderFromManager()
 {
-	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().RemoveCollider(this);
+	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RemoveCollider(this);
 }
 
 void Jotar::ColliderComponent::Start()
 {
+	m_SceneID = SceneManager::GetInstance().GetCurrentSceneID();
+	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().AddCollider(this);
 
 	m_pTransform = GetOwner()->GetTransform();
 
@@ -186,8 +178,11 @@ void Jotar::ColliderComponent::Start()
 
 	// x, y , z , w
 	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
+}
 
-	SceneManager::GetInstance().GetSceneByID(0).GetCollisionManager().AddCollider(this);
+void Jotar::ColliderComponent::Reset()
+{
+	SceneManager::GetInstance().GetSceneByID(m_SceneID).GetCollisionManager().RemoveCollider(this);
 }
 
 void Jotar::ColliderComponent::FixedUpdate()

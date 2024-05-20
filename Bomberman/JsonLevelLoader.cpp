@@ -1,5 +1,5 @@
 #include "JsonLevelLoader.h"
-#include <nlohmann/json.hpp>
+
 #include <iostream>
 #include <fstream>
 #include "WorldGrid.h"
@@ -19,14 +19,33 @@
 
 #include "HUDComponent.h"
 
+#include "CameraComponent.h"
 #include "MenuComponent.h"
 #include "AIScoreComponent.h"
 #include "DamageComponent.h"
+#include "TextComponent.h"
+#include "FPSComponent.h"
+#include "HealthDisplayComponent.h"
+#include "ScoreDisplayComponent.h"
+
+#include "ScoreComponent.h"
+#include "PlaceBombComponent.h"
+
+#include "InputManager.h"
+#include "Command.h"
+#include "MovementCommand.h"
+#include "PlaceBombCommand.h"
+#include "Renderer.h"
+
+#include "GameCommands.h"
+
+
+#include "Font.h"
 
 using json = nlohmann::json;
 
 
-bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level)
+bool Jotar::JsonLevelLoader::InitGame()
 {
     std::ifstream file(m_GameLevelsFilePath);
     if (!file.is_open())
@@ -40,12 +59,93 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level)
         file >> jsonData;
 
 
+        //Make The Scenes
+
+        Jotar::SceneManager::GetInstance().CreateScene("mainMenu");
+
+
+        const auto& levels = jsonData["gameInfo"]["gameScenes"]["levels"];
+        for (json::const_iterator it = levels.begin(); it != levels.end(); ++it)
+        {
+            Jotar::SceneManager::GetInstance().CreateScene(it.key());
+        }
+
+        Jotar::SceneManager::GetInstance().CreateScene("highScoreMenu");
+
+        //Load The Shared Textures
+        const auto& sharedTexturesInfo = jsonData["gameInfo"]["sharedTextures"];
+        for (json::const_iterator it = sharedTexturesInfo.begin(); it != sharedTexturesInfo.end(); ++it)
+        {
+            const auto& textureInfo = it.value();
+            ResourceManager::GetInstance().AddSharedTexture(textureInfo["filePath"], textureInfo["name"]);
+        }
+
+
+
+        // Load The Shared Sprite Sheet
+        const auto& sharedSpriteSheetInfo = jsonData["gameInfo"]["sharedSpriteSheet"];
+        for (json::const_iterator it = sharedSpriteSheetInfo.begin(); it != sharedSpriteSheetInfo.end(); ++it)
+        {
+            const auto& spriteSheetInfo = it.value();
+            const auto& spriteSheet = spriteSheetInfo["spriteSheet"];
+
+            SpriteSheet explosionSheet{};
+            explosionSheet.TotalColumns = spriteSheet["columns"];
+            explosionSheet.TotalRows = spriteSheet["rows"];
+            explosionSheet.Direction = spriteSheet["isDirectionDown"] ? SpriteSheet::SpriteSheetDirection::Down : SpriteSheet::SpriteSheetDirection::Right;
+
+            ResourceManager::GetInstance().AddSharedSpriteSheet(spriteSheetInfo["filePath"], explosionSheet, spriteSheetInfo["name"]);
+        }
+
+
+        ///  Init Genral Input 
+
+        const auto& generalInput = jsonData["gameInfo"]["generalInput"];
+
+        auto & input = InputManager::GetInstance();
+
+        input.AddKeyBinding(KeyboardKey{ generalInput["skipLevel"] , InputType::Up }, std::make_unique<SkipLevelCommand>());
+        input.AddKeyBinding(KeyboardKey{ generalInput["mute"] , InputType::Up }, std::make_unique<MuteSoundCommand>());
+
+        input.AddKeyBinding(KeyboardKey{ generalInput["increaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(5));
+        input.AddKeyBinding(KeyboardKey{ generalInput["decreaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(-5));
+
+        input.AddKeyBinding(KeyboardKey{ generalInput["increaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(5));
+        input.AddKeyBinding(KeyboardKey{ generalInput["decreaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(-5));
+
+        return true;
+    }
+    catch (const json::exception& ex)
+    {
+        std::cout << "Failed to parse JSON file: " << m_GameLevelsFilePath << std::endl;
+        std::cout << "Error: " << ex.what() << std::endl;
+        return false;
+    }
+
+    return false;
+}
+
+bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isGameModeInit)
+{
+    std::ifstream file(m_GameLevelsFilePath);
+    if (!file.is_open())
+    {
+        std::cout << "Failed to open JSON file: " << m_GameLevelsFilePath << std::endl;
+        return false;
+    }
+    try
+    {
+        json jsonData;
+        file >> jsonData;
+
+        //InitializeLevel
+
         std::string levelID = "level" + std::to_string(level);
 
-        const auto& levelData = jsonData["gameScenes"][levelID];
+        const auto& levelData = jsonData["gameInfo"]["gameScenes"]["levels"][levelID];
 
         const auto& levelLayout = levelData["levelLayout"];
-        const auto& gridSize = levelLayout["gridSize"];
+        const auto& cellSize = levelLayout["cellSize"];
 
         const auto& gridDimensions = levelLayout["gridDimensions"];
         int gridRows = gridDimensions[0];
@@ -53,8 +153,34 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level)
 
         const auto& layout = levelLayout["layout"];
 
-        GameManager::GetInstance().ResetAndInitializeWorldGrid(gridRows, gridColumns, gridSize);
+
+        GameManager::GetInstance().ResetAndInitializeWorldGrid(gridRows, gridColumns, cellSize);
         auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
+
+
+
+        int windowWidth, windowHeight;
+        SDL_GetWindowSize(Renderer::GetInstance().GetGlSDLManager()->GetWindow(), &windowWidth, &windowHeight);
+
+        const auto& UIInfo = jsonData["gameInfo"]["UI"];
+        float screenHeightPercent = UIInfo["heightPercent"];
+
+
+
+        GeneralLevelInfo levelInfo;
+        levelInfo.CellSize = cellSize;
+        levelInfo.Rows = gridRows;
+        levelInfo.Columns = gridColumns;
+        levelInfo.ScreenHeight = windowHeight;
+        levelInfo.ScreenWidth = windowWidth;
+        levelInfo.UIPercent = screenHeightPercent;
+
+
+
+        if (!isGameModeInit)
+            CreateGameMode(scene, levelInfo);
+        else
+            UpdateCamera(scene, levelInfo);
 
 
         std::vector<glm::ivec2> spawnCells{};
@@ -96,9 +222,31 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level)
             RandomizeBreakableWalls(gridRows, gridColumns, scene, amount, spawnCells);
         }
 
-        CreateEnemies(scene);
 
 
+
+
+
+        // Set the players on the right position
+
+        auto players = GameManager::GetInstance().GetPlayers();
+        for (size_t i = 0; i < players.size(); i++)
+        {
+            const std::string playerPosIndexString = "playerPosIndex" + std::to_string(i);
+
+            glm::ivec2 playerPosIndex = { levelData[playerPosIndexString][0], levelData[playerPosIndexString][1] };
+
+            const auto& cell2 = worldGrid->GetGridCellByID(playerPosIndex);
+            players[i]->SetPosition(cell2.CenterCellPosition);
+        }
+
+
+
+        // Enemies
+
+   
+
+        CreateEnemies(scene, levelData["enemyInfo"], levelInfo);
 
         return true;
     }
@@ -120,7 +268,7 @@ bool Jotar::JsonLevelLoader::LoadMenuFromJson(Scene& scene)
     auto title = scene.CreateGameObject("Background", false ); 
     title->GetTransform()->SetSize(glm::vec2{ 800, 350 });
     title->AddComponent<TextureComponent>("../Data/Sprites/Backgrounds/MenuBackground.png");
-    title->AddComponent<HUDComponent>(HUDPosition::CenterUp, glm::vec2 { 0.f, 350.f / 2 });
+    title->AddComponent<HUDComponent>(HUDPosition::CenterUp);
 
 
 
@@ -144,6 +292,7 @@ void Jotar::JsonLevelLoader::SetGameLevelsFilePath(std::string filePath)
     m_GameLevelsFilePath = filePath;
 }
 
+
 std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateUnbreakableWall(Scene& scene)
 {
     auto wall = scene.CreateGameObject("Wall");
@@ -163,37 +312,296 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBreakableWall(S
     return wall;
 }
 
-void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene)
+void Jotar::JsonLevelLoader::UpdateCamera(Scene& scene, GeneralLevelInfo& levelInfo)
 {
+    //update camera levelbounds
+    auto cam = scene.GetObjectByName("Camera");
+    if (cam != nullptr)
+    {
+        scene.SetCamera(cam->GetComponent<CameraComponent>());
+
+        glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
+        scene.GetCamera()->SetLevelBounds(levelBounds);
+    }
+
+}
+
+bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& levelInfo)
+{
+    std::ifstream file(m_GameLevelsFilePath);
+
+
+    if (!file.is_open())
+    {
+        std::cout << "Failed to open JSON file: " << m_GameLevelsFilePath << std::endl;
+        return false;
+    }
+    try
+    {
+        json jsonData;
+        file >> jsonData;
+
+
+        auto& gameManager = GameManager::GetInstance();
+
+
+
+        //// Camera
+        glm::ivec4 camRect = { 0, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth };
+        glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
+
+        auto cameraObj = scene.CreateGameObject("Camera");
+        cameraObj->SetDestroyOnLoad(false);
+        auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
+        scene.SetCamera(camera);
+
+
+
+        const auto& gameInfo = jsonData["gameInfo"];
+        const auto& fonts = gameInfo["fonts"];
+
+        //Fonts
+        const auto& fpsFontInfo = fonts["fpsFont"];
+        const auto& bombermanFontInfo = fonts["bombermanFont"];
+        auto fpsFont = Jotar::ResourceManager::GetInstance().LoadFont(fpsFontInfo["fontPath"], fpsFontInfo["size"]);
+        auto bombermanFont = Jotar::ResourceManager::GetInstance().LoadFont(bombermanFontInfo["fontPath"], bombermanFontInfo["size"]);
+
+
+        const auto& UIInfo = gameInfo["UI"];
+
+        //HUD
+        auto HUD = scene.CreateGameObject("HUD", false);
+        HUD->SetDestroyOnLoad(false);
+        HUD->GetTransform()->SetSize({ levelInfo.ScreenWidth, levelInfo.ScreenHeight * levelInfo.UIPercent });
+        auto textureComp = HUD->AddComponent<TextureComponent>(UIInfo["UIBackground"]);
+        textureComp->SetLayer(10);
+        HUD->AddComponent<HUDComponent>(HUDPosition::CenterUp);
+
+        ////FPS
+        auto fpsCounter = HUD->CreateChildGameObject("FPScounter", false, false);
+
+        auto textComp = fpsCounter->AddComponent<TextComponent>("FPS", fpsFont,
+            SDL_Color(fpsFontInfo["color"][0], fpsFontInfo["color"][1], fpsFontInfo["color"][2], fpsFontInfo["color"][3]));
+        textComp->SetLayer(10);
+
+        fpsCounter->AddComponent<HUDComponent>(HUDPosition::LeftUp);
+        fpsCounter->AddComponent<Jotar::FPSComponent>();
+
+        // Time Left
+
+        auto TimeLeftObj = HUD->CreateChildGameObject("TimeLeft", true, false);
+        textComp = TimeLeftObj->AddComponent<TextComponent>("TimeLeft: ", bombermanFont);
+        textComp->SetLayer(10);
+        TimeLeftObj->AddComponent<HUDComponent>(HUDPosition::CenterLeft);
+
+
+        // Player 0
+
+        auto player0Obj = CreatePlayer(scene, gameInfo, HUD, bombermanFont, levelInfo.CellSize, 0);
+        player0Obj->SetDestroyOnLoad(false);
+
+        gameManager.AddPlayer(player0Obj->GetTransform());
+
+        // in cam component we set on start, tha tthe current scene is this cameras camera and dontdestoryonload
+        camera->SetTargets({ player0Obj->GetTransform() });
+
+
+        // gameMode
+
+        if (gameManager.GetGamemode() == GameMode::Coop)
+        {
+            // player 1
+
+            auto player1Obj = CreatePlayer(scene, gameInfo, HUD, bombermanFont, levelInfo.CellSize, 1);
+            player1Obj->SetDestroyOnLoad(false);
+
+            gameManager.AddPlayer(player1Obj->GetTransform());
+            camera->SetTargets({ player1Obj->GetTransform() });
+        }
+        else if (gameManager.GetGamemode() == GameMode::Versus)
+        {
+
+        }
+
+        return true;
+    }
+    catch (const json::exception& ex)
+    {
+        std::cout << "Failed to parse JSON file: " << m_GameLevelsFilePath << std::endl;
+        std::cout << "Error: " << ex.what() << std::endl;
+        return false;
+    }
+
+    return false;
+}
+
+std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& scene, const nlohmann::json& gameInfo, std::shared_ptr<GameObject> HUD, std::shared_ptr<Font> font, int cellSize, unsigned int playerIndex)
+{
+    const auto& playerInfo = gameInfo["playerInfo"];
+    const auto& UIInfo = gameInfo["UI"];
+
+    // Player Text
+
+    std::string playerString = "player" + std::to_string(playerIndex);
+
+    auto playerTextObj = HUD->CreateChildGameObject("PlayerText", true, false);
+    auto textComp = playerTextObj->AddComponent<TextComponent>(playerString + " : ", font);
+    textComp->SetLayer(11);
+    std::string playerbarPos = "playerInfoBarOffset" + std::to_string(playerIndex);
+    glm::vec2 textPos = { UIInfo[playerbarPos][0],  UIInfo[playerbarPos][1] };
+
+    playerTextObj->AddComponent<HUDComponent>(HUDPosition::CenterUp, textPos);
+
+    // Player Lives Display
+
+    auto playerHealthDisplayObj = playerTextObj->CreateChildGameObject("PlayerHealthDisplay" + std::to_string(playerIndex), false, false);
+    textComp = playerHealthDisplayObj->AddComponent<TextComponent>("Lives: ", font);
+    textComp->SetLayer(11);
+    auto playerHealthDisplay = playerHealthDisplayObj->AddComponent<HealthDisplayComponent>();
+
+    int xPos = playerTextObj->GetTransform()->GetSize().x + UIInfo["spacing"];
+
+    playerHealthDisplayObj->GetTransform()->Translate({ xPos, 0 });
+
+    // Player Score Display
+
+    auto playerScoreDisplayObj = playerTextObj->CreateChildGameObject("PlayerScoreDisplay" + std::to_string(playerIndex), false, false);
+    textComp = playerScoreDisplayObj->AddComponent<TextComponent>("Score: ", font);
+    textComp->SetLayer(11);
+    auto playerScoreDisplay = playerScoreDisplayObj->AddComponent<ScoreDisplayComponent>();
+
+    xPos += playerHealthDisplayObj->GetTransform()->GetSize().x + UIInfo["spacing"];
+
+    playerScoreDisplayObj->GetTransform()->Translate({ xPos, 0 });
+
+    // Player OBJ
+
+    auto playerObj = scene.CreateGameObject("Bomberman" + std::to_string(playerIndex));
+
+    auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"]["playerSprite"]);
+    textureComp->SetLayer(10);
+
+
+    auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(playerInfo["speed"], cellSize);
+
+    auto healthCompPlayer = playerObj->AddComponent<HealthComponent>(playerInfo["health"]);
+    healthCompPlayer->AddObserver(playerHealthDisplay);
+
+    auto scoreCompPlayer = playerObj->AddComponent<ScoreComponent>();
+    scoreCompPlayer->AddObserver(playerScoreDisplay);
+
+
+    auto placeBombComp = playerObj->AddComponent<PlaceBombComponent>();
+    auto colliderComp = playerObj->AddComponent<ColliderComponent>(false);
+    colliderComp->SetTag("Player");
+    colliderComp->AddIgnoreCollisionTag("Enemy");
+
+    auto& input = InputManager::GetInstance();
+
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadUp }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, -1 }));
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadDown }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, 1 }));
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadRight }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadLeft }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ -1, 0 }));
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp));
+
+
+    const auto& keyboardKeys = playerInfo["keyboardKeys"][playerString];
+
+    input.AddKeyBinding(KeyboardKey{ keyboardKeys["forward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, -1}));
+    input.AddKeyBinding(KeyboardKey{ keyboardKeys["backward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, 1}));
+    input.AddKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
+    input.AddKeyBinding(KeyboardKey{ keyboardKeys["left"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{-1, 0}));
+    input.AddKeyBinding(KeyboardKey{ keyboardKeys["placeBomb"] , InputType::Up}, std::make_unique<PlaceBombCommand>(placeBombComp));
+
+
+    return playerObj;
+}
+
+void Jotar::JsonLevelLoader::CreateBalloomPlayer(Scene& )
+{
+}
+
+void Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& EnemyInfo, GeneralLevelInfo& levelInfo)
+{
+
     std::vector <std::string> enemyTarget = { "Player" };
     AnimationIndexesInfo animationInfo{ {3,5},{0, 2},{6, 6},{7, 10} };
+    std::string enemyTag = "Enemy";
 
-    for (float i = 0; i < 3; i++)
+
+    for (const auto& enemyTypeInfo : EnemyInfo.items())
     {
-        auto enemy = scene.CreateGameObject("enemy");
-        enemy->AddComponent<TextureComponent>("../Data/Sprites/Enemy/BalloomSpriteSheet.png", false, 1, 11 );
-        enemy->AddComponent<MovementComponent>(60.f);
-        auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+        const auto& enemyData = enemyTypeInfo.value();
+        const auto& amount = enemyData["amount"];
+
+        for (size_t j = 0; j < amount; ++j)
+        {
+            auto enemy = scene.CreateGameObject(enemyTag);
+
+            enemy->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet(enemyData["spriteSheetName"]), 0, 0);
+            enemy->AddComponent<MovementComponent>(enemyData["speed"], levelInfo.CellSize);
+            auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+
+            if (enemyData["intelligence"]["level"] == 1)
+            {
+               // auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget);
+               // perception->AddObserver(behavior);
+            }
+ 
+            enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
+            auto healthComp = enemy->AddComponent<HealthComponent>(1);
+            healthComp->AddObserver(behavior);
+
+            auto collEnemy = enemy->AddComponent<ColliderComponent>(false, false);
+            collEnemy->SetTag(enemyTag);
+            collEnemy->AddIgnoreCollisionTag(enemyTag);
+            collEnemy->AddIgnoreCollisionTag("Player");
+
+            auto scoreComp = enemy->AddComponent<AIScoreComponent>(enemyData["points"]);
+            behavior->AddObserver(scoreComp);
 
 
-        auto perception = enemy->AddComponent< AIPerceptionComponent>(200.f, enemyTarget);
-        perception->AddObserver(behavior);
-        enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
-        auto healthComp = enemy->AddComponent<HealthComponent>(1);
-        healthComp->AddObserver(behavior);
-        auto collEnemy = enemy->AddComponent<ColliderComponent>(false, true);
-        collEnemy->SetTag("Enemy");
-        collEnemy->AddIgnoreCollisionTag("Enemy");
-
-        auto damageComp = enemy->AddComponent<DamageComponent>(1, enemyTarget);
-        collEnemy->AddObserver(damageComp);
+            auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false);
+            auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
+            auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
+            damageCollComp->AddObserver(damageComp);
 
 
-        auto scoreComp = enemy->AddComponent<AIScoreComponent>(100);
-        behavior->AddObserver(scoreComp);
+            PlaceEnemyRandomly(enemy, levelInfo);
+        }
+    }
+}
 
+void Jotar::JsonLevelLoader::PlaceEnemyRandomly(std::shared_ptr<GameObject> enemy, GeneralLevelInfo& levelInfo)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribX(0, levelInfo.Rows - 1); // Random distribution for X coordinate
+    std::uniform_int_distribution<int> distribY(0, levelInfo.Columns - 1);    // Random distribution for Y coordinate
 
-        enemy->GetTransform()->SetPosition(64.f * (i * 3 + 2.f), 100.f);
+    auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
+    bool isPlaced = false;
+
+    while (!isPlaced)
+    {
+        int randomX, randomY;
+        glm::ivec2 cellIndex;
+
+        do
+        {
+            randomX = distribX(gen);
+            randomY = distribY(gen);
+        } while (randomX < 6 || randomY < 6);
+
+        cellIndex = { randomX, randomY };
+
+        auto& cell = worldGrid->GetGridCellByID(cellIndex);
+
+        if (cell.ObjectOnCell.expired())
+        {
+            enemy->GetTransform()->SetPosition(cell.CenterCellPosition);
+            isPlaced = true;
+        }
     }
 }
 

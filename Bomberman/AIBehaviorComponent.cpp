@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "AIAnimationControllerComponent.h"
 
 
@@ -21,6 +21,7 @@ Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	, m_pChaseTargetState{ std::make_unique<ChaseTargetAIState>(this, 2.0f) }
 	, m_pCalculateRandomPathState{ std::make_unique<CalculateRandomPathAIState>(this, 3) }
 	, m_pCalculatePathToPlayerState{ std::make_unique<CalculatePathToPlayerAIState>(this) }
+	, m_pOnDamageState{ std::make_unique<OnDamageAIState>(this) }
 	, m_IsPlayerSeen{false}
 	, m_pAIAnimationControllerComponent{ nullptr }
 	, m_IsDamaged{ false }
@@ -80,13 +81,13 @@ void Jotar::AIBehaviorComponent::OnNotify(const HealthEvent& healthEvent)
 {
 	if (m_IsDamaged) return;
 
-
 	const DamageHealthEvent* damageEvent = dynamic_cast<const DamageHealthEvent*>(&healthEvent);
 	if (damageEvent)
 	{
 		m_IsDamaged = true;
-		auto damageState = std::make_unique<OnDamageAIState>(this, damageEvent->GetAttacker(), 2.0f);
-		m_pCurrentState = damageState.get();
+		m_pOnDamageState->Initialize(damageEvent->GetAttacker(), 2.0f);
+
+		m_pCurrentState = m_pOnDamageState.get();
 		m_pCurrentState->OnEnter();
 	}
 }

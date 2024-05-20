@@ -72,8 +72,7 @@ void Jotar::PlaceBombComponent::DetonateBomb()
 
 std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject(GridCell& cell)
 {
-	// TODO get rid of hardcoded scene index
-	Scene& scene = SceneManager::GetInstance().GetSceneByID(0);
+	Scene& scene = SceneManager::GetInstance().GetCurrentScene();
 	auto bombObj = scene.CreateGameObject("Bomb");
 	auto size = GameManager::GetInstance().GetWorldGrid()->GetCellSize();
 	glm::vec2 sizeVec = { size, size };
@@ -88,7 +87,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 
 	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	cell.ObjectOnCell = bombObj;
-	SoundServiceLocator::GetSoundSystem().Play(0, 64);
+	SoundServiceLocator::GetSoundSystem().Play(0);
 
 
 	bombComp->AddObserver(this);

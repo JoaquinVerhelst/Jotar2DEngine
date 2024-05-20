@@ -16,6 +16,7 @@ namespace Jotar
 	public:
 
 		void Start();
+		void Reset();
 		void Update();
 		void FixedUpdate();
 		void LateUpdate();
@@ -34,6 +35,11 @@ namespace Jotar
 
 		void Destroy();
 		bool IsDestroyed() { return m_IsDestroyed; }
+
+
+		bool IsDestroyOnLoad() const { return m_DestroyOnLoad; }
+		void SetDestroyOnLoad(bool destroyIt) { m_DestroyOnLoad = destroyIt; }
+
 
 		//void SetTexture(const std::string& filename);
 
@@ -82,6 +88,8 @@ namespace Jotar
 
 
 		bool m_IsDestroyed;
+		bool m_DestroyOnLoad;
+
 
 		std::string m_Name{};
 		Scene* m_pScene{};
@@ -127,7 +135,7 @@ namespace Jotar
 
 
 		// If the component is not found, throw an exception
-		throw std::runtime_error("No component of this type: " + std::string(typeid(T).name()) + "is in this gameobject");
+		throw std::runtime_error("No component of this type: " + std::string(typeid(T).name()) + "is in this gameobject: " + GetName());
 	}
 
 

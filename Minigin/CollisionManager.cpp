@@ -39,6 +39,9 @@ void Jotar::CollisionManager::FixedUpdate()
 
         // A static object will not trigger a collision
         if (pCollider->GetIsStatic()) continue;
+        if (pCollider->IsDisabled()) continue;
+
+
 
 
         for (auto pOtherCollider : m_pSceneColliders)
@@ -97,41 +100,76 @@ Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosit
 }
 
 
-///TODO: BUG LINE GOES THRROUGH WALLS
 Jotar::ColliderComponent* Jotar::CollisionManager::RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> tagsToFind)
 {
     glm::vec2 dir = glm::normalize(direction);
 
+    struct RaycastHit {
+        Jotar::ColliderComponent* collider;
+        float distance;
+    };
+
+    std::vector<RaycastHit> hits;
+
     for (const auto& collider : m_pSceneColliders)
     {
-        bool canCollide = std::any_of(tagsToFind.begin(), tagsToFind.end(), [&collider](const std::string& tag) {
-            return collider->CompareTag(tag);
-            });
-
-        if (!canCollide)
-            continue;
-
         // Calculate collision rectangle for the collider
         glm::vec4 collisionRect = collider->GetCollisionRect();
 
-        if (!RayBoxIntersection(startpos, dir, collisionRect, distance))
-            continue; // No intersection, continue to the next collider
+        float hitDistance;
+        if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance)
+        {
+            hits.push_back({ collider, hitDistance });
+        }
+    }
 
-        // Return the collider if there's an intersection
-        return collider;
+    // Sort hits by distance
+    std::sort(hits.begin(), hits.end(), [](const RaycastHit& a, const RaycastHit& b) {
+        return a.distance < b.distance;
+        });
+
+    for (const auto& hit : hits)
+    {
+        bool canCollide = std::any_of(tagsToFind.begin(), tagsToFind.end(), [&hit](const std::string& tag) {
+            return hit.collider->CompareTag(tag);
+            });
+
+        if (canCollide)
+        {
+            return hit.collider;
+        }
     }
 
     return nullptr;
 }
 
-bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& startpos, const glm::vec2& direction, const glm::vec4& collisionRect, float maxDistance)
+
+void Jotar::CollisionManager::Reset()
 {
-    if (startpos.x + direction.x * maxDistance + 1> collisionRect.x &&
-        startpos.x < collisionRect.x + collisionRect.w &&
-        startpos.y + direction.y * maxDistance + 1> collisionRect.y &&
-        startpos.y < collisionRect.y + collisionRect.z)
-    {
-        return true;
-    }       
-    return false;
+    m_pSceneColliders.clear();
+}
+
+bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& rayOrigin, const glm::vec2& rayDir, const glm::vec4& box, float& t)
+{
+    float tmin = (box.x - rayOrigin.x) / rayDir.x;
+    float tmax = (box.z - rayOrigin.x) / rayDir.x;
+
+    if (tmin > tmax) std::swap(tmin, tmax);
+
+    float tymin = (box.y - rayOrigin.y) / rayDir.y;
+    float tymax = (box.w - rayOrigin.y) / rayDir.y;
+
+    if (tymin > tymax) std::swap(tymin, tymax);
+
+    if ((tmin > tymax) || (tymin > tmax))
+        return false;
+
+    if (tymin > tmin)
+        tmin = tymin;
+
+    if (tymax < tmax)
+        tmax = tymax;
+
+    t = tmin;
+    return true;
 }

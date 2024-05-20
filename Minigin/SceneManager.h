@@ -21,13 +21,13 @@ namespace Jotar
 
 		void Destroy();
 
-		Scene& SetGetCurrentSceneByName(const std::string& name);
+		Scene& SetCurrentSceneByName(const std::string& name);
 
 		Scene& GetCurrentScene() const;
 		Scene& GetSceneByID(int SceneIndex) const;
 		Scene& GetSceneByName(const std::string& name);
 
-
+		int GetCurrentSceneID();
 
 	private:
 		friend class Singleton<SceneManager>;

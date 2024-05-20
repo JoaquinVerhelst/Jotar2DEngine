@@ -62,4 +62,17 @@ namespace Jotar
         m_SoundSystem->MuteSound();
     }
 
+    int LoggingSoundSystem::GetMusicVolume() const
+    {
+        int volume = m_SoundSystem->GetMusicVolume();
+        std::cout << "Music volume is: " << volume << "\n";
+        return volume;
+    }
+
+    int LoggingSoundSystem::GetSoundEffectsVolume() const
+    {
+        int volume = m_SoundSystem->GetSoundEffectsVolume();
+        std::cout << "Sound Effects volume is: " << volume << "\n";
+        return volume;
+    }
 }

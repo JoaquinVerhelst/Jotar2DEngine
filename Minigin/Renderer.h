@@ -10,10 +10,14 @@
 #include "Subject.h"
 #include "WindowEvents.h"
 
+#include <map>
+
+
 namespace Jotar
 {
 	class Texture2D;
-
+	class GameObject;
+	class BaseTextureComponent;
 	/**
 	 * Simple RAII wrapper for the SDL renderer
 	 */
@@ -29,6 +33,9 @@ namespace Jotar
 		void RenderTexture(const Texture2D& texture, float x, float y) const;
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 		void RenderTexture(const Texture2D& texture, const glm::ivec4& src, const glm::ivec4& dst) const;
+
+		void AddTextureToRender(BaseTextureComponent* textureComponent);
+		void RemoveTextureToRender(BaseTextureComponent* textureComponent);
 
 		SDL_Renderer* GetSDLRenderer() const;
 		SDLManager* GetGlSDLManager();
@@ -65,6 +72,9 @@ namespace Jotar
 
 		SDL_Rect m_ViewPortRect{0,0, 720,1080};
 
+
+		std::map<int, std::vector<BaseTextureComponent*>> m_LayeredTextures;
+	
 	};
 }
 

@@ -123,12 +123,14 @@ namespace Jotar
 	class OnDamageAIState final : public AIState
 	{
 	public:
-		OnDamageAIState(AIBehaviorComponent* pAiComp, GameObject* attacker, float deathWaitTime = 2.0f);
+		OnDamageAIState(AIBehaviorComponent* pAiComp);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
 		virtual void OnExit() override;
 
+
+		void Initialize(GameObject* attacker, float deathWaitTime = 2.0f);
 	private:
 
 		GameObject* m_Attacker;

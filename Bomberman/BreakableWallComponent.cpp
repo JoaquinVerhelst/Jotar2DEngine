@@ -8,18 +8,12 @@
 #include "GameManager.h"
 #include "WorldGrid.h"
 
-Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
-	: Component(owner)
+void Jotar::BreakableWallComponent::OnWallBreak()
 {
-}
-
-void Jotar::BreakableWallComponent::OnDestroy()
-{
-	//TODO get rid of hardcoded index
-	auto& scene = SceneManager::GetInstance().GetSceneByID(0);
+	auto& scene = SceneManager::GetInstance().GetCurrentScene();
 	auto pickupObj = scene.CreateGameObject("PickUp");
 	auto pickupComp = pickupObj->AddComponent<PickUpComponent>();
-	auto collider = pickupObj->AddComponent<ColliderComponent>(true , true);
+	auto collider = pickupObj->AddComponent<ColliderComponent>(true, true);
 
 	collider->AddObserver(pickupComp);
 
@@ -27,4 +21,14 @@ void Jotar::BreakableWallComponent::OnDestroy()
 
 	pickupObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	collider->UpdatePosition();
+}
+
+Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner)
+	: Component(owner)
+{
+}
+
+void Jotar::BreakableWallComponent::OnDestroy()
+{
+
 }

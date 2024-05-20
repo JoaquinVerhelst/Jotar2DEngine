@@ -30,9 +30,12 @@ namespace Jotar
 	{
 	public:
 		HUDComponent(GameObject* owner, HUDPosition position = HUDPosition::Center, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
+		~HUDComponent();
+
 
 		void Start() override;
 		void OnNotify(const WindowResizeEvent& event) override;
+		void OnDestroy() override;
 
 		void SetPosition(HUDPosition position, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
 

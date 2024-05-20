@@ -8,7 +8,7 @@
 #include "AIBehaviorComponent.h"
 
 #include "SceneManager.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "Scene.h"
 #include "WorldTimeManager.h"
 #include "AIAnimationControllerComponent.h"
@@ -89,8 +89,7 @@ void Jotar::GoToTargetAIState::MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& p
 {
 	pathPos = m_Path[0];
 
-	//todo get rid of hardcocded index
-	auto camObj = SceneManager::GetInstance().GetSceneByID(0).GetCamera();
+	auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera();
 	if (camObj != nullptr)
 		pathPos += camObj->GetOffset();
 
@@ -308,12 +307,12 @@ void Jotar::CalculatePathToPlayerAIState::SetTarget(ColliderComponent* targetCol
 //									DEAD STATE											 //
 // ------------------------------------------------------------------------------------- //
 
-Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp, GameObject* attacker, float deathWaitTime)
+Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp)
 	: AIState(pAiComp)
-	, m_DeathWaitTime{ deathWaitTime }
+	, m_DeathWaitTime{ 0 }
 	, m_IsDeath{ false }
 	, m_DeathTimer{ 0 }
-	, m_Attacker{ attacker }
+	, m_Attacker{ nullptr }
 {
 }
 
@@ -321,6 +320,8 @@ void Jotar::OnDamageAIState::OnEnter()
 {
 	m_pAIBehaviorComp->GetAnimatorController()->SetDamageAnimation();
 	m_DeathTimer = 0;
+	m_pAIBehaviorComp->GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(true);
+
 }
 
 Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
@@ -340,6 +341,7 @@ Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
 		}
 		else
 		{
+			m_pAIBehaviorComp->GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(false);
 			return m_pAIBehaviorComp->GetCalculateRandomPathState();
 		}
 	}
@@ -349,5 +351,11 @@ Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
 
 void Jotar::OnDamageAIState::OnExit()
 {
+}
+
+void Jotar::OnDamageAIState::Initialize(GameObject* attacker, float deathWaitTime)
+{
+	m_Attacker = attacker;
+	m_DeathWaitTime = deathWaitTime;
 }
 

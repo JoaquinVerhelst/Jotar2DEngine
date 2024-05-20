@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "SoundServiceLocator.h"
+#include "Renderer.h"
 
 
 Jotar::PickUpComponent::PickUpComponent(GameObject* owner)
@@ -23,7 +24,7 @@ void Jotar::PickUpComponent::OnNotify(const CollisionEvent& eventData)
 
         if (otherCollider->GetOwner()->HasComponent<PlaceBombComponent>())
         {
-            SoundServiceLocator::GetSoundSystem().Play(2, 80);
+            SoundServiceLocator::GetSoundSystem().Play(2);
 
             switch (m_PickUpType)
             {
@@ -55,21 +56,26 @@ void Jotar::PickUpComponent::RandomizePickUpType()
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     int randomValue = std::rand() % 3;
 
+    TextureComponent* textureComp{nullptr};
+
     switch (randomValue)
     {
     case 0:
         m_PickUpType = PickUpType::ExtraBomb;
-        GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("ExtraBombPickUp"));
+        textureComp = GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("ExtraBombPickUp"));
         break;
     case 1:
         m_PickUpType = PickUpType::Detonator;
-        GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("DetonatorPickUp"));
+        textureComp = GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("DetonatorPickUp"));
         break;
     case 2:
         m_PickUpType = PickUpType::ExtraExplosionRange;
-        GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("ExplosionRangePickUp"));
-        break;
-    default:
+        textureComp = GetOwner()->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("ExplosionRangePickUp"));
         break;
     }
+
+    if (textureComp == nullptr) return;
+
+    textureComp->SetLayer(5);
+    Renderer::GetInstance().AddTextureToRender(textureComp);
 }

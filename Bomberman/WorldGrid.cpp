@@ -11,18 +11,22 @@ Jotar::WorldGrid::WorldGrid(int rows, int columns, int size)
 {
     m_Grid.clear();
 
-
-
     m_Grid.reserve(rows * columns);
     m_GridSize = { rows, columns };
     m_CellSize = size;
-    //m_GridSize.x = rows;
-    //m_GridSize.y = columns;
+
 
     for (int r = 0; r < rows; ++r)
     {
         for (int c = 0; c < columns; ++c)
         {
+
+            if (r == 1)
+            {
+                m_CellSize = size;
+              
+            }
+
             glm::ivec2 IDposition(r, c);
 
             glm::vec2 worldPosition(r * size, c * size);
@@ -97,13 +101,15 @@ Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& positi
         const GridCell& cell = cellPair.second;
         const glm::vec2& cellPos = cell.WorldPosition;
 
-        if (position.x >= cellPos.x && position.x < cellPos.x + m_CellSize &&
-            position.y >= cellPos.y && position.y < cellPos.y + m_CellSize)
+        // Round position to nearest integer values
+        glm::ivec2 roundedPosition = glm::round(position);
+
+        if (roundedPosition.x >= cellPos.x && roundedPosition.x < cellPos.x + m_CellSize &&
+            roundedPosition.y >= cellPos.y && roundedPosition.y < cellPos.y + m_CellSize)
         {
             return cellPair.second;
         }
     }
-
     throw std::runtime_error("const& GetGridCellByPosition() const: ID not found");
 }
 

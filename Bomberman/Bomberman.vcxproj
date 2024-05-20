@@ -158,11 +158,11 @@
     <ClCompile Include="AIStates.cpp" />
     <ClCompile Include="BombComponent.cpp" />
     <ClCompile Include="Bomberman.cpp" />
-    <ClCompile Include="BombermanComponent.cpp" />
     <ClCompile Include="BreakableWallComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="EventAddScore.cpp" />
     <ClCompile Include="ExitComponent.cpp" />
+    <ClCompile Include="GameCommands.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
@@ -188,12 +188,12 @@
     <ClInclude Include="AIScoreComponent.h" />
     <ClInclude Include="AIStates.h" />
     <ClInclude Include="BombComponent.h" />
-    <ClInclude Include="BombermanComponent.h" />
     <ClInclude Include="BreakableWallComponent.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="EventAddScore.h" />
     <ClInclude Include="ExitComponent.h" />
     <ClInclude Include="ExplosionEvent.h" />
+    <ClInclude Include="GameCommands.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HealthComponent.h" />

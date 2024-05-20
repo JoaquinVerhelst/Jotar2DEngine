@@ -8,13 +8,16 @@ namespace Jotar
 	class GameObject;
 	class  TransformComponent;
 
-	class Camera : public Component 
+	class CameraComponent : public Component 
 	{
 	public:
-		explicit Camera(GameObject* owner, glm::ivec4& cameraRect, glm::ivec4& levelBoundaries);
+		explicit CameraComponent(GameObject* owner, glm::ivec4& cameraRect, glm::ivec4& levelBoundaries);
 
+		void Start() override;
 		void LateUpdate() override;
 		void SetTargets(std::vector<TransformComponent*> targets);
+
+		void SetLevelBounds(glm::ivec4& levelBoundaries);
 
 		glm::vec2 GetOffset();
 		

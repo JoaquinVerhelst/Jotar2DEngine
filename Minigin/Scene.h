@@ -1,7 +1,7 @@
 #pragma once
 #include "SceneManager.h"
 #include "CollisionManager.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 
 namespace Jotar
 {
@@ -22,21 +22,35 @@ namespace Jotar
 		void Remove(std::shared_ptr<GameObject> object);
 		void RemoveAll();
 
+		// every Object in scene will be deleted
+		void MarkAllForDestroy();
+
+		// every Object except the "dont Destroy On load" Obj in scene will be deleted
+		void MarkSceneForDestroy();
+
+		// Transfers the Dont destroy on load obj to the next scene
+		void HandleDontDestroyOnLoadObjects(Scene& nextScene);
+
+
 		void Start();
+		void Reset();
 		void Update();
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
+
+		std::shared_ptr<GameObject> GetObjectByName(const std::string& name);
 
 		void RemoveGameObjectFromRoot(GameObject* GO);
 		void CleanUpDestroyedObjects();
 
 		CollisionManager& GetCollisionManager();
 
-		void SetCamera(Camera* cameraObj);
-		Camera* GetCamera() const;
-
+		void SetCamera(CameraComponent* cameraObj);
+		CameraComponent* GetCamera() const;
 		const std::string& GetName() const;
+
+		int GetSceneID() const;
 
 	private: 
 		explicit Scene(const std::string& name);
@@ -46,7 +60,7 @@ namespace Jotar
 		CollisionManager m_CollisionManager;
 		std::vector < std::shared_ptr<GameObject>> m_pObjects{};
 
-		Camera* m_pCameraObject;
+		CameraComponent* m_pCameraObject;
 
 
 		static unsigned int m_idCounter; 

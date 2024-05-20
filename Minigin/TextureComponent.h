@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component.h"
+#include "BaseTextureComponent.h"
 #include "Texture2D.h"
 #include <memory>
 #include <string>
@@ -16,7 +16,7 @@ namespace Jotar
 
 
 
-    class TextureComponent final : public Component {
+    class TextureComponent final : public BaseTextureComponent {
     public:
         explicit TextureComponent(GameObject* owner, const std::string& filePath, bool isStatic = true, int columns = 1, int rows = 1);
         explicit TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture);
@@ -26,7 +26,7 @@ namespace Jotar
 
         void Update() override;
         void Render() const override;
- 
+
  
         TextureComponent(const TextureComponent& other) = delete;
         TextureComponent(TextureComponent&& other) = delete;
@@ -45,6 +45,8 @@ namespace Jotar
         void SetAnimationSpeedInNrOfFramesPerSecond(int animSpeed);
 
         void SetSelectedFrames(glm::ivec2 startAndEndFrames);
+
+
 
         void UpdateFrame();
 
@@ -66,7 +68,6 @@ namespace Jotar
         int m_NrFramesPerSec;
         float m_AnimTime;
         int m_AnimFrame;
-
 
     };
 

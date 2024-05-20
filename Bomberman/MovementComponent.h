@@ -11,7 +11,7 @@ namespace Jotar
 	class MovementComponent : public Component
 	{
     public:
-        explicit MovementComponent(GameObject* owner, float movementSpeed);
+        explicit MovementComponent(GameObject* owner, float movementSpeed, int cellsize);
 
         MovementComponent(const MovementComponent& other) = delete;
         MovementComponent(MovementComponent&& other) = delete;
@@ -22,12 +22,12 @@ namespace Jotar
         TransformComponent* GetTransform();
     private:
         glm::vec2 Walk(glm::ivec2 direction, const glm::vec2& currentPosition);
-        glm::vec2 CalculateWalk(int direction, float x, float y);
+        glm::vec2 CalculateWalk(int direction, float axis);
         float m_MovementSpeed;
         TransformComponent* m_pTransformComponent;
 
 
-
+        int m_CellSize;
 	};
 
 }

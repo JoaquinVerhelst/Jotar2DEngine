@@ -50,9 +50,6 @@
     <Filter Include="Engine\Components\PickUps">
       <UniqueIdentifier>{29526f87-3588-48d6-b19e-f27ee8f24cee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\AI">
-      <UniqueIdentifier>{0d617682-868e-41b7-8e62-e7dc016d2830}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\ServiceLocator">
       <UniqueIdentifier>{a85de245-502d-4dd1-bab5-47058e3f92aa}</UniqueIdentifier>
     </Filter>
@@ -208,8 +205,11 @@
     <ClInclude Include="WindowEvents.h">
       <Filter>Engine\Observer\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Engine</Filter>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTextureComponent.h">
+      <Filter>Engine\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,8 +336,11 @@
     <ClCompile Include="LoggingSoundSystem.cpp">
       <Filter>Engine\ServiceLocator</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Engine</Filter>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTextureComponent.cpp">
+      <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

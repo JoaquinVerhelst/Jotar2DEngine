@@ -6,7 +6,7 @@
 
 
 Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& filePath, bool isStatic, int columns, int rows)
-	: Component(owner)
+	: BaseTextureComponent(owner)
 	, m_AnimTime{}
 	, m_AnimFrame{}
 	, m_SpriteSheet{}
@@ -19,7 +19,7 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, const std::string& 
 }
 
 Jotar::TextureComponent::TextureComponent(GameObject* owner, std::shared_ptr<Texture2D> texture)
-	: Component(owner)
+	: BaseTextureComponent(owner)
 	, m_AnimTime{}
 	, m_AnimFrame{}
 	, m_SpriteSheet{}
@@ -32,7 +32,7 @@ Jotar::TextureComponent::TextureComponent(GameObject* owner, std::shared_ptr<Tex
 }
 
 Jotar::TextureComponent::TextureComponent(GameObject* owner, SpriteSheet& spriteSheet, int currentRow, int currentColumn)
-	: Component(owner)
+	: BaseTextureComponent(owner)
 	, m_AnimTime{}
 	, m_AnimFrame{}
 	, m_SpriteSheet{}

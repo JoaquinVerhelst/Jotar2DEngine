@@ -25,9 +25,10 @@ namespace Jotar
 		CollisionManager& operator=(const CollisionManager& other) = delete;
 		CollisionManager& operator=(CollisionManager&& other) = delete;
 
+		void Reset();
 	private:
 
-		bool RayBoxIntersection(const glm::vec2& startpos, const glm::vec2& direction, const glm::vec4& box, float maxDistance);
+		bool RayBoxIntersection(const glm::vec2& rayOrigin, const glm::vec2& rayDir, const glm::vec4& box, float& t);
 
 
 

@@ -7,6 +7,8 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 {
     m_LevelLoader.SetGameLevelsFilePath(gameLevelsFilePath);
 
+    m_LevelLoader.InitGame();
+
     m_pMainMenuState = std::make_unique<MainMenuState>();
     m_pGameLevelState = std::make_unique<GameLevelState>(3);
     m_pHighScoreState = std::make_unique<HighscoreState>();
@@ -16,25 +18,16 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 
 }
 
-void Jotar::GameManager::SetPlayerOne(std::shared_ptr<GameObject> ptr)
+void Jotar::GameManager::AddPlayer(TransformComponent* ptr)
 {
-    m_PlayerOne = ptr;
+    m_Players.emplace_back(ptr);
 }
 
-void Jotar::GameManager::SetPlayerTwo(std::shared_ptr<GameObject> ptr)
+std::vector<Jotar::TransformComponent*> Jotar::GameManager::GetPlayers() const
 {
-    m_PlayerTwo = ptr;
+    return m_Players;
 }
 
-std::shared_ptr<Jotar::GameObject> Jotar::GameManager::GetPlayerOne()
-{
-    return m_PlayerOne;
-}
-
-std::shared_ptr<Jotar::GameObject> Jotar::GameManager::GetPlayerTwo()
-{
-    return m_PlayerTwo;
-}
 
 void Jotar::GameManager::ResetAndInitializeWorldGrid(int rows, int columns, int size)
 {
@@ -51,14 +44,20 @@ Jotar::JsonLevelLoader& Jotar::GameManager::GetLevelLoader()
     return m_LevelLoader;
 }
 
-void Jotar::GameManager::StartAndSetGameMode(GameMode)
+void Jotar::GameManager::StartAndSetGameMode(GameMode gameMode)
 {
+    m_GameMode = gameMode;
     ChangeState(m_pGameLevelState.get());
 }
 
 void Jotar::GameManager::NextLevel()
 {
     ChangeState(m_pGameLevelState.get());
+}
+
+Jotar::GameMode Jotar::GameManager::GetGamemode()
+{
+    return m_GameMode;
 }
 
 
