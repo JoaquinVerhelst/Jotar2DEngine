@@ -23,6 +23,10 @@ namespace Jotar
 		void FixedUpdate() override;
 		void OnDestroy() override;
 
+		void Render() const override;
+
+
+
 		void AddObserver(Observer<CollisionEvent>* pObserver);
 		void RemoveObserver(Observer<CollisionEvent>* pObserver);
 		bool CompareTag(const std::string& compareTag) const;
@@ -38,6 +42,7 @@ namespace Jotar
 
 		bool IsOverlapping(const glm::vec4& otherCollisionRect);
 
+		void SetSize(glm::vec2 size);
 
 		void OnTriggerBegin(TriggerBeginEvent& collisionEvent);
 		void OnTriggerCollision(TriggerEvent& collisionEvent);

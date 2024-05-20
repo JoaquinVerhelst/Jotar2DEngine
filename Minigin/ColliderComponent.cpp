@@ -5,6 +5,8 @@
 #include "Scene.h"
 
 #include <iostream>
+#include "Renderer.h"
+
 
 Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bool isTrigger)
 	: Component(owner)
@@ -36,6 +38,27 @@ void Jotar::ColliderComponent::OnDestroy()
 {
 	SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RemoveCollider(this);
 	m_pSubject->RemoveAllObservers();
+}
+
+void Jotar::ColliderComponent::Render() const
+{
+
+	SDL_Rect rect;
+	rect.x = static_cast<int>(m_CollisionRect.x);
+	rect.y = static_cast<int>(m_CollisionRect.y);
+	rect.h = static_cast<int>(m_CollisionRect.z);
+	rect.w = static_cast<int>(m_CollisionRect.w);
+
+	// Set the color for the rectangle (e.g., red color)
+	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255); // RGBA
+
+	// Render the rectangle
+	SDL_RenderDrawRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+	// Optionally, fill the rectangle
+	SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+
+	// Reset the color if necessary
+	//SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 0, 255); // RGBA (black)
 }
 
 void Jotar::ColliderComponent::AddObserver(Observer<CollisionEvent>* pObserver)
@@ -92,6 +115,12 @@ bool Jotar::ColliderComponent::IsOverlapping(const glm::vec4& otherCollisionRect
 	}
 
 	return false;
+}
+
+void Jotar::ColliderComponent::SetSize(glm::vec2 size)
+{
+	m_CollisionRect.w = size.x;
+	m_CollisionRect.z = size.y;
 }
 
 
@@ -167,8 +196,8 @@ void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 void Jotar::ColliderComponent::UpdatePosition()
 {
 	auto& pos = GetOwner()->GetTransform()->GetWorldPosition();
-	m_CollisionRect.x = pos.x;
-	m_CollisionRect.y = pos.y;
+	m_CollisionRect.x = pos.x - m_CollisionRect.w / 2;
+	m_CollisionRect.y = pos.y - m_CollisionRect.z / 2;
 }
 
 void Jotar::ColliderComponent::SetTag(std::string tag)

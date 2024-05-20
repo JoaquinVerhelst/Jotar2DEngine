@@ -38,6 +38,7 @@ void Jotar::Renderer::Render() const
 		}
 	}
 
+
 	SDL_RenderPresent(m_Renderer);
 }
 

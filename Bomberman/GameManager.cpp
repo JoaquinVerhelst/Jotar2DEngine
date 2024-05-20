@@ -79,6 +79,16 @@ void Jotar::GameManager::LoadLevel(bool isNextLevel)
     ChangeState(m_pGameLevelState.get());
 }
 
+void Jotar::GameManager::LoadHighScore()
+{
+    ChangeState(m_pHighScoreState.get());
+}
+
+void Jotar::GameManager::LoadMainMenu()
+{
+    ChangeState(m_pMainMenuState.get());
+}
+
 Jotar::GameMode Jotar::GameManager::GetGamemode()
 {
     return m_GameMode;

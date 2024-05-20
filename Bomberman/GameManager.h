@@ -49,6 +49,9 @@ namespace Jotar
 
 		void StartAndSetGameMode(GameMode gameMode);
 		void LoadLevel(bool isNextLevel = true);
+		void LoadHighScore();
+		void LoadMainMenu();
+
 		GameMode GetGamemode();
 
 	private:
