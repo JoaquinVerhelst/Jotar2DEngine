@@ -122,6 +122,15 @@
     <ClCompile Include="DeathCheckerComponent.cpp">
       <Filter>GameFIles\Components\Player</Filter>
     </ClCompile>
+    <ClCompile Include="JsonHighScoreLoaderComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreMenuComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreEntryComponent.cpp">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
@@ -222,6 +231,15 @@
     </ClInclude>
     <ClInclude Include="MovementCommand.h">
       <Filter>GameFIles\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonHighScoreLoaderComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreMenuComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreEntryComponent.h">
+      <Filter>GameFIles\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

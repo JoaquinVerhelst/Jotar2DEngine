@@ -5,7 +5,7 @@
 #include "Font.h"
 #include <SDL_ttf.h>
 #include "WorldTimeManager.h"
-#include "Texture2D.h"
+
 
 
 Jotar::TextComponent::TextComponent(GameObject* owner, const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color& color, bool needUpdating)
@@ -51,6 +51,11 @@ void Jotar::TextComponent::SetText(const std::string& text)
 	UpdateText();
 }
 
+glm::ivec2 Jotar::TextComponent::GetSize() const
+{
+	return m_TextSize;
+}
+
 void Jotar::TextComponent::UpdateText()
 {
 	if (m_Text.empty()) return;
@@ -68,7 +73,7 @@ void Jotar::TextComponent::UpdateText()
 	}
 	SDL_FreeSurface(surf);
 	m_Texture = std::make_unique<Texture2D>(texture);
-
+	m_TextSize = m_Texture->GetSize();
 
 	GetOwner()->GetTransform()->SetSize(m_Texture->GetSize());
 

@@ -79,8 +79,9 @@ void Jotar::GameManager::LoadLevel(bool isNextLevel)
     ChangeState(m_pGameLevelState.get());
 }
 
-void Jotar::GameManager::LoadHighScore()
+void Jotar::GameManager::LoadHighScoreMenu(bool isSaving)
 {
+    m_pHighScoreState->SetIsSaving(isSaving);
     ChangeState(m_pHighScoreState.get());
 }
 

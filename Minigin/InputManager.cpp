@@ -109,6 +109,16 @@ namespace Jotar
 		return m_KeyboardInput->IsMouseButtonUp();
 	}
 
+	bool InputManager::IsKeyUp(KeyboardButton key)
+	{
+		return m_KeyboardInput->IsKeyUp(key);
+	}
+
+	std::string InputManager::GetPressedKeyString()
+	{
+		return m_KeyboardInput->GetPressedKeyString();
+	}
+
 	bool InputManager::IsGameQuit() const
 	{
 		return m_KeyboardInput->GetIsGameQuit();

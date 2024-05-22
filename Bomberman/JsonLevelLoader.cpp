@@ -41,6 +41,10 @@
 #include "ExitComponent.h"
 #include "DeathCheckerComponent.h"
 #include "PlayerDeathComponent.h"
+#include "HighScoreMenuComponent.h"
+#include "HighScoreEntryComponent.h"
+#include "JsonHighScoreLoaderComponent.h"
+
 
 #include "Font.h"
 
@@ -325,21 +329,23 @@ bool Jotar::JsonLevelLoader::LoadMenuFromJson(Scene& scene)
     menuComp->AddButton("SinglePlayer", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::SinglePlayer), {0, 0, 25, 150}, bombermanFont);
     menuComp->AddButton("Coop", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Coop), { 0, 0, 25, 150 }, bombermanFont);
     menuComp->AddButton("Versus", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Versus), { 0, 0, 25, 150 }, bombermanFont);
-    menuComp->AddButton("HighScore", std::bind(&GameManager::LoadHighScore, &GameManager::GetInstance()), { 0, 0, 25, 150 }, bombermanFont);
+    menuComp->AddButton("HighScore", std::bind(&GameManager::LoadHighScoreMenu, &GameManager::GetInstance(), false), { 0, 0, 25, 150 }, bombermanFont);
 
 
-    return false;
+    return true;
 }
 
 
-bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene)
+bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene, bool isSavingScore)
 {
-    auto bombermanFont = Jotar::ResourceManager::GetInstance().LoadFont("nes-field-combat.otf", 50);
+    auto titleFont = Jotar::ResourceManager::GetInstance().LoadFont("nes-field-combat.otf", 50);
+    auto gameModeFont = Jotar::ResourceManager::GetInstance().LoadFont("nes-field-combat.otf", 30);
+    auto scoreFont = Jotar::ResourceManager::GetInstance().LoadFont("nes-field-combat.otf", 10);
 
 
     //HighScore Title
     auto highScoreTitle = scene.CreateGameObject("HighScoreTitle", false);
-    highScoreTitle->AddComponent<TextComponent>("HighScore", bombermanFont);
+    highScoreTitle->AddComponent<TextComponent>("HighScore", titleFont);
     highScoreTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp);
 
 
@@ -349,18 +355,35 @@ bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene)
 
     //SinglePlayer Title
     auto singlePlayerTitle = scene.CreateGameObject("SinglePlayerTitle", false);
-    singlePlayerTitle->AddComponent<TextComponent>("SinglePlayer", bombermanFont);
-    glm::vec2 offset{ -windowWidth / 4, windowHeight / 5 };
+    auto textComp = singlePlayerTitle->AddComponent<TextComponent>("SinglePlayer", gameModeFont);
+
+    glm::vec2 offset{ static_cast<float>(-windowWidth / 4 - textComp->GetSize().x/2), windowHeight / 5};
     singlePlayerTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp, offset);
 
+
     //Coop Title
-    auto CoopTitle = scene.CreateGameObject("CoopTitle", false);
-    CoopTitle->AddComponent<TextComponent>("Coop", bombermanFont);
-    offset. x = windowWidth / 4;
-    CoopTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp, offset);
+    auto coopTitle = scene.CreateGameObject("CoopTitle", false);
+    textComp = coopTitle->AddComponent<TextComponent>("Coop", gameModeFont);
+    offset. x = static_cast<float>(windowWidth / 4) - static_cast<float>(textComp->GetSize().x / 2);
+    coopTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp, offset);
 
 
 
+    // Setup HighScore Game Object
+    auto menu = scene.CreateGameObject("HighScore Menu", false);
+    menu->AddComponent<HighScoreMenuComponent>(scoreFont, glm::ivec2{windowWidth, windowHeight});
+    menu->AddComponent<JsonHighScoreLoaderComponent>("../Data/Json/HighScore.json");
+    menu->AddComponent<HUDComponent>(HUDPosition::Center);
+
+    if (isSavingScore)
+    {
+        // make the HighScoreEntry
+        auto entryObj = scene.CreateGameObject("HighScore Menu", false);
+        entryObj->AddComponent<HighScoreEntryComponent>();
+        entryObj->AddComponent<TextComponent>("", scoreFont);
+    }
+
+    return true;
 }
 
 
@@ -745,160 +768,3 @@ void Jotar::JsonLevelLoader::RandomizeBreakableWalls(int rows, int columns, Scen
     }
 }
 
-
-//
-//std::vector<HighscoreEntry> JsonManager::LoadHighscoresForSinglePlayer(const std::string& filePath)
-//{
-//    std::ifstream file(filePath);
-//    if (!file.is_open())
-//    {
-//        std::cout << "Failed to open JSON file: " << filePath << std::endl;
-//        return std::vector<HighscoreEntry>();
-//    }
-//
-//    try
-//    {
-//        json jsonData;
-//        file >> jsonData;
-//
-//        std::vector<HighscoreEntry> highscores;
-//
-//        // Extract highscores from JSON
-//        const json& entries = jsonData["singleplayer"];
-//        for (const auto& entry : entries)
-//        {
-//            HighscoreEntry highscore;
-//            highscore.name = entry["name"];
-//            highscore.score = entry["score"];
-//            highscores.push_back(highscore);
-//        }
-//
-//        return highscores;
-//    }
-//    catch (const json::exception& ex)
-//    {
-//        std::cout << "Failed to parse JSON file: " << filePath << std::endl;
-//        std::cout << "Error: " << ex.what() << std::endl;
-//        return std::vector<HighscoreEntry>();
-//    }
-//}
-//
-//std::vector<HighscoreEntryCoop> JsonManager::LoadHighscoresForCoop(const std::string& filePath)
-//{
-//    std::ifstream file(filePath);
-//    if (!file.is_open())
-//    {
-//        std::cout << "Failed to open JSON file: " << filePath << std::endl;
-//        return std::vector<HighscoreEntryCoop>();
-//    }
-//
-//    try
-//    {
-//        json jsonData;
-//        file >> jsonData;
-//
-//        std::vector<HighscoreEntryCoop> highscores;
-//
-//        // Extract highscores from JSON
-//        const json& entries = jsonData["coop"];
-//        for (const auto& entry : entries)
-//        {
-//            HighscoreEntryCoop highscore;
-//
-//            highscore.name1 = entry["name1"];
-//            highscore.score1 = entry["score1"];
-//
-//            highscore.name2 = entry["name2"];
-//            highscore.score2 = entry["score2"];
-//
-//            highscores.push_back(highscore);
-//        }
-//
-//        return highscores;
-//    }
-//    catch (const json::exception& ex)
-//    {
-//        std::cout << "Failed to parse JSON file: " << filePath << std::endl;
-//        std::cout << "Error: " << ex.what() << std::endl;
-//        return std::vector<HighscoreEntryCoop>();
-//    }
-//}
-//
-//void JsonManager::SaveHighscoresToSinglePlayer(const std::string& filePath, const HighscoreEntry& highscores)
-//{
-//    json jsonData;
-//
-//    // Load existing JSON data from file
-//    std::ifstream inputFile(filePath);
-//    if (inputFile.is_open())
-//    {
-//        inputFile >> jsonData;
-//        inputFile.close();
-//    }
-//    else
-//    {
-//        std::cout << "Failed to open JSON file for loading: " << filePath << std::endl;
-//        return;
-//    }
-//
-//    // Convert highscores to JSON
-//    json entryJson;
-//    entryJson["name"] = highscores.name;
-//    entryJson["score"] = highscores.score;
-//    jsonData["singleplayer"].push_back(entryJson);
-//
-//    // Write updated JSON data to file
-//    std::ofstream outputFile(filePath);
-//    if (outputFile.is_open())
-//    {
-//        outputFile << jsonData.dump(4); // Write JSON data to file with indentation
-//        outputFile.close();
-//        std::cout << "Highscores saved to JSON file: " << filePath << std::endl;
-//    }
-//    else
-//    {
-//        std::cout << "Failed to open JSON file for saving: " << filePath << std::endl;
-//    }
-//}
-//
-//void JsonManager::SaveHighscoresToCoop(const std::string& filePath, const HighscoreEntryCoop& highscores)
-//{
-//
-//    json jsonData;
-//
-//    // Load existing JSON data from file
-//    std::ifstream inputFile(filePath);
-//    if (inputFile.is_open())
-//    {
-//        inputFile >> jsonData;
-//        inputFile.close();
-//    }
-//    else
-//    {
-//        std::cout << "Failed to open JSON file for loading: " << filePath << std::endl;
-//        return;
-//    }
-//
-//    // Convert highscores to JSON
-//    json entryJson;
-//
-//    entryJson["name1"] = highscores.name1;
-//    entryJson["score1"] = highscores.score1;
-//    entryJson["name2"] = highscores.name2;
-//    entryJson["score2"] = highscores.score2;
-//
-//    jsonData["coop"].push_back(entryJson);
-//
-//    // Write updated JSON data to file
-//    std::ofstream outputFile(filePath);
-//    if (outputFile.is_open())
-//    {
-//        outputFile << jsonData.dump(8); // Write JSON data to file with indentation
-//        outputFile.close();
-//        std::cout << "Highscores saved to JSON file: " << filePath << std::endl;
-//    }
-//    else
-//    {
-//        std::cout << "Failed to open JSON file for saving: " << filePath << std::endl;
-//    }
-//}

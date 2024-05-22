@@ -66,8 +66,6 @@ Jotar::GameLevelState::GameLevelState()
 
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
-
-
 	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
 
 	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
@@ -111,8 +109,24 @@ void Jotar::GameLevelState::OnExit(GameManager* )
 
 
 
-void Jotar::HighscoreState::OnEnter(GameManager* )
+void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
+	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
+	auto& nextScene = SceneManager::GetInstance().GetSceneByName("highScoreMenu");
+
+	gameManager->GetLevelLoader().LoadHighScoreFromJson(nextScene, m_IsSaving);
+	m_IsSaving = false;
+
+	prevScene.MarkAllForDestroy();
+
+	if (prevScene.GetName() != "mainMenu")
+	{
+		SceneManager::GetInstance().DestroyScene(prevScene);
+	}
+
+	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
+
+	nextScene.Start();
 }
 
 Jotar::GameState* Jotar::HighscoreState::OnHandle()
@@ -122,6 +136,13 @@ Jotar::GameState* Jotar::HighscoreState::OnHandle()
 
 void Jotar::HighscoreState::OnExit(GameManager* )
 {
+	auto& scene = SceneManager::GetInstance().GetCurrentScene();
+	scene.MarkAllForDestroy();
+}
+
+void Jotar::HighscoreState::SetIsSaving(bool isSaving)
+{
+	m_IsSaving = isSaving;
 }
 
 

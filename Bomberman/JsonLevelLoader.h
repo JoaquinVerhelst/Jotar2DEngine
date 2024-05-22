@@ -38,7 +38,7 @@ namespace Jotar
 
 		bool LoadLevelFromJson(Scene& scene, int level, bool isGameModeInit);
 		bool LoadMenuFromJson(Scene& scene);
-		bool LoadHighScoreFromJson(Scene& scene);
+		bool LoadHighScoreFromJson(Scene& scene, bool isSavingScore);
 
 
 		void SetGameLevelsFilePath(std::string filePath);

@@ -135,7 +135,8 @@ namespace Jotar
 
 
 		// If the component is not found, throw an exception
-		throw std::runtime_error("No component of this type: " + std::string(typeid(T).name()) + "is in this gameobject: " + GetName());
+		std::string error = "No component of this type: " + std::string(typeid(T).name()) + "is in this gameobject: " + GetName();
+		throw std::runtime_error(error);
 	}
 
 

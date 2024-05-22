@@ -33,6 +33,8 @@ namespace Jotar
 
 		bool GetIsGameQuit() const;
 
+		std::string GetPressedKeyString();
+
 	private:
 		std::vector<SDL_Event> m_SDLFrameKeyEvents;
 		std::vector<SDL_Event> m_SDLFrameMouseEvents;
@@ -134,6 +136,24 @@ namespace Jotar
 		return m_IsGameQuit;
 	}
 
+	std::string KeyboardInput::KeyboardInputImpl::GetPressedKeyString()
+	{
+		for (size_t i = 0; i < m_SDLFrameKeyEvents.size(); i++)
+		{
+			if (m_SDLFrameKeyEvents[i].type == SDL_KEYUP)
+			{
+				SDL_Keycode keyCode = m_SDLFrameKeyEvents[i].key.keysym.sym;
+				if ((keyCode >= SDLK_a && keyCode <= SDLK_z))
+				{
+					const char* keyName = SDL_GetKeyName(keyCode);
+					return keyName;
+				}
+			}
+		}
+
+		return ""; 
+	}
+
 
 	//  ===============================================================================  //
 	//  						KeyboardInput Functions									 //
@@ -184,6 +204,11 @@ namespace Jotar
 	bool KeyboardInput::IsKeyPressed(KeyboardButton button) const
 	{
 		return pImpl->IsKeyPressed(static_cast<SDL_KeyCode>(button));
+	}
+
+	std::string KeyboardInput::GetPressedKeyString()
+	{
+		return pImpl->GetPressedKeyString();
 	}
 
 	bool KeyboardInput::GetIsGameQuit() const

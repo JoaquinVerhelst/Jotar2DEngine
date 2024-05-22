@@ -61,6 +61,11 @@ namespace Jotar
 		void OnEnter(GameManager* gameManager) override;
 		GameState* OnHandle() override;
 		void OnExit(GameManager* gameManager) override;
+
+		void SetIsSaving(bool isSaving);
+
+	private:
+		bool m_IsSaving{false};
 	};
 }
 

@@ -49,7 +49,7 @@ namespace Jotar
 
 		void StartAndSetGameMode(GameMode gameMode);
 		void LoadLevel(bool isNextLevel = true);
-		void LoadHighScore();
+		void LoadHighScoreMenu(bool isSaving);
 		void LoadMainMenu();
 
 		GameMode GetGamemode();

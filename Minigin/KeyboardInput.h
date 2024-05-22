@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-
+#include <string>
 
 namespace Jotar
 {
@@ -26,6 +26,8 @@ namespace Jotar
 		bool IsKeyDown(KeyboardButton button) const;
 		bool IsKeyPressed(KeyboardButton button) const;
 
+		std::string GetPressedKeyString();
+		
 
 		bool GetIsGameQuit() const;
 		void ClearFrameEvents();

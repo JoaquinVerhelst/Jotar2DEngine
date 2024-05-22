@@ -36,6 +36,11 @@ namespace Jotar
 	enum class KeyboardButton
 	{
 
+
+		Key_Return = 13,
+		Key_Backscpace = 8,
+
+
 		Key_a = 97,
 		Key_b = 98,
 		Key_c = 99,
@@ -62,6 +67,8 @@ namespace Jotar
 		Key_x = 120,
 		Key_y = 121,
 		Key_z = 122,
+
+
 
 		key_LShift = 225,
 
@@ -145,6 +152,8 @@ namespace Jotar
 		bool IsMouseButtonUp() const;
 
 
+		bool IsKeyUp(KeyboardButton key);
+		std::string GetPressedKeyString();
 
 	private :
 

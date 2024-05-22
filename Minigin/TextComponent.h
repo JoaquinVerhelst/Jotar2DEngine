@@ -5,10 +5,12 @@
 #include <string>
 #include <SDL_pixels.h>
 #include <glm/glm.hpp>
+#include "Texture2D.h"
+
 
 namespace Jotar
 {
-    class Texture2D;
+   // class Texture2D;
     class string;
     class Font;
 
@@ -29,6 +31,8 @@ namespace Jotar
 
         void SetText(const std::string& text, const std::shared_ptr<Font>& font, bool needUpdating);
         void SetText(const std::string& text);
+
+        glm::ivec2 GetSize() const;
 
         void UpdateText();
     private:
