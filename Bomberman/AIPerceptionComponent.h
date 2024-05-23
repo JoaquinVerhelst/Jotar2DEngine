@@ -16,6 +16,7 @@ namespace Jotar
 		~AIPerceptionComponent();
 		
 		void FixedUpdate() override;
+		void Update() override;
 		void Start() override;
 
 
@@ -44,5 +45,9 @@ namespace Jotar
 
 		std::vector<std::string> m_TargetTags;
 		float m_ViewDistance;
+
+
+		float m_TimeToCheck;
+		float m_CheckTimer;
 	};
 }

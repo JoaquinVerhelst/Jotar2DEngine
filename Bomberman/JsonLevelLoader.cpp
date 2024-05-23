@@ -345,8 +345,8 @@ bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene, bool isSavingSc
 
     //HighScore Title
     auto highScoreTitle = scene.CreateGameObject("HighScoreTitle", false);
-    highScoreTitle->AddComponent<TextComponent>("HighScore", titleFont);
-    highScoreTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp);
+    auto textComp = highScoreTitle->AddComponent<TextComponent>("HighScore", titleFont);
+    highScoreTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp,glm::vec2{ -textComp->GetSize().x / 2, 0 });
 
 
     int windowWidth, windowHeight;
@@ -355,7 +355,7 @@ bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene, bool isSavingSc
 
     //SinglePlayer Title
     auto singlePlayerTitle = scene.CreateGameObject("SinglePlayerTitle", false);
-    auto textComp = singlePlayerTitle->AddComponent<TextComponent>("SinglePlayer", gameModeFont);
+    textComp = singlePlayerTitle->AddComponent<TextComponent>("SinglePlayer", gameModeFont);
 
     glm::vec2 offset{ static_cast<float>(-windowWidth / 4 - textComp->GetSize().x/2), windowHeight / 5};
     singlePlayerTitle->AddComponent<HUDComponent>(HUDPosition::CenterUp, offset);
@@ -638,8 +638,8 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
 
             if (enemyData["intelligence"]["level"] == 1)
             {
-               // auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget);
-               // perception->AddObserver(behavior);
+                auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget);
+                perception->AddObserver(behavior);
             }
  
             enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);

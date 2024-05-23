@@ -8,7 +8,7 @@ Jotar::HighScoreMenuComponent::HighScoreMenuComponent(GameObject* owner, const s
 	:Component(owner)
 	, m_Font{ font }
 	, m_WindowSize{ windowSize }
-{
+{ 
 }
 
 void Jotar::HighScoreMenuComponent::Update()
@@ -53,8 +53,8 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 
 		std::string scoreText = std::to_string(highScoreSinglePlayer[i].score1) + "             " + highScoreSinglePlayer[i].name1;
 
-		go->AddComponent<TextComponent>(scoreText, m_Font);
-		go->GetTransform()->Translate({ -m_WindowSize.x / 4.f,  200.f + offset * i});
+		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
+		go->GetTransform()->Translate({ -m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i});
 			
 		m_ScoreTextObjects.emplace_back(go.get());
 	}
@@ -67,8 +67,8 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 		std::string scoreText = std::to_string(highScoreCoop[i].score1) + ": " + highScoreCoop[i].name1 + "        "
 			+ std::to_string(highScoreCoop[i].score2) + ": " + highScoreCoop[i].name2;
 
-		go->AddComponent<TextComponent>(scoreText, m_Font);
-		go->GetTransform()->Translate({ m_WindowSize.x / 4.f,  200.f + offset * i });
+		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
+		go->GetTransform()->Translate({ m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i });
 
 
 		m_ScoreTextObjects.emplace_back(go.get());

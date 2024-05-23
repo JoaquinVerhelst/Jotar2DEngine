@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "CameraComponent.h"
 #include "AIAnimationControllerComponent.h"
+#include "AIPerceptionComponent.h"
 
 
 
@@ -73,6 +74,8 @@ void Jotar::AIBehaviorComponent::OnNotify(const AIPlayerSeenEvent& AiEvent)
 		m_IsPlayerSeen = true;
 		GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
 		m_pCurrentState = GetCalculatePathToPlayerState();
+
+		GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(true);
 	}
 
 }

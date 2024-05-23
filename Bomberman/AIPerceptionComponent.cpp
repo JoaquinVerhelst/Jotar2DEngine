@@ -5,9 +5,10 @@
 #include "Scene.h"
 #include <glm/glm.hpp>
 
-
+// todo remove
 #include "SDL.h"
 #include "Renderer.h"
+#include <iostream>
 
 
 Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float viewDistance, std::vector<std::string> targetTags)
@@ -16,6 +17,8 @@ Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float vie
 	, m_pAIBehaviorComponent{ nullptr }
 	, m_TargetTags{targetTags}
 	, m_ViewDistance{ viewDistance }
+	, m_TimeToCheck{0}
+	, m_CheckTimer{0}
 {
 	m_pSubject = std::make_unique<Subject<AIPlayerSeenEvent>>();
 }
@@ -33,13 +36,47 @@ void Jotar::AIPerceptionComponent::Start()
 
 void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
 {
+
+
+
+
 	auto dir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
 	auto pos = m_pTransformComponent->GetWorldPosition();
 
+
+
+
 	ColliderComponent* collider = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RaycastLookForCollider(pos, dir, m_ViewDistance, m_TargetTags);
 
+	if (collider == nullptr) return;
+
+	for (size_t i = 0; i < m_TargetTags.size(); i++)
+	{
+		if (collider->CompareTag(m_TargetTags[i]))
+		{
+
+			std::cout << "PlayerSeen" << '\n';
+			m_pSubject->NotifyObservers(AIPlayerSeenEvent(collider));
+			
+		}
+	}
 
 
+
+
+
+}
+
+void Jotar::AIPerceptionComponent::FixedUpdate()
+{
+	CheckIfPotentialTargetIsSeen();
+}
+
+void Jotar::AIPerceptionComponent::Update()
+{	
+	
+	auto dir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
+	auto pos = m_pTransformComponent->GetWorldPosition();
 
 	SDL_Renderer* renderer = Renderer::GetInstance().GetSDLRenderer();
 
@@ -57,17 +94,6 @@ void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
 	// Reset the draw color to white (or whatever your default is)
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-
-
-	if (collider != nullptr)
-	{
-		m_pSubject->NotifyObservers(AIPlayerSeenEvent(collider));
-	}
-}
-
-void Jotar::AIPerceptionComponent::FixedUpdate()
-{
-	CheckIfPotentialTargetIsSeen();
 }
 
 

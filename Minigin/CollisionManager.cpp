@@ -100,45 +100,26 @@ Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosit
 }
 
 
-Jotar::ColliderComponent* Jotar::CollisionManager::RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> tagsToFind)
+Jotar::ColliderComponent* Jotar::CollisionManager::RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> )
 {
     glm::vec2 dir = glm::normalize(direction);
 
-    struct RaycastHit {
-        Jotar::ColliderComponent* collider;
-        float distance;
-    };
-
-    std::vector<RaycastHit> hits;
-
-    for (const auto& collider : m_pSceneColliders)
-    {
-        // Calculate collision rectangle for the collider
-        glm::vec4 collisionRect = collider->GetCollisionRect();
-
-        float hitDistance;
-        if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance)
+    //for (float currentDistance = 64; currentDistance < distance; currentDistance += 64)
+    //{
+        for (const auto& collider : m_pSceneColliders)
         {
-            hits.push_back({ collider, hitDistance });
+            glm::vec4 collisionRect = collider->GetCollisionRect();
+
+            if (RayBoxIntersection(startpos, dir, collisionRect, distance))
+            {
+                return collider;
+            }
         }
-    }
+    //}
 
-    // Sort hits by distance
-    std::sort(hits.begin(), hits.end(), [](const RaycastHit& a, const RaycastHit& b) {
-        return a.distance < b.distance;
-        });
 
-    for (const auto& hit : hits)
-    {
-        bool canCollide = std::any_of(tagsToFind.begin(), tagsToFind.end(), [&hit](const std::string& tag) {
-            return hit.collider->CompareTag(tag);
-            });
 
-        if (canCollide)
-        {
-            return hit.collider;
-        }
-    }
+
 
     return nullptr;
 }
