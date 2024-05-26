@@ -63,21 +63,32 @@ bool Jotar::AIBehaviorComponent::GetIsPlayerSeen() const
 	return m_IsPlayerSeen;
 }
 
-void Jotar::AIBehaviorComponent::OnNotify(const AIPlayerSeenEvent& AiEvent)
+void Jotar::AIBehaviorComponent::OnNotify(const AIEvents& AiEvent)
 {
-	if (m_IsPlayerSeen) return;
 
-	if (typeid(AiEvent) == typeid(AIPlayerSeenEvent))
+	if (!m_IsPlayerSeen)
 	{
-		const AIPlayerSeenEvent& playerSeenEvent = static_cast<const AIPlayerSeenEvent&>(AiEvent);
+		if (typeid(AiEvent) == typeid(AIPlayerSeenEvent))
+		{
+			const AIPlayerSeenEvent& playerSeenEvent = static_cast<const AIPlayerSeenEvent&>(AiEvent);
 
-		m_IsPlayerSeen = true;
-		GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
-		m_pCurrentState = GetCalculatePathToPlayerState();
+			m_IsPlayerSeen = true;
+			GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
+			m_pCurrentState = GetCalculatePathToPlayerState();
 
-		GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(true);
+			GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(true);
+		}
 	}
+	else
+	{
+		if (typeid(AiEvent) == typeid(AIKilledTarget))
+		{
 
+			m_IsPlayerSeen = false;
+			m_pCurrentState = GetCalculateRandomPathState();
+			GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(false);
+		}
+	}
 }
 
 void Jotar::AIBehaviorComponent::OnNotify(const HealthEvent& healthEvent)

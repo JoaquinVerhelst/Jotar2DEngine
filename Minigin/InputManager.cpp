@@ -99,6 +99,11 @@ namespace Jotar
 		m_pKeyboardBinds.emplace_back(std::pair(key, std::move(pCommand)));
 	}
 
+	void InputManager::ClearInputBindings()
+	{
+		m_pControllerBinds.clear();
+	}
+
 	bool InputManager::IsMouseButtonDown() const
 	{
 		return m_KeyboardInput->IsMouseButtonDown();
@@ -113,6 +118,22 @@ namespace Jotar
 	{
 		return m_KeyboardInput->IsKeyUp(key);
 	}
+
+	bool InputManager::IsControllerButtonUp(ControllerButton button)
+	{
+		bool isUp = false;
+
+		for (size_t i = 0; i < m_pControllers.size(); i++)
+		{
+			if (m_pControllers[i]->IsUp(button))
+			{
+				isUp = true;
+			}
+		}
+
+		return isUp;
+	}
+
 
 	std::string InputManager::GetPressedKeyString()
 	{

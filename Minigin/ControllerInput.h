@@ -23,6 +23,7 @@ namespace Jotar
 		bool IsDown(ControllerButton button) const;
 		bool IsUp(ControllerButton button) const;
 
+
 		unsigned int GetMaxControllers() const;
 	};
 }

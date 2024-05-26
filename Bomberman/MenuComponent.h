@@ -14,18 +14,18 @@ namespace Jotar
 	class MenuComponent : public Component
 	{
 	public:
-		MenuComponent(GameObject* owner);
+		MenuComponent(GameObject* owner, const glm::ivec3& defaultColor = glm::ivec3{255,255,255}, const  glm::ivec3& selectedColor = glm::ivec3{ 255,0,0 });
 		~MenuComponent() = default;
 
 		void Start() override;
 		void Update() override;
 
-
-		void AddButton(std::string buttonName, const std::function<void()>& buttonFunction, glm::ivec4 rectBonds, const std::shared_ptr<Font>& font);
-		void SetMarkerChildObj(GameObject* pMarkerObj);
+		void AddButton(const std::string buttonName, const std::function<void()>& buttonFunction, const std::shared_ptr<Font>& font);
 
 		void ButtonSelectUp();
 		void ButtonSelectDown();
+
+		void PressButton();
 
 		MenuComponent(const MenuComponent& other) = delete;
 		MenuComponent(MenuComponent&& other) = delete;
@@ -34,12 +34,19 @@ namespace Jotar
 
 	private:
 
+		void CheckMouseInput();
+
 		void UpdateButtonPositions();
-		void SelectButton();
+		void SelectButton(int index);
+
+
+
 
 		std::vector<UIButtonComponent*> m_pButtonChildren;
-		GameObject* m_pMarkerObject;
 
 		int m_CurrentButtonIndex;
+
+		glm::ivec3 m_DefaultColor;
+		glm::ivec3 m_SelectedColor;
 	};
 }

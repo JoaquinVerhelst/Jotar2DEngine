@@ -27,11 +27,11 @@ namespace Jotar
 		AIPerceptionComponent& operator=(AIPerceptionComponent&& other) = delete;
 
 
-		void AddObserver(Observer<AIPlayerSeenEvent>* pObserver)
+		void AddObserver(Observer<AIEvents>* pObserver)
 		{
 			m_pSubject->AddObserver(pObserver);
 		}
-		void RemoveObserver(Observer<AIPlayerSeenEvent>* pObserver)
+		void RemoveObserver(Observer<AIEvents>* pObserver)
 		{
 			m_pSubject->RemoveObserver(pObserver);
 		}
@@ -42,7 +42,7 @@ namespace Jotar
 		TransformComponent* m_pTransformComponent;
 		AIBehaviorComponent* m_pAIBehaviorComponent;
 
-		std::unique_ptr<Subject<AIPlayerSeenEvent>> m_pSubject;
+		std::unique_ptr<Subject<AIEvents>> m_pSubject;
 
 		std::string m_TargetTag;
 		float m_ViewDistance;

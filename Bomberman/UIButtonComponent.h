@@ -10,6 +10,7 @@ namespace Jotar
 {
 	class GameObject;
 	class ColliderComponent;
+	class TextComponent;
 
 	class UIButtonComponent : public Component
 	{
@@ -17,7 +18,6 @@ namespace Jotar
 		UIButtonComponent(GameObject* owner, const std::function<void()>& buttonFunction);
 		~UIButtonComponent() = default;
 
-		void Render() const override;
 		void Start() override;
 
 		UIButtonComponent(const UIButtonComponent& other) = delete;
@@ -27,11 +27,12 @@ namespace Jotar
 
 
 		void PressButton();
+		void ChangeColor(const glm::ivec3& color);
 		bool IsPointInRect(const glm::ivec2& mousePos);
 
 	private:
 		glm::ivec4 m_ButtonRect;
 		std::function<void()> m_ButtonFunction;
-
+		TextComponent* m_pTextComponent;
 	};
 }

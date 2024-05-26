@@ -24,6 +24,15 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 
 }
 
+void Jotar::GameManager::Reset()
+{
+    m_IsGameInit = false;
+    m_Players.clear();
+
+    m_CurrentLevelID = 1;
+    m_CurrentTotalLevelsPlayed = 0;
+}
+
 void Jotar::GameManager::AddPlayer(TransformComponent* ptr)
 {
     m_Players.emplace_back(ptr);
@@ -58,6 +67,16 @@ int Jotar::GameManager::GetCurrentLevelID() const
 int Jotar::GameManager::GetCurrentTotalLevelsPlayed() const
 {
     return m_CurrentTotalLevelsPlayed;
+}
+
+bool Jotar::GameManager::GetIsGameInit() const
+{
+    return m_IsGameInit;
+}
+
+void Jotar::GameManager::SetGameInit(bool isGameInit)
+{
+    m_IsGameInit = isGameInit;
 }
 
 void Jotar::GameManager::StartAndSetGameMode(GameMode gameMode)

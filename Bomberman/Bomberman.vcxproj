@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="AIAnimationControllerComponent.cpp" />
     <ClCompile Include="AIBehaviorComponent.cpp" />
+    <ClCompile Include="AIDamageComponent.cpp" />
     <ClCompile Include="AIPerceptionComponent.cpp" />
     <ClCompile Include="AIScoreComponent.cpp" />
     <ClCompile Include="AIStates.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="HUDComponent.cpp" />
     <ClCompile Include="JsonHighScoreLoaderComponent.cpp" />
     <ClCompile Include="JsonLevelLoader.cpp" />
+    <ClCompile Include="MenuCommands.cpp" />
     <ClCompile Include="MenuComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="NavigationSystem.cpp" />
@@ -188,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="AIAnimationControllerComponent.h" />
     <ClInclude Include="AIBehaviorComponent.h" />
+    <ClInclude Include="AIDamageComponent.h" />
     <ClInclude Include="AIEvents.h" />
     <ClInclude Include="AIPerceptionComponent.h" />
     <ClInclude Include="AIScoreComponent.h" />
@@ -209,6 +212,7 @@
     <ClInclude Include="HUDComponent.h" />
     <ClInclude Include="JsonHighScoreLoaderComponent.h" />
     <ClInclude Include="JsonLevelLoader.h" />
+    <ClInclude Include="MenuCommands.h" />
     <ClInclude Include="MenuComponent.h" />
     <ClInclude Include="MovementCommand.h" />
     <ClInclude Include="MovementComponent.h" />

@@ -25,7 +25,7 @@ namespace Jotar
 
 
 	private:
-		int m_AmountOfDeathPlayers;
+		size_t m_AmountOfDeathPlayers;
 	};
 
 }

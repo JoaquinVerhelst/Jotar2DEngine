@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "JsonLevelLoader.h"
 #include "SceneManager.h"
+#include "InputManager.h"
 #include "Scene.h"
 
 // ------------------------------------------------------------------------------------- //
@@ -10,6 +11,11 @@
 
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
+	SceneManager::GetInstance().GetCurrentScene().MarkAllForDestroy();
+	gameManager->Reset();
+
+	InputManager::GetInstance().ClearInputBindings();
+
 	auto& scene = SceneManager::GetInstance().SetCurrentSceneByName("mainMenu");
 	scene.MarkAllForDestroy();
 
@@ -28,6 +34,7 @@ Jotar::GameState* Jotar::MainMenuState::OnHandle()
 void Jotar::MainMenuState::OnExit(GameManager* )
 {
 	auto& scene = SceneManager::GetInstance().GetCurrentScene();
+	InputManager::GetInstance().ClearInputBindings();
 	scene.MarkAllForDestroy();
 }
 
@@ -59,11 +66,6 @@ void Jotar::TransitionState::OnExit(GameManager* )
 // ------------------------------------------------------------------------------------- //
 
 
-Jotar::GameLevelState::GameLevelState()
-	:  m_IsGameModeInitialized{ false }
-{
-}
-
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
 	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
@@ -76,8 +78,8 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 	prevScene.Reset();
 
 
-	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, gameManager->GetCurrentLevelID(), m_IsGameModeInitialized);
-	m_IsGameModeInitialized = true;
+	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, gameManager->GetCurrentLevelID(), gameManager->GetIsGameInit());
+	gameManager->SetGameInit(true);
 
 
 	if (prevScene.GetName() != "mainMenu")
@@ -98,7 +100,8 @@ Jotar::GameState* Jotar::GameLevelState::OnHandle()
 
 void Jotar::GameLevelState::OnExit(GameManager* )
 {
-	//auto& scene = SceneManager::GetInstance().GetCurrentScene();
+
+	SceneManager::GetInstance().GetCurrentScene().MarkSceneForDestroy();
 
 }
 
@@ -111,6 +114,8 @@ void Jotar::GameLevelState::OnExit(GameManager* )
 
 void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
+
+
 	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
 	auto& nextScene = SceneManager::GetInstance().GetSceneByName("highScoreMenu");
 
@@ -121,8 +126,10 @@ void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 
 	if (prevScene.GetName() != "mainMenu")
 	{
+		InputManager::GetInstance().ClearInputBindings();
 		SceneManager::GetInstance().DestroyScene(prevScene);
 	}
+
 
 	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
 
@@ -136,6 +143,7 @@ Jotar::GameState* Jotar::HighscoreState::OnHandle()
 
 void Jotar::HighscoreState::OnExit(GameManager* )
 {
+
 	auto& scene = SceneManager::GetInstance().GetCurrentScene();
 	scene.MarkAllForDestroy();
 }

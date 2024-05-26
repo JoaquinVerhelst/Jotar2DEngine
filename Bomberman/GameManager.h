@@ -33,6 +33,7 @@ namespace Jotar
 		~GameManager() = default;
 
 		void Init(std::string gameLevelsFilePath);
+		void Reset();
 
 		void AddPlayer(TransformComponent* ptr);
 		std::vector<TransformComponent*> GetPlayers() const;
@@ -46,6 +47,8 @@ namespace Jotar
 		int GetCurrentLevelID() const;
 		int GetCurrentTotalLevelsPlayed() const;
 
+		bool GetIsGameInit() const;
+		void SetGameInit(bool isGameInit);
 
 		void StartAndSetGameMode(GameMode gameMode);
 		void LoadLevel(bool isNextLevel = true);
@@ -70,6 +73,7 @@ namespace Jotar
 		int m_CurrentLevelID;
 		int m_CurrentTotalLevelsPlayed;
 
+		bool m_IsGameInit = false;
 		//STATE
 
 		GameState* m_CurrentState{};

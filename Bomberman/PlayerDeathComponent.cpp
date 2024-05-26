@@ -24,7 +24,7 @@ void Jotar::PlayerDeathComponent::Update()
 
 			OnDeathEvent deathEvent{};
 			m_pSubject->NotifyObservers(deathEvent);
-
+			m_DeathTimer = 0;
 			m_IsDeath = false;
 		}
 	}
@@ -32,6 +32,7 @@ void Jotar::PlayerDeathComponent::Update()
 
 void Jotar::PlayerDeathComponent::Reset()
 {
+	m_DeathTimer = 0;
 	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(false);
 	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(false);
 	m_pSubject->RemoveAllObservers();

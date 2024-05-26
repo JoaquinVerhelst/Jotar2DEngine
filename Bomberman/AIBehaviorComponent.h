@@ -21,7 +21,7 @@ namespace Jotar
 
 
 
-	class AIBehaviorComponent final : public Component , public Observer<AIPlayerSeenEvent>, public Observer<HealthEvent>
+	class AIBehaviorComponent final : public Component , public Observer<AIEvents>, public Observer<HealthEvent>
 	{
 	public:
 
@@ -38,7 +38,7 @@ namespace Jotar
 		AIBehaviorComponent& operator=(AIBehaviorComponent&& other) = delete;
 
 		bool GetIsPlayerSeen() const;
-		void OnNotify(const AIPlayerSeenEvent& event) override;
+		void OnNotify(const AIEvents& event) override;
 		void OnNotify(const HealthEvent& event) override;
 
 		IdleAIState* GetIdleState() const { return m_pIdleState.get(); }

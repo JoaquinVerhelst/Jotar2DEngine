@@ -79,3 +79,12 @@ void Jotar::TextComponent::UpdateText()
 
 
 }
+
+void Jotar::TextComponent::SetColor(const  glm::ivec3& color)
+{
+	m_Color.a = static_cast<Uint8>(color.x);
+	m_Color.g = static_cast<Uint8>(color.y);
+	m_Color.b = static_cast<Uint8>(color.z);
+
+	UpdateText();
+}

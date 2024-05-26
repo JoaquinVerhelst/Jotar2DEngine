@@ -31,6 +31,8 @@ namespace Jotar
 
         void SetText(const std::string& text, const std::shared_ptr<Font>& font, bool needUpdating);
         void SetText(const std::string& text);
+        void SetColor(const  glm::ivec3& color = glm::ivec3{ 255,255,255 });
+
 
         glm::ivec2 GetSize() const;
 

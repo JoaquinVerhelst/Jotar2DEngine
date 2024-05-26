@@ -46,13 +46,9 @@ namespace Jotar
 	class GameLevelState : public GameState
 	{
 	public:
-		GameLevelState();
-
 		void OnEnter(GameManager* gameManager) override;
 		GameState* OnHandle() override;
 		void OnExit(GameManager* gameManager) override;
-	private:
-		bool m_IsGameModeInitialized;
 	};
 
 	class HighscoreState : public GameState

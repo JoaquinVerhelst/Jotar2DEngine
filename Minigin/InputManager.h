@@ -39,6 +39,8 @@ namespace Jotar
 
 		Key_Return = 13,
 		Key_Backscpace = 8,
+		Key_Escape = 27,
+
 
 
 		Key_a = 97,
@@ -146,6 +148,7 @@ namespace Jotar
 		void AddControllerBinding(ControllerKey key, std::unique_ptr<Command> pCommand);
 		void AddKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand);
 
+		void ClearInputBindings();
 
 		glm::ivec2 GetMouseLocation() const;
 		bool IsMouseButtonDown() const;
@@ -153,6 +156,8 @@ namespace Jotar
 
 
 		bool IsKeyUp(KeyboardButton key);
+		bool IsControllerButtonUp(ControllerButton button);
+
 		std::string GetPressedKeyString();
 
 	private :

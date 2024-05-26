@@ -44,6 +44,12 @@ namespace Jotar
 	};
 
 
+	class AIKilledTarget : public AIEvents
+	{
+	public:
+		AIKilledTarget() = default;
+		virtual ~AIKilledTarget() = default;
+	};
 
 
 

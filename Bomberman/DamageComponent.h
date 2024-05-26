@@ -12,14 +12,16 @@ namespace Jotar
 	public:
 		DamageComponent(GameObject* owner, int amountOfDamage, std::vector<std::string> tagsToHit, GameObject* attacker = nullptr);
 
-		void OnNotify(const CollisionEvent& event) override;
+		virtual void OnNotify(const CollisionEvent& event) override;
 
 		DamageComponent(const DamageComponent& other) = delete;
 		DamageComponent(DamageComponent&& other) = delete;
 		DamageComponent& operator=(const DamageComponent& other) = delete;
 		DamageComponent& operator=(DamageComponent&& other) = delete;
 
-	private:
+	protected:
+
+
 
 		int m_Damage;
 		std::vector<std::string> m_TagsToHit;

@@ -90,6 +90,7 @@
 		"generalInput": {
 			"mute": 109,
 			"skipLevel": 1073741882,
+			"mainMenu" : 27,
 
 			"increaseMusicVolume": 93,
 			"decreaseMusicVolume": 91,

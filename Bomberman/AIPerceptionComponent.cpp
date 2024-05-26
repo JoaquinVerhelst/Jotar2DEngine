@@ -22,7 +22,7 @@ Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float vie
 	, m_TimeToCheck{0.2f}
 	, m_CheckTimer{0}
 {
-	m_pSubject = std::make_unique<Subject<AIPlayerSeenEvent>>();
+	m_pSubject = std::make_unique<Subject<AIEvents>>();
 }
 
 Jotar::AIPerceptionComponent::~AIPerceptionComponent()

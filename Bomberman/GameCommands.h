@@ -14,6 +14,13 @@ namespace Jotar
 		virtual void Execute() override;
 	};
 
+	class GoToMainMenuCommand final : public Command
+	{
+	public:
+		GoToMainMenuCommand() = default;
+		virtual void Execute() override;
+	};
+
 
 	class MuteSoundCommand final : public Command
 	{

@@ -35,6 +35,7 @@
 #include "Command.h"
 #include "MovementCommand.h"
 #include "PlaceBombCommand.h"
+#include "MenuCommands.h"
 #include "Renderer.h"
 #include "PickUpComponent.h"
 #include "GameCommands.h"
@@ -44,6 +45,7 @@
 #include "HighScoreMenuComponent.h"
 #include "HighScoreEntryComponent.h"
 #include "JsonHighScoreLoaderComponent.h"
+#include "AIDamageComponent.h"
 
 
 #include "Font.h"
@@ -113,6 +115,8 @@ bool Jotar::JsonLevelLoader::InitGame()
         auto & input = InputManager::GetInstance();
 
         input.AddKeyBinding(KeyboardKey{ generalInput["skipLevel"] , InputType::Up }, std::make_unique<SkipLevelCommand>());
+        input.AddKeyBinding(KeyboardKey{ generalInput["mainMenu"] , InputType::Up }, std::make_unique<GoToMainMenuCommand>());
+
         input.AddKeyBinding(KeyboardKey{ generalInput["mute"] , InputType::Up }, std::make_unique<MuteSoundCommand>());
 
         input.AddKeyBinding(KeyboardKey{ generalInput["increaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(5));
@@ -326,10 +330,18 @@ bool Jotar::JsonLevelLoader::LoadMenuFromJson(Scene& scene)
     //menuObj->GetTransform()->SetPosition(540.f, 360.f);
     auto menuComp = menuObj->AddComponent<MenuComponent>();
     menuObj->AddComponent<HUDComponent>(HUDPosition::Center);
-    menuComp->AddButton("SinglePlayer", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::SinglePlayer), {0, 0, 25, 150}, bombermanFont);
-    menuComp->AddButton("Coop", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Coop), { 0, 0, 25, 150 }, bombermanFont);
-    menuComp->AddButton("Versus", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Versus), { 0, 0, 25, 150 }, bombermanFont);
-    menuComp->AddButton("HighScore", std::bind(&GameManager::LoadHighScoreMenu, &GameManager::GetInstance(), false), { 0, 0, 25, 150 }, bombermanFont);
+    menuComp->AddButton("SinglePlayer", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::SinglePlayer), bombermanFont);
+    menuComp->AddButton("Coop", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Coop), bombermanFont);
+    menuComp->AddButton("Versus", std::bind(&GameManager::StartAndSetGameMode, &GameManager::GetInstance(), GameMode::Versus), bombermanFont);
+    menuComp->AddButton("HighScore", std::bind(&GameManager::LoadHighScoreMenu, &GameManager::GetInstance(), false), bombermanFont);
+
+
+
+    auto& input = InputManager::GetInstance();
+
+    input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::DPadUp, InputType::Up}, std::make_unique<SelectUpCommand>(menuComp));
+    input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::DPadDown, InputType::Up }, std::make_unique<SelectDownCommand>(menuComp));
+    input.AddControllerBinding(ControllerKey{ 0, Jotar::ControllerButton::ButtonA, InputType::Up }, std::make_unique<PressButtonCommand>(menuComp));
 
 
     return true;
@@ -657,14 +669,14 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
 
 
             auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false, false);
-            auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
+            auto damageComp = damageCollObj->AddComponent<AIDamageComponent>(1, enemyTarget);
             auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
             damageCollComp->SetSize({ levelInfo.CellSize * 4/5, levelInfo.CellSize * 4 / 5 });
             damageCollComp->AddObserver(damageComp);
             damageCollComp->SetTag(enemyTag);
 
             behavior->AddObserver(exitComp);
-
+            damageComp->AddObserver(behavior);
 
 
             PlaceGameObjectRandomly(enemy, levelInfo);

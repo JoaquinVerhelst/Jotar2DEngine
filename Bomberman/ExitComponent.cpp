@@ -48,7 +48,7 @@ void Jotar::ExitComponent::OnNotify(const CollisionEvent& triggerEvent)
 		}
 	}
 }
-
+ 
 void Jotar::ExitComponent::RevealExit()
 {
 	// set the texture

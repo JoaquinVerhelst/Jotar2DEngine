@@ -131,6 +131,12 @@
     <ClCompile Include="HighScoreEntryComponent.cpp">
       <Filter>GameFIles\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="MenuCommands.cpp">
+      <Filter>GameFIles\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="AIDamageComponent.cpp">
+      <Filter>GameFIles\Components\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
@@ -240,6 +246,12 @@
     </ClInclude>
     <ClInclude Include="HighScoreEntryComponent.h">
       <Filter>GameFIles\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuCommands.h">
+      <Filter>GameFIles\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDamageComponent.h">
+      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
