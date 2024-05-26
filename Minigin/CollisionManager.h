@@ -18,7 +18,7 @@ namespace Jotar
 
 		ColliderComponent* GetOverlappingColliderInPosition(const glm::vec2& position) const;
 
-		ColliderComponent* RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> tagsToFind);
+		ColliderComponent* RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance);
 
 		CollisionManager(const CollisionManager& other) = delete;
 		CollisionManager(CollisionManager&& other) = delete;

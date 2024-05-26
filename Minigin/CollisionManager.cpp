@@ -100,34 +100,27 @@ Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosit
 }
 
 
-Jotar::ColliderComponent* Jotar::CollisionManager::RaycastLookForCollider(glm::vec2 startpos, glm::vec2 direction, float distance, std::vector<std::string> )
+Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance )
 {
     glm::vec2 dir = glm::normalize(direction);
+    float closestDistance = std::numeric_limits<float>::max();
+    ColliderComponent* closestCollider = nullptr;
 
-    //for (float currentDistance = 64; currentDistance < distance; currentDistance += 64)
-    //{
-        for (const auto& collider : m_pSceneColliders)
+    for (const auto& collider : m_pSceneColliders)
+    {
+        glm::vec4 collisionRect = collider->GetCollisionRect();
+
+        float hitDistance = distance;
+        if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance && hitDistance < closestDistance)
         {
-            glm::vec4 collisionRect = collider->GetCollisionRect();
-
-            if (RayBoxIntersection(startpos, dir, collisionRect, distance))
-            {
-                return collider;
-            }
+            std::cout << "Seen: " << collider->GetOwner()->GetName() << '\n';
+            closestDistance = hitDistance;
+            closestCollider = collider;
+        
         }
-    //}
+    }
 
-
-
-
-
-    return nullptr;
-}
-
-
-void Jotar::CollisionManager::Reset()
-{
-    m_pSceneColliders.clear();
+    return closestCollider;
 }
 
 bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& rayOrigin, const glm::vec2& rayDir, const glm::vec4& box, float& t)
@@ -140,7 +133,7 @@ bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& rayOrigin, con
     float tymin = (box.y - rayOrigin.y) / rayDir.y;
     float tymax = (box.w - rayOrigin.y) / rayDir.y;
 
-    if (tymin > tymax) std::swap(tymin, tymax);
+    if (tymin > tmax) std::swap(tymin, tmax);
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;
@@ -152,5 +145,17 @@ bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& rayOrigin, con
         tmax = tymax;
 
     t = tmin;
+
+    if (t < 0) {
+        t = tmax;
+        if (t < 0)
+            return false;
+    }
+
     return true;
+}
+
+void Jotar::CollisionManager::Reset()
+{
+    m_pSceneColliders.clear();
 }
