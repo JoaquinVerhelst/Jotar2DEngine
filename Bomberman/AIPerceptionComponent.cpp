@@ -13,11 +13,11 @@
 #include <iostream>
 
 
-Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float viewDistance, std::vector<std::string> targetTags)
+Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float viewDistance, std::string targetTag)
 	:Component(owner)
 	, m_pTransformComponent{nullptr}
 	, m_pAIBehaviorComponent{ nullptr }
-	, m_TargetTags{targetTags}
+	, m_TargetTag{targetTag}
 	, m_ViewDistance{ viewDistance }
 	, m_TimeToCheck{0.2f}
 	, m_CheckTimer{0}
@@ -41,24 +41,47 @@ void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
 	auto dir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
 	auto pos = m_pTransformComponent->GetWorldPosition();
 
-	ColliderComponent* collider = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RaycastLookForCollider(pos, dir, m_ViewDistance, m_TargetTags);
+	auto& collsiionManager = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager();
 
-	if (collider == nullptr) return;
-
-	for (size_t i = 0; i < m_TargetTags.size(); i++)
+	if (collsiionManager.RayCastIsColliderInRange(pos, dir, m_ViewDistance, m_TargetTag))
 	{
-		if (collider->CompareTag(m_TargetTags[i]))
-		{
+		auto futureResult = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RayCastCollisionAsync(pos, dir, m_ViewDistance, "Enemy");
 
-			std::cout << "PlayerSeen" << '\n';
-			m_pSubject->NotifyObservers(AIPlayerSeenEvent(collider));
-			
+		Jotar::ColliderComponent* closestCollider = futureResult.get();
+
+		if (closestCollider == nullptr) return;
+
+
+		std::cout << "Seen:" << closestCollider->GetOwner()->GetName() << '\n';
+
+		for (size_t i = 0; i < m_TargetTag.size(); i++)
+		{
+			if (closestCollider->CompareTag(m_TargetTag))
+			{
+				std::cout << "PlayerSeen" << '\n';
+				m_pSubject->NotifyObservers(AIPlayerSeenEvent(closestCollider));
+
+			}
 		}
 	}
 }
 
 void Jotar::AIPerceptionComponent::FixedUpdate()
 {
+
+}
+
+void Jotar::AIPerceptionComponent::Render() const
+{
+	// Perform raycast
+	auto rayDir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
+	glm::ivec2 rayStart = static_cast<glm::ivec2>(m_pTransformComponent->GetWorldPosition());
+	int rayDistance = static_cast<int>(m_ViewDistance);
+
+
+	// Draw ray
+	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 255, 0, 255);
+	SDL_RenderDrawLine(Renderer::GetInstance().GetSDLRenderer(), rayStart.x, rayStart.y, rayStart.x + rayDir.x * rayDistance, rayStart.y + rayDir.y * rayDistance);
 
 }
 

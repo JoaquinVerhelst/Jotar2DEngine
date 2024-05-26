@@ -12,6 +12,7 @@ Jotar::ColliderComponent::ColliderComponent(GameObject* owner, bool isStatic, bo
 	: Component(owner)
 	, m_IsStatic{ isStatic }
 	, m_IsTrigger{ isTrigger }
+	, m_HasCustomSize{ false }
 	, m_CollisionRect{}
 	, m_pTransform{}
 	, m_SceneID{0}
@@ -30,7 +31,13 @@ void Jotar::ColliderComponent::Start()
 	auto& size = m_pTransform->GetSize();
 
 	// x, y , z , w
-	m_CollisionRect = { pos.x, pos.y, size.y, size.x };
+	if (!m_HasCustomSize)
+		m_CollisionRect = { pos.x - size.x /2, pos.y - size.y /2, size.x, size.y };
+	else
+	{
+		m_CollisionRect.x = pos.x - m_CollisionRect.w / 2;
+		m_CollisionRect.y = pos.y - m_CollisionRect.z / 2;
+	}
 }
 
 
@@ -43,21 +50,21 @@ void Jotar::ColliderComponent::OnDestroy()
 void Jotar::ColliderComponent::Render() const
 {
 
-	SDL_Rect rect;
-	rect.x = static_cast<int>(m_CollisionRect.x);
-	rect.y = static_cast<int>(m_CollisionRect.y);
-	rect.h = static_cast<int>(m_CollisionRect.z);
-	rect.w = static_cast<int>(m_CollisionRect.w);
+	//SDL_Rect rect;
+	//rect.x = static_cast<int>(m_CollisionRect.x);
+	//rect.y = static_cast<int>(m_CollisionRect.y);
+	//rect.h = static_cast<int>(m_CollisionRect.z);
+	//rect.w = static_cast<int>(m_CollisionRect.w);
 
-	// Set the color for the rectangle (e.g., red color)
-	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255); // RGBA
+	//// Set the color for the rectangle (e.g., red color)
+	//SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255); // RGBA
 
-	// Render the rectangle
-	SDL_RenderDrawRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
-	// Optionally, fill the rectangle
-	SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+	//// Render the rectangle
+	//SDL_RenderDrawRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
+	//// Optionally, fill the rectangle
+	//SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
 
-	// Reset the color if necessary
+	//// Reset the color if necessary
 	//SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 0, 255); // RGBA (black)
 }
 
@@ -121,6 +128,8 @@ void Jotar::ColliderComponent::SetSize(glm::vec2 size)
 {
 	m_CollisionRect.w = size.x;
 	m_CollisionRect.z = size.y;
+
+	m_HasCustomSize = true;
 }
 
 
@@ -219,7 +228,6 @@ void Jotar::ColliderComponent::Reset()
 void Jotar::ColliderComponent::FixedUpdate()
 {
 	UpdatePosition();
-
 
 	for (size_t i = 0; i < m_pCollidingColliders.size(); ++i)
 	{

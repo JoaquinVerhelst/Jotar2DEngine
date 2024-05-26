@@ -2,6 +2,9 @@
 #include "Singleton.h"
 #include "ColliderComponent.h"
 #include <vector>
+#include "ThreadPool.h"
+#include <future>
+
 
 namespace Jotar
 {
@@ -17,8 +20,11 @@ namespace Jotar
 		void FixedUpdate();
 
 		ColliderComponent* GetOverlappingColliderInPosition(const glm::vec2& position) const;
+		std::future<ColliderComponent*> RayCastCollisionAsync(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tags);
 
-		ColliderComponent* RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance);
+		bool RayCastIsColliderInRange(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tags);
+
+
 
 		CollisionManager(const CollisionManager& other) = delete;
 		CollisionManager(CollisionManager&& other) = delete;
@@ -28,11 +34,14 @@ namespace Jotar
 		void Reset();
 	private:
 
+
+
+		ColliderComponent* RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tagToIgnore);
 		bool RayBoxIntersection(const glm::vec2& rayOrigin, const glm::vec2& rayDir, const glm::vec4& box, float& t);
 
 
 
 		std::vector<ColliderComponent*> m_pSceneColliders;
-
+		ThreadPool m_threadPool;
 	};
 }

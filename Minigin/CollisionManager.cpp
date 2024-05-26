@@ -8,6 +8,7 @@
 
 Jotar::CollisionManager::CollisionManager()
     :m_pSceneColliders{}
+    , m_threadPool{4}
 {
 }
 
@@ -99,24 +100,49 @@ Jotar::ColliderComponent* Jotar::CollisionManager::GetOverlappingColliderInPosit
     return nullptr;
 }
 
+std::future<Jotar::ColliderComponent*> Jotar::CollisionManager::RayCastCollisionAsync(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tagToIgnore)
+{
+    return m_threadPool.enqueue(&CollisionManager::RayCastCollision, this, startpos, direction, distance, tagToIgnore);
+}
 
-Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance )
+bool Jotar::CollisionManager::RayCastIsColliderInRange(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tag)
+{
+    for (const auto& collider : m_pSceneColliders) {
+
+        if (collider->CompareTag(tag))
+        {
+            glm::vec4 collisionRect = collider->GetCollisionRect();
+            float hitDistance = distance;
+
+            if (RayBoxIntersection(startpos, direction, collisionRect, hitDistance))
+            {
+                std::cout << "Close Enough" << '\n';
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 startpos, glm::vec2 direction, float distance, std::string tagToIgnore)
 {
     glm::vec2 dir = glm::normalize(direction);
     float closestDistance = std::numeric_limits<float>::max();
     ColliderComponent* closestCollider = nullptr;
 
-    for (const auto& collider : m_pSceneColliders)
-    {
-        glm::vec4 collisionRect = collider->GetCollisionRect();
+    for (const auto& collider : m_pSceneColliders) {
 
-        float hitDistance = distance;
-        if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance && hitDistance < closestDistance)
+        if (!collider->CompareTag(tagToIgnore))
         {
-            std::cout << "Seen: " << collider->GetOwner()->GetName() << '\n';
-            closestDistance = hitDistance;
-            closestCollider = collider;
-        
+            glm::vec4 collisionRect = collider->GetCollisionRect();
+            float hitDistance = distance;
+            if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance && hitDistance < closestDistance) {
+                //std::cout << "Seen: " << collider->GetOwner()->GetName() << '\n';
+                closestDistance = hitDistance;
+                closestCollider = collider;
+            }
         }
     }
 
@@ -126,14 +152,14 @@ Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 st
 bool Jotar::CollisionManager::RayBoxIntersection(const glm::vec2& rayOrigin, const glm::vec2& rayDir, const glm::vec4& box, float& t)
 {
     float tmin = (box.x - rayOrigin.x) / rayDir.x;
-    float tmax = (box.z - rayOrigin.x) / rayDir.x;
+    float tmax = (box.x + box.z - rayOrigin.x) / rayDir.x;
 
     if (tmin > tmax) std::swap(tmin, tmax);
 
     float tymin = (box.y - rayOrigin.y) / rayDir.y;
-    float tymax = (box.w - rayOrigin.y) / rayDir.y;
+    float tymax = (box.y + box.w - rayOrigin.y) / rayDir.y;
 
-    if (tymin > tmax) std::swap(tymin, tmax);
+    if (tymin > tymax) std::swap(tymin, tymax);
 
     if ((tmin > tymax) || (tymin > tmax))
         return false;

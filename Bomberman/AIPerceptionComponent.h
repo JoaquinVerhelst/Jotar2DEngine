@@ -12,10 +12,11 @@ namespace Jotar
 	class AIPerceptionComponent final : public Component
 	{
 	public:
-		AIPerceptionComponent(GameObject* owner, float viewDistance, std::vector<std::string> targetTags);
+		AIPerceptionComponent(GameObject* owner, float viewDistance, std::string targetTag);
 		~AIPerceptionComponent();
 		
 		void FixedUpdate() override;
+		void Render() const override;
 		void Update() override;
 		void Start() override;
 
@@ -43,7 +44,7 @@ namespace Jotar
 
 		std::unique_ptr<Subject<AIPlayerSeenEvent>> m_pSubject;
 
-		std::vector<std::string> m_TargetTags;
+		std::string m_TargetTag;
 		float m_ViewDistance;
 
 

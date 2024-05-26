@@ -38,6 +38,7 @@ namespace Jotar
 		void SetIsTrigger(bool isTrigger);
 		bool GetIsTrigger() const;
 		bool GetIsStatic() const;
+
 		TransformComponent* GetTransform();
 
 		bool IsOverlapping(const glm::vec4& otherCollisionRect);
@@ -65,6 +66,7 @@ namespace Jotar
 		TransformComponent* m_pTransform;
 		bool m_IsStatic;
 		bool m_IsTrigger;
+		bool m_HasCustomSize;
 		std::unique_ptr<Subject<CollisionEvent>> m_pSubject;
 		int m_SceneID;
 

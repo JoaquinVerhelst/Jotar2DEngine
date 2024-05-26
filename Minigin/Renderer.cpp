@@ -32,6 +32,10 @@ void Jotar::Renderer::Render() const
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 
+
+
+	///SceneManager::GetInstance().Render();
+
 	for (const auto& layer : m_LayeredTextures) {
 		for (const auto& textureComponent : layer.second) {
 			textureComponent->Render();

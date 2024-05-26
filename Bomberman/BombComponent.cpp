@@ -162,12 +162,14 @@ void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm:
 {
     auto explosion = scene.CreateGameObject("Explosion");
 
+
     auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Explosion"), explosionPosition);
     texture->SetDestroyOnLastFrame(true);
     texture->SetAnimationSpeedInNrOfFramesPerSecond(10);
     explosion->GetTransform()->SetPosition(pos);
     auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
     triggerCollider->SetTag("Explosion");
+
     int damage = 1;
     auto damageComp = explosion->AddComponent<DamageComponent>(damage, std::vector<std::string>{"Killable", "Player", "Enemy"}, m_BombPlacer);
 

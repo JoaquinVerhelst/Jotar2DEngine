@@ -565,8 +565,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
     // Player OBJ
 
     auto playerObj = scene.CreateGameObject("Bomberman" + std::to_string(playerIndex));
-
-    playerObj->GetTransform()->SetSize({ 60,60 });
+    playerObj->GetTransform()->SetSize({ 64,64});
 
     auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"]["playerSprite"]);
     textureComp->SetLayer(10);
@@ -587,6 +586,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     auto placeBombComp = playerObj->AddComponent<PlaceBombComponent>();
     auto colliderComp = playerObj->AddComponent<ColliderComponent>(false);
+    colliderComp->SetSize({ cellSize *4/5, cellSize * 4/ 5 });
     colliderComp->SetTag("Player");
     colliderComp->AddIgnoreCollisionTag("Enemy");
 
@@ -638,7 +638,7 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
 
             if (enemyData["intelligence"]["level"] == 1)
             {
-                auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget);
+                auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget[0]);
                 perception->AddObserver(behavior);
             }
  
@@ -650,6 +650,7 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
             collEnemy->SetTag(enemyTag);
             collEnemy->AddIgnoreCollisionTag(enemyTag);
             collEnemy->AddIgnoreCollisionTag("Player");
+            collEnemy->SetSize({ levelInfo.CellSize * 4 / 5, levelInfo.CellSize * 4 / 5 });
 
             auto scoreComp = enemy->AddComponent<AIScoreComponent>(enemyData["points"]);
             behavior->AddObserver(scoreComp);
@@ -658,9 +659,9 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
             auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false, false);
             auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
             auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
-            damageCollComp->SetSize({ 50.f, 50.f });
+            damageCollComp->SetSize({ levelInfo.CellSize * 4/5, levelInfo.CellSize * 4 / 5 });
             damageCollComp->AddObserver(damageComp);
-
+            damageCollComp->SetTag(enemyTag);
 
             behavior->AddObserver(exitComp);
 
