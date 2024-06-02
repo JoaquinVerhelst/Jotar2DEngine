@@ -5,6 +5,7 @@
 #include "TextComponent.h"
 #include "Texture2D.h"
 #include "InputManager.h"
+#include "HUDComponent.h"
 
 
 #include <iostream>
@@ -35,6 +36,7 @@ void Jotar::MenuComponent::AddButton(const std::string buttonName, const std::fu
 {
 	auto buttonObj = GetOwner()->CreateChildGameObject(buttonName + "Button", false);
 	buttonObj->AddComponent<TextComponent>(buttonName, font);
+	buttonObj->AddComponent<HUDComponent>();
 	auto buttonComp = buttonObj->AddComponent<UIButtonComponent>(buttonFunction);
 
 	m_pButtonChildren.emplace_back(buttonComp);

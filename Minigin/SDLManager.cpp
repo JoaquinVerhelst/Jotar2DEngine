@@ -28,7 +28,7 @@ void Jotar::SDLManager::Init()
 		SDL_WINDOWPOS_CENTERED,
 		m_WindowWidth,
 		m_WindowHeight,
-		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 
 	if (m_Window == nullptr)

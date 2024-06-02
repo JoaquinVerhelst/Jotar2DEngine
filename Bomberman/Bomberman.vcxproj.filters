@@ -92,9 +92,6 @@
     <ClCompile Include="AIAnimationControllerComponent.cpp">
       <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
-    <ClCompile Include="HUDComponent.cpp">
-      <Filter>GameFIles\Components\UI</Filter>
-    </ClCompile>
     <ClCompile Include="UIButtonComponent.cpp">
       <Filter>GameFIles\Components\UI</Filter>
     </ClCompile>
@@ -204,9 +201,6 @@
     </ClInclude>
     <ClInclude Include="AIAnimationControllerComponent.h">
       <Filter>GameFIles\Components\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="HUDComponent.h">
-      <Filter>GameFIles\Components\UI</Filter>
     </ClInclude>
     <ClInclude Include="UIButtonComponent.h">
       <Filter>GameFIles\Components\UI</Filter>

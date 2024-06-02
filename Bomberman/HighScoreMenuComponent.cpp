@@ -2,12 +2,14 @@
 #include "GameObject.h"
 #include "JsonHighScoreLoaderComponent.h"
 #include "TextComponent.h"
+#include "HUDComponent.h"
 
 
 Jotar::HighScoreMenuComponent::HighScoreMenuComponent(GameObject* owner, const std::shared_ptr<Font>& font, glm::ivec2 windowSize)
 	:Component(owner)
 	, m_Font{ font }
 	, m_WindowSize{ windowSize }
+	, m_pJsonHighScoreLoader{nullptr}
 { 
 }
 
@@ -53,12 +55,13 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 
 		std::string scoreText = std::to_string(highScoreSinglePlayer[i].score1) + "             " + highScoreSinglePlayer[i].name1;
 
+		go->AddComponent<HUDComponent>();
+
 		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
 		go->GetTransform()->Translate({ -m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i});
-			
+
 		m_ScoreTextObjects.emplace_back(go.get());
 	}
-
 
 	for (size_t i = 0; i < highScoreCoop.size(); ++i)
 	{
@@ -67,13 +70,14 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 		std::string scoreText = std::to_string(highScoreCoop[i].score1) + ": " + highScoreCoop[i].name1 + "        "
 			+ std::to_string(highScoreCoop[i].score2) + ": " + highScoreCoop[i].name2;
 
+
+		go->AddComponent<HUDComponent>();
+
 		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
 		go->GetTransform()->Translate({ m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i });
 
-
 		m_ScoreTextObjects.emplace_back(go.get());
 	}
-
 }
 
 

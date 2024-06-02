@@ -4,11 +4,19 @@
 #include "Texture2D.h"
 #include "SDLManager.h"
 #include <algorithm>
-
+#include "Scene.h"
 
 #include "BaseTextureComponent.h"
 
 #include <iostream>
+
+//namespace Jotar
+//{
+//	thread_local int g_CurrentPlayerIndex = -1;
+//}
+
+thread_local int g_CurrentPlayerIndex = 0;
+
 
 void Jotar::Renderer::Init()
 {
@@ -24,6 +32,7 @@ void Jotar::Renderer::Init()
 	}
 
 	m_pSubject = std::make_unique<Subject<WindowResizeEvent>>();
+
 }
 
 void Jotar::Renderer::Render() const
@@ -33,10 +42,26 @@ void Jotar::Renderer::Render() const
 	SDL_RenderClear(m_Renderer);
 
 
+	auto cameras = SceneManager::GetInstance().GetCurrentScene().GetCameras();
 
-	///SceneManager::GetInstance().Render();
+	for (int i = 0; i < cameras.size(); i++)
+	{
+		// This is for the positions of the GameObjecs for each camera
+		g_CurrentPlayerIndex = i;
 
-	for (const auto& layer : m_LayeredTextures) {
+		SDL_Rect camRect = cameras[i]->GetCamRect();
+
+		SDL_RenderSetViewport(m_Renderer, &camRect);
+		for (const auto& layer : m_LayeredGameTextures) {
+			for (const auto& textureComponent : layer.second) {
+				textureComponent->Render();
+			}
+		}
+	}
+
+	g_CurrentPlayerIndex = -1; // Reset the current player index for HUD rendering
+	SDL_RenderSetViewport(m_Renderer, nullptr);
+	for (const auto& layer : m_LayeredHUDTextures) {
 		for (const auto& textureComponent : layer.second) {
 			textureComponent->Render();
 		}
@@ -144,13 +169,24 @@ void Jotar::Renderer::RenderTexture(const Texture2D& texture, const glm::ivec4& 
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dstRect);
 }
 
+void Jotar::Renderer::AddHUDToRender(BaseTextureComponent* textureComponent)
+{
+	int layer = textureComponent->GetLayer();
+
+	m_LayeredHUDTextures[layer].emplace_back(textureComponent);
+
+	std::sort(m_LayeredHUDTextures[layer].begin(), m_LayeredHUDTextures[layer].end(), [](const auto& a, const auto& b) {
+		return a->GetLayer() < b->GetLayer();
+		});
+}
+
 void Jotar::Renderer::AddTextureToRender(BaseTextureComponent* textureComponent)
 {
 	int layer = textureComponent->GetLayer();
 
-	m_LayeredTextures[layer].emplace_back(textureComponent);
+	m_LayeredGameTextures[layer].emplace_back(textureComponent);
 
-	std::sort(m_LayeredTextures[layer].begin(), m_LayeredTextures[layer].end(), [](const auto& a, const auto& b) {
+	std::sort(m_LayeredGameTextures[layer].begin(), m_LayeredGameTextures[layer].end(), [](const auto& a, const auto& b) {
 		return a->GetLayer() < b->GetLayer();
 	});
 }
@@ -159,18 +195,31 @@ void Jotar::Renderer::RemoveTextureToRender(BaseTextureComponent* textureCompone
 {
 	int layer = textureComponent->GetLayer();
 
-	auto it = m_LayeredTextures.find(layer);
-	if (it != m_LayeredTextures.end()) {
-		// Find and remove the texture from the layer's vector
+	auto it = m_LayeredGameTextures.find(layer);
+	if (it != m_LayeredGameTextures.end()) {
 		auto& textures = it->second;
 		textures.erase(std::remove_if(textures.begin(), textures.end(),
 			[textureComponent](BaseTextureComponent* tc) {
 				return tc == textureComponent;
 			}), textures.end());
 
-		// If the vector is empty after removal, erase the layer from the map
 		if (textures.empty()) {
-			m_LayeredTextures.erase(it);
+			m_LayeredGameTextures.erase(it);
+		}
+	}
+
+	auto hudIt = m_LayeredHUDTextures.find(layer);
+	if (hudIt != m_LayeredHUDTextures.end()) {
+
+		auto& hudTextures = hudIt->second;
+		hudTextures.erase(std::remove_if(hudTextures.begin(), hudTextures.end(),
+			[textureComponent](BaseTextureComponent* tc) {
+				return tc == textureComponent;
+			}), hudTextures.end());
+
+
+		if (hudTextures.empty()) {
+			m_LayeredHUDTextures.erase(hudIt);
 		}
 	}
 }

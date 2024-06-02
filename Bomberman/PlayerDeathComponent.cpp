@@ -2,6 +2,7 @@
 #include "MovementComponent.h"
 #include "WorldTimeManager.h"
 #include "PlaceBombComponent.h"
+#include "GameManager.h"
 
 Jotar::PlayerDeathComponent::PlayerDeathComponent(GameObject* owner, float deathPauseTime)
 	:Component( owner )
@@ -46,5 +47,11 @@ void Jotar::PlayerDeathComponent::OnNotify(const HealthEvent& eventData)
 		GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
 		GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(true);
 		m_IsDeath = true;
+
+
+		if (eventData.GetHealth() > 0)
+		{
+			GameManager::GetInstance().LoadHighScoreMenu(true);
+		}
 	}
 }

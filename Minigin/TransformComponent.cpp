@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "SceneManager.h"
 #include "Scene.h"
-
+#include "Renderer.h"
 #include "CameraComponent.h"
 
 
@@ -27,9 +27,9 @@ const glm::vec2& Jotar::TransformComponent::GetWorldPosition()
 	
 	m_WorldProjectionPosition = m_WorldPosition;
 
-	if (m_IsMovingWithCamera)
+	if (m_IsMovingWithCamera && g_CurrentPlayerIndex != -1)
 	{
-		auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera();
+		auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera(g_CurrentPlayerIndex);
 		if (camObj != nullptr)
 			m_WorldProjectionPosition += camObj->GetOffset();
 	}

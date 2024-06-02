@@ -1,6 +1,7 @@
 #include "GameState.h"
 #include "GameManager.h"
 #include "JsonLevelLoader.h"
+#include "Renderer.h"
 #include "SceneManager.h"
 #include "InputManager.h"
 #include "Scene.h"
@@ -11,6 +12,10 @@
 
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
+	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
+	InputManager::GetInstance().ClearInputBindings();
+
+
 	SceneManager::GetInstance().GetCurrentScene().MarkAllForDestroy();
 	gameManager->Reset();
 
@@ -68,6 +73,8 @@ void Jotar::TransitionState::OnExit(GameManager* )
 
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
+	Renderer::GetInstance().SetBackgroundColor(SDL_Color(20, 180, 20, 255));
+
 	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
 
 	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
@@ -114,7 +121,7 @@ void Jotar::GameLevelState::OnExit(GameManager* )
 
 void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
-
+	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
 
 	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
 	auto& nextScene = SceneManager::GetInstance().GetSceneByName("highScoreMenu");

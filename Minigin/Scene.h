@@ -46,8 +46,10 @@ namespace Jotar
 
 		CollisionManager& GetCollisionManager();
 
-		void SetCamera(CameraComponent* cameraObj);
-		CameraComponent* GetCamera() const;
+		void AddCamera(CameraComponent* cameraObj);
+		CameraComponent* GetCamera(int cameraIndex) const;
+		std::vector<CameraComponent*> GetCameras() const;
+
 		const std::string& GetName() const;
 
 		int GetSceneID() const;
@@ -58,9 +60,9 @@ namespace Jotar
 
 		std::string m_Name;
 		CollisionManager m_CollisionManager;
-		std::vector < std::shared_ptr<GameObject>> m_pObjects{};
+		std::vector<std::shared_ptr<GameObject>> m_pObjects{};
 
-		CameraComponent* m_pCameraObject;
+		std::vector<CameraComponent*> m_pCameras;
 
 
 		static unsigned int m_idCounter; 

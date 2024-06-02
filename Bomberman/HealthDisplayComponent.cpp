@@ -21,6 +21,7 @@ void Jotar::HealthDisplayComponent::OnNotify(const HealthEvent& event)
         }
         else
         {
+
             m_pTextComponent->SetText("Player Died!");
         }
     }

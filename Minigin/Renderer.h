@@ -12,9 +12,14 @@
 
 #include <map>
 
+extern thread_local int g_CurrentPlayerIndex;
 
 namespace Jotar
 {
+
+
+
+
 	class Texture2D;
 	class GameObject;
 	class BaseTextureComponent;
@@ -34,6 +39,8 @@ namespace Jotar
 		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
 		void RenderTexture(const Texture2D& texture, const glm::ivec4& src, const glm::ivec4& dst) const;
 
+
+		void AddHUDToRender(BaseTextureComponent* textureComponent);
 		void AddTextureToRender(BaseTextureComponent* textureComponent);
 		void RemoveTextureToRender(BaseTextureComponent* textureComponent);
 
@@ -73,8 +80,8 @@ namespace Jotar
 		SDL_Rect m_ViewPortRect{0,0, 720,1080};
 
 
-		std::map<int, std::vector<BaseTextureComponent*>> m_LayeredTextures;
-	
+		std::map<int, std::vector<BaseTextureComponent*>> m_LayeredGameTextures;
+		std::map<int, std::vector<BaseTextureComponent*>> m_LayeredHUDTextures;
 	};
 }
 

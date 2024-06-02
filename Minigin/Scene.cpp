@@ -90,7 +90,7 @@ void Jotar::Scene::Reset()
 		m_pObjects[i]->Reset();
 	}
 
-	m_pCameraObject = nullptr;
+	m_pCameras.clear();
 	m_CollisionManager.Reset();
 }
 
@@ -185,14 +185,19 @@ CollisionManager& Jotar::Scene::GetCollisionManager()
 	return m_CollisionManager;
 }
 
-void Jotar::Scene::SetCamera(CameraComponent* cameraObj)
+void Jotar::Scene::AddCamera(CameraComponent* cameraObj)
 {
-	m_pCameraObject = cameraObj;
+	m_pCameras.emplace_back(cameraObj);
 }
 
-CameraComponent* Jotar::Scene::GetCamera() const
+CameraComponent* Jotar::Scene::GetCamera(int cameraIndex) const
 {
-	return m_pCameraObject;
+	return m_pCameras[cameraIndex];
+}
+
+std::vector<CameraComponent*> Jotar::Scene::GetCameras() const
+{
+	return m_pCameras;
 }
 
 const std::string& Jotar::Scene::GetName() const

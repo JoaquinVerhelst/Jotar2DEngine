@@ -1,6 +1,7 @@
 #include "BaseTextureComponent.h"
 #include "Renderer.h"
-
+#include "GameObject.h"
+#include "HUDComponent.h"
 
 Jotar::BaseTextureComponent::BaseTextureComponent(GameObject* owner)
 	: Component(owner)
@@ -9,7 +10,10 @@ Jotar::BaseTextureComponent::BaseTextureComponent(GameObject* owner)
 
 void Jotar::BaseTextureComponent::Start()
 {
-	Renderer::GetInstance().AddTextureToRender(this);
+	if (GetOwner()->HasComponent<HUDComponent>())
+		Renderer::GetInstance().AddHUDToRender(this);
+	else
+		Renderer::GetInstance().AddTextureToRender(this);
 }
 
 void Jotar::BaseTextureComponent::Reset()

@@ -13,6 +13,10 @@
 #include "WorldTimeManager.h"
 #include "AIAnimationControllerComponent.h"
 
+
+#include "Renderer.h"
+
+
 #include "ScoreComponent.h"
 #include "HealthComponent.h"
 #include "AIEvents.h"
@@ -89,9 +93,13 @@ void Jotar::GoToTargetAIState::MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& p
 {
 	pathPos = m_Path[0];
 
-	auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera();
-	if (camObj != nullptr)
-		pathPos += camObj->GetOffset();
+	if (g_CurrentPlayerIndex != -1)
+	{
+		auto camObj = SceneManager::GetInstance().GetCurrentScene().GetCamera(g_CurrentPlayerIndex);
+		if (camObj != nullptr)
+			pathPos += camObj->GetOffset();
+
+	}
 
 	CalculateDirection(pos, pathPos);
 

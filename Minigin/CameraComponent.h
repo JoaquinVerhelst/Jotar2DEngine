@@ -3,6 +3,10 @@
 #include "Component.h"
 #include <vector>
 
+
+struct SDL_Rect;
+
+
 namespace Jotar
 {
 	class GameObject;
@@ -15,9 +19,11 @@ namespace Jotar
 
 		void Start() override;
 		void LateUpdate() override;
-		void SetTargets(std::vector<TransformComponent*> targets);
+		void SetTarget(TransformComponent* target);
 
 		void SetLevelBounds(glm::ivec4& levelBoundaries);
+
+		SDL_Rect GetCamRect();
 
 		glm::vec2 GetOffset();
 		
@@ -33,7 +39,7 @@ namespace Jotar
 
 		glm::ivec4 m_LevelBoundaries;
 		glm::ivec4 m_CameraRect;
-		std::vector<TransformComponent*> m_Targets;
+		TransformComponent* m_Target;
 	};
 
 }

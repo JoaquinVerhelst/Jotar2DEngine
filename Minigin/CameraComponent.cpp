@@ -12,11 +12,14 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+
+#include "SDL.h"
+
 Jotar::CameraComponent::CameraComponent(GameObject* owner, glm::ivec4& cameraRect, glm::ivec4& levelBoundaries)
 	: Component(owner)
 	, m_CameraRect{ cameraRect }
 	, m_LevelBoundaries{ levelBoundaries }
-	, m_Targets{nullptr}
+	, m_Target{nullptr}
     , m_Offset{0,0}
 {
 
@@ -25,7 +28,7 @@ Jotar::CameraComponent::CameraComponent(GameObject* owner, glm::ivec4& cameraRec
 
 void Jotar::CameraComponent::Start()
 {
-    SceneManager::GetInstance().GetCurrentScene().SetCamera(this);
+    //SceneManager::GetInstance().GetCurrentScene().AddCamera(this);
 }
 
 
@@ -33,31 +36,11 @@ void Jotar::CameraComponent::LateUpdate()
 {
     HandleWindowResize();
 
-    if (m_Targets.empty())
+    if (m_Target == nullptr)
         return;
 
-    //glm::ivec4 boundingBox = CalculateBoundingBox();
-    //// Calculate the center of the bounding box
-    //glm::vec2 boundingBoxCenter = glm::ivec2(boundingBox.x + boundingBox.w / 2, boundingBox.y + boundingBox.z / 2);
-    //// Calculate the position of the camera's center based on the bounding box center
-    //glm::vec2 cameraCenter = glm::ivec2(m_CameraRect.w / 2, m_CameraRect.z / 2);
-    //// Calculate the offset to move the camera to keep the bounding box centered
-    //glm::vec2 cameraOffset = boundingBoxCenter - cameraCenter;
-    //// Clamp camera position to stay within the level boundaries
-    //cameraOffset.x = glm::clamp(cameraOffset.x, 0.f, static_cast<float>(m_LevelBoundaries.w - m_CameraRect.w));
-    //cameraOffset.y = glm::clamp(cameraOffset.y, 0.f, static_cast<float>(m_LevelBoundaries.z - m_CameraRect.z));
-    //// Update the camera's offset
-    //m_Offset = cameraOffset;
-    //glm::ivec4 targetShape = static_cast<glm::ivec4>(m_Targets[0]->GetShape());
-    //// Calculate the position of the player's center
-    //glm::ivec2 playerCenter = glm::ivec2(targetShape.x + targetShape.w / 2, targetShape.y + targetShape.z / 2);
-    ////// Calculate the position of the camera's top-left corner
-    //glm::ivec2 cameraPosition = glm::ivec2(m_CameraRect.w / 2, m_CameraRect.z / 2 + m_LevelBoundaries.y);
 
-
-    if (m_Targets.empty()) return;
-
-    glm::ivec4 targetShape = static_cast<glm::ivec4>(m_Targets[0]->GetShape());
+    glm::ivec4 targetShape = static_cast<glm::ivec4>(m_Target->GetShape());
 
     // Calculate the position of the player's center
     glm::ivec2 playerCenter = glm::ivec2(targetShape.x + targetShape.w / 2, targetShape.y + targetShape.z / 2);
@@ -89,14 +72,25 @@ void Jotar::CameraComponent::LateUpdate()
     m_Offset = { static_cast<float>(cameraPosition.x), static_cast<float>(cameraPosition.y) };
 }
 
-void Jotar::CameraComponent::SetTargets(std::vector<TransformComponent*> targets)
+void Jotar::CameraComponent::SetTarget(TransformComponent* target)
 {
-    m_Targets = targets;
+    m_Target = target;
 }
 
 void Jotar::CameraComponent::SetLevelBounds(glm::ivec4& levelBoundaries)
 {
     m_LevelBoundaries = levelBoundaries;
+}
+
+SDL_Rect Jotar::CameraComponent::GetCamRect()
+{
+    SDL_Rect camRect;
+    camRect.x = m_CameraRect.x;
+    camRect.y = m_CameraRect.y;
+    camRect.w = m_CameraRect.w;
+    camRect.h = m_CameraRect.z; 
+
+    return camRect;
 }
 
 glm::vec2 Jotar::CameraComponent::GetOffset()

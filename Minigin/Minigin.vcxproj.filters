@@ -217,6 +217,9 @@
     <ClInclude Include="ThreadPool.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="HUDComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Font.cpp">
@@ -353,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDComponent.cpp">
+      <Filter>Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
