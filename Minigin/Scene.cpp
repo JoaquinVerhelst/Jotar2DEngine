@@ -134,6 +134,11 @@ void Scene::Render() const
 	}
 }
 
+void Jotar::Scene::Destroy()
+{
+	m_IsSceneDestroyed = true;
+}
+
 std::shared_ptr<GameObject> Jotar::Scene::GetObjectByName(const std::string& name) 
 {
 	auto it = std::find_if(m_pObjects.begin(), m_pObjects.end(),
@@ -203,6 +208,11 @@ std::vector<CameraComponent*> Jotar::Scene::GetCameras() const
 const std::string& Jotar::Scene::GetName() const
 {
 	return m_Name;
+}
+
+const bool Jotar::Scene::GetIsDestroyed() const
+{
+	return m_IsSceneDestroyed;
 }
 
 int Jotar::Scene::GetSceneID() const

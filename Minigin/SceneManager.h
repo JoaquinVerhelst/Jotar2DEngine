@@ -37,7 +37,10 @@ namespace Jotar
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
-		std::vector<std::shared_ptr<Scene>> m_scenes;
+
+		std::vector<std::shared_ptr<Scene>> m_Scenes;
+		Scene* m_CurrentScene;
+
 
 		int m_CurrentSceneIndex{};
 

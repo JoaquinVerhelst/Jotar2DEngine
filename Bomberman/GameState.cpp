@@ -86,15 +86,17 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 	gameManager->GetLevelLoader().LoadLevelFromJson(nextScene, gameManager->GetCurrentLevelID(), gameManager->GetIsGameInit());
 	gameManager->SetGameInit(true);
 
+	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
+
+	nextScene.Start();
+
 
 	if (prevScene.GetName() != "mainMenu")
 	{
 		SceneManager::GetInstance().DestroyScene(prevScene);
 	}
 
-	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
 
-	nextScene.Start();
 
 }
 

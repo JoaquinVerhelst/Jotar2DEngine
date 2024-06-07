@@ -38,6 +38,7 @@ namespace Jotar
 		void FixedUpdate();
 		void LateUpdate();
 		void Render() const;
+		void Destroy();
 
 		std::shared_ptr<GameObject> GetObjectByName(const std::string& name);
 
@@ -51,6 +52,8 @@ namespace Jotar
 		std::vector<CameraComponent*> GetCameras() const;
 
 		const std::string& GetName() const;
+		const bool GetIsDestroyed() const;
+
 
 		int GetSceneID() const;
 
@@ -63,7 +66,7 @@ namespace Jotar
 		std::vector<std::shared_ptr<GameObject>> m_pObjects{};
 
 		std::vector<CameraComponent*> m_pCameras;
-
+		bool m_IsSceneDestroyed;
 
 		static unsigned int m_idCounter; 
 	};

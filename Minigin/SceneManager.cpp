@@ -5,48 +5,65 @@
 
 void Jotar::SceneManager::Start()
 {
-	m_scenes[m_CurrentSceneIndex]->Start();
+	m_CurrentScene->Start();
 }
 
 void Jotar::SceneManager::Update()
 {
-	m_scenes[m_CurrentSceneIndex]->Update();
+	m_CurrentScene->Update();
 }
 
 void Jotar::SceneManager::FixedUpdate()
 {
-	m_scenes[m_CurrentSceneIndex]->FixedUpdate();
+	m_CurrentScene->FixedUpdate();
 }
 
 void Jotar::SceneManager::LateUpdate()
 {
-	m_scenes[m_CurrentSceneIndex]->LateUpdate();
+	m_CurrentScene->LateUpdate();
 }
 
 void Jotar::SceneManager::Render()
 {
-	m_scenes[m_CurrentSceneIndex]->Render();
+	m_CurrentScene->Render();
 }
 
 void Jotar::SceneManager::CleanUpDestroyedObjects()
 {
-	for (const auto& scene : m_scenes)
+	for (const auto& scene : m_Scenes)
 	{
 		scene->CleanUpDestroyedObjects();
+	}
+
+	for (auto it = m_Scenes.begin(); it != m_Scenes.end(); )
+	{
+		if ((*it)->GetIsDestroyed())
+		{
+			it = m_Scenes.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 
 Jotar::Scene& Jotar::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
-	m_scenes.push_back(scene);
+	m_Scenes.push_back(scene);
+
+
+	if (m_CurrentScene == nullptr)
+		m_CurrentScene = scene.get();
+
 
 	return *scene;
 }
 
 void Jotar::SceneManager::Destroy()
 {
-	for (auto& scene : m_scenes)
+	for (auto& scene : m_Scenes)
 	{
 		scene = nullptr;
 	}
@@ -54,21 +71,21 @@ void Jotar::SceneManager::Destroy()
 
 Jotar::Scene& Jotar::SceneManager::GetCurrentScene() const
 {
-	return *m_scenes[m_CurrentSceneIndex];
+	return *m_CurrentScene;
 }
 
 Jotar::Scene& Jotar::SceneManager::GetSceneByID(int SceneIndex) const
 {
-	return *m_scenes[SceneIndex];
+	return *m_Scenes[SceneIndex];
 }
 
 Jotar::Scene& Jotar::SceneManager::GetSceneByName(const std::string& name)
 {
-	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
+	auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
 		return scene->GetName() == name;
 		});
 
-	if (it != m_scenes.end()) {
+	if (it != m_Scenes.end()) {
 		return **it;
 	}
 	else {
@@ -79,14 +96,14 @@ Jotar::Scene& Jotar::SceneManager::GetSceneByName(const std::string& name)
 
 void Jotar::SceneManager::DestroyScene(Scene& scene)
 {
-	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
+	auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
 		{
 			return ptr.get() == &scene;
 		});
 
-	if (it != m_scenes.end())
+	if (it != m_Scenes.end())
 	{
-		m_scenes.erase(it);
+		it->get()->Destroy();
 	}
 }
 
@@ -98,12 +115,13 @@ int Jotar::SceneManager::GetCurrentSceneID()
 
 Jotar::Scene& Jotar::SceneManager::SetCurrentSceneByName(const std::string& name)
 {
-	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
+	auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [&name](const std::shared_ptr<Scene>& scene) {
 		return scene->GetName() == name;
 		});
 
-	if (it != m_scenes.end()) {
-		m_CurrentSceneIndex = static_cast<int>(std::distance(m_scenes.begin(), it));
+	if (it != m_Scenes.end()) {
+		m_CurrentScene = it->get();
+		m_CurrentSceneIndex = static_cast<int>(std::distance(m_Scenes.begin(), it));
 		return **it;
 	}
 	else {
@@ -113,14 +131,15 @@ Jotar::Scene& Jotar::SceneManager::SetCurrentSceneByName(const std::string& name
 
 void Jotar::SceneManager::SetCurrentSceneByScene(Scene& scene)
 {
-	auto it = std::find_if(m_scenes.begin(), m_scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
+	auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [&scene](const std::shared_ptr<Scene>& ptr)
 		{
 			return ptr.get() == &scene;
 		});
 
-	if (it != m_scenes.end())
+	if (it != m_Scenes.end())
 	{
-		m_CurrentSceneIndex = static_cast<int>(std::distance(m_scenes.begin(), it));
+				m_CurrentScene = it->get();
+		m_CurrentSceneIndex = static_cast<int>(std::distance(m_Scenes.begin(), it));
 	}
 	else {
 		throw std::runtime_error("Scene not found: " + scene.GetName());

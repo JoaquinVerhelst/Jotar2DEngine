@@ -22,7 +22,7 @@ void Jotar::ExitComponent::SetAmountOfEnemies(int totalEnemies)
 
 void Jotar::ExitComponent::OnDestroy()
 {
-	GameManager::GetInstance().LoadLevel(true);
+
 }
 
 
@@ -51,7 +51,7 @@ void Jotar::ExitComponent::OnNotify(const CollisionEvent& triggerEvent)
 
 		if (otherCollider->CompareTag("Player"))
 		{
-			GetOwner()->Destroy();
+			GameManager::GetInstance().LoadLevel(true);
 		}
 	}
 }
