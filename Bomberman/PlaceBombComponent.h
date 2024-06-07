@@ -14,7 +14,7 @@ namespace Jotar
 	{
 	public:
 
-		explicit PlaceBombComponent(GameObject* owner);
+		explicit PlaceBombComponent(GameObject* owner, float bombTime = 4.0f, int startAmountOfBombs = 1, int startAmountOfFlames = 1);
 		virtual ~PlaceBombComponent() = default;
 
 		void OnNotify(const ExplosionEvent& eventData) override;
@@ -23,6 +23,8 @@ namespace Jotar
 		PlaceBombComponent(PlaceBombComponent&& other) = delete;
 		PlaceBombComponent& operator=(const PlaceBombComponent& other) = delete;
 		PlaceBombComponent& operator=(PlaceBombComponent&& other) = delete;
+
+		void Reset() override;
 
 		void UpgradeExplosionRange();
 		void UpgradeMaxAmountOfBombs();
@@ -34,6 +36,10 @@ namespace Jotar
 	private:
 
 		std::shared_ptr<GameObject> CreateBombGameObject(GridCell& cell);
+
+
+		int m_StartAmountOfBombs;
+		int m_StartAmountOfFlames;
 
 
 		int m_MaxAmountOfBombs;

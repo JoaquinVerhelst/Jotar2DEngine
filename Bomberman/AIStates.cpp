@@ -207,12 +207,11 @@ Jotar::AIState* Jotar::CalculateRandomPathAIState::OnHandle()
 {
 	auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 	auto& pos = m_pAIBehaviorComp->GetOwner()->GetTransform()->GetLocalPosition();
-	// Get Start cell (our position)
+
 	auto startCell = worldGrid->GetGridCellByPosition(pos);
 
 	while (!m_IsPathFound)
 	{
-		//TODO Get rid of hardCoded range
 		auto randomCellIndex = GetNextRandomCellIndex(startCell.Index, m_Range);
 		const auto& endCell = worldGrid->GetGridCellByID(randomCellIndex);
 		if (!endCell.ObjectOnCell.expired()) continue;

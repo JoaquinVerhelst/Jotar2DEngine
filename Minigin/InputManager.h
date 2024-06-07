@@ -6,6 +6,11 @@
 #include <vector>
 #include "ControllerInput.h"
 #include "KeyboardInput.h"
+#include <utility>
+
+
+
+
 
 namespace Jotar
 {
@@ -146,9 +151,13 @@ namespace Jotar
 		void ClearFrameEvents();
 
 		void AddControllerBinding(ControllerKey key, std::unique_ptr<Command> pCommand);
-		void AddKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand);
+		void AddGeneralKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand);
+		void AddPlayerKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand);
 
-		void ClearInputBindings();
+
+
+
+		void ClearPlayerInputBindings();
 
 		glm::ivec2 GetMouseLocation() const;
 		bool IsMouseButtonDown() const;
@@ -170,7 +179,10 @@ namespace Jotar
 
 
 		std::vector<std::pair<ControllerKey, std::unique_ptr<Command>>> m_pControllerBinds{};
-		std::vector<std::pair<KeyboardKey, std::unique_ptr<Command>>> m_pKeyboardBinds{};
+
+		std::vector<std::pair<KeyboardKey, std::unique_ptr<Command>>> m_pGeneralKeyboardBinds{};
+		std::vector<std::pair<KeyboardKey, std::unique_ptr<Command>>> m_pPlayerKeyboardBinds{};
+
 
 		std::vector<std::unique_ptr<ControllerInput>> m_pControllers{};
 		std::unique_ptr<KeyboardInput> m_KeyboardInput;

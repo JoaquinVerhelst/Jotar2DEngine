@@ -4,7 +4,7 @@ Jotar::HealthComponent::HealthComponent(GameObject* owner, int health)
 	:Component(owner)
 	, m_CurrentHealth(health)
 {
-	m_pSubject = std::make_unique<Subject<HealthEvent>>();
+	m_pSubject = std::make_unique<Subject<Event>>();
 }
 
 Jotar::HealthComponent::~HealthComponent()
@@ -27,14 +27,6 @@ void Jotar::HealthComponent::TakeDamage(int damage, GameObject* attacker)
 	m_CurrentHealth -= damage;
 
 	m_pSubject->NotifyObservers(DamageHealthEvent{m_CurrentHealth, attacker});
-
-
-	// stop moving
-
-
-	// reloadlevel
-
-
 }
 
 

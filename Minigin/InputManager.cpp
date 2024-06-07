@@ -24,6 +24,7 @@ namespace Jotar
 
 		//Input bindings check
 		ControllersHandler();
+
 		KeyboardHandler();
 
 		return !IsGameQuit();
@@ -55,7 +56,28 @@ namespace Jotar
 
 	void InputManager::KeyboardHandler() const
 	{
-		for (const auto& keyboardBinds : m_pKeyboardBinds)
+		for (const auto& keyboardBinds : m_pGeneralKeyboardBinds)
+		{
+			const auto& [key, command] = keyboardBinds;
+
+			switch (key.inputType)
+			{
+			case InputType::Pressed:
+				if (m_KeyboardInput->IsKeyPressed(key.button))
+					command->Execute();
+				break;
+			case InputType::Up:
+				if (m_KeyboardInput->IsKeyUp(key.button))
+					command->Execute();
+				break;
+			case InputType::Down:
+				if (m_KeyboardInput->IsKeyDown(key.button))
+					command->Execute();
+				break;
+			}
+		}
+
+		for (const auto& keyboardBinds : m_pPlayerKeyboardBinds)
 		{
 			const auto& [key, command] = keyboardBinds;
 
@@ -94,14 +116,21 @@ namespace Jotar
 		m_pControllerBinds.emplace_back(std::pair(key, std::move(pCommand)));
 	}
 
-	void InputManager::AddKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand)
+	void InputManager::AddGeneralKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand)
 	{
-		m_pKeyboardBinds.emplace_back(std::pair(key, std::move(pCommand)));
+		m_pGeneralKeyboardBinds.emplace_back(std::pair(key, std::move(pCommand)));
 	}
 
-	void InputManager::ClearInputBindings()
+	void InputManager::AddPlayerKeyBinding(KeyboardKey key, std::unique_ptr<Command> pCommand)
+	{
+		m_pPlayerKeyboardBinds.emplace_back(std::pair(key, std::move(pCommand)));
+	}
+
+
+	void InputManager::ClearPlayerInputBindings()
 	{
 		m_pControllerBinds.clear();
+		m_pPlayerKeyboardBinds.clear();
 	}
 
 	bool InputManager::IsMouseButtonDown() const

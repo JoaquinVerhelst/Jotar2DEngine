@@ -9,7 +9,7 @@ Jotar::HealthDisplayComponent::HealthDisplayComponent(GameObject* owner)
 }
 
 
-void Jotar::HealthDisplayComponent::OnNotify(const HealthEvent& event)
+void Jotar::HealthDisplayComponent::OnNotify(const Event& event)
 {
     if (typeid(event) == typeid(DamageHealthEvent))
     {

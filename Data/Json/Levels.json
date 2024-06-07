@@ -177,17 +177,8 @@
 								"viewDistance": 200
 							},
 							"points": 100
-						},
-						"oneal": {
-							"amount": 1,
-							"spriteSheetName": "Oneal",
-							"speed": 120,
-							"intelligence": {
-								"level": 1,
-								"viewDistance": 200
-							},
-							"points": 200
 						}
+
 
 					}
 				},

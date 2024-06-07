@@ -140,8 +140,8 @@ void Jotar::BombComponent::OnExplode(int range)
 
                 int animationRow = CalculateSpriteSheetRow(dx, dy, range, i);
                 //Position
-                //int distanceX = x - centerIndex.x;
-                //int distanceY = y - centerIndex.y;
+
+
                 //0 = middle, 1 = Vertical, 2 = horizontal, 3 = endUp, 4 = EndDown, 5 = EndRight, 6 = EndLeft
                 CreateChildExplosion(animationRow, cell.CenterCellPosition, scene);
 

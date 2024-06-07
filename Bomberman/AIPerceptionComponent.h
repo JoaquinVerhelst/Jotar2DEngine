@@ -15,8 +15,7 @@ namespace Jotar
 		AIPerceptionComponent(GameObject* owner, float viewDistance, std::string targetTag);
 		~AIPerceptionComponent();
 		
-		void FixedUpdate() override;
-		void Render() const override;
+
 		void Update() override;
 		void Start() override;
 

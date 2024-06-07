@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "CameraComponent.h"
 #include "AIAnimationControllerComponent.h"
+#include "PlayerDeathComponent.h"
 #include "AIPerceptionComponent.h"
 
 
@@ -25,6 +26,7 @@ Jotar::AIBehaviorComponent::AIBehaviorComponent(GameObject* owner)
 	, m_pOnDamageState{ std::make_unique<OnDamageAIState>(this) }
 	, m_IsPlayerSeen{false}
 	, m_pAIAnimationControllerComponent{ nullptr }
+	, m_pAIPerceptionComponent{ nullptr }
 	, m_IsDamaged{ false }
 {
 	m_pCurrentState = m_pIdleState.get();
@@ -40,6 +42,11 @@ void Jotar::AIBehaviorComponent::Start()
 {
 	if (GetOwner()->HasComponent<AIAnimationControllerComponent>())
 		m_pAIAnimationControllerComponent = GetOwner()->GetComponent<AIAnimationControllerComponent>();
+
+	if (GetOwner()->HasComponent<AIPerceptionComponent>())
+		m_pAIPerceptionComponent = GetOwner()->GetComponent<AIPerceptionComponent>();
+
+	
 }
 
 void Jotar::AIBehaviorComponent::Update()
@@ -65,35 +72,43 @@ bool Jotar::AIBehaviorComponent::GetIsPlayerSeen() const
 
 void Jotar::AIBehaviorComponent::OnNotify(const AIEvents& AiEvent)
 {
-
 	if (!m_IsPlayerSeen)
 	{
 		if (typeid(AiEvent) == typeid(AIPlayerSeenEvent))
 		{
 			const AIPlayerSeenEvent& playerSeenEvent = static_cast<const AIPlayerSeenEvent&>(AiEvent);
 
+			if (playerSeenEvent.GetTargetCollider()->GetOwner()->GetComponent<PlayerHealthComponent>()->GetIsDeath())
+				return;
+
 			m_IsPlayerSeen = true;
 			GetCalculatePathToPlayerState()->SetTarget(playerSeenEvent.GetTargetCollider());
 			m_pCurrentState = GetCalculatePathToPlayerState();
 
-			GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(true);
-		}
-	}
-	else
-	{
-		if (typeid(AiEvent) == typeid(AIKilledTarget))
-		{
-
-			m_IsPlayerSeen = false;
-			m_pCurrentState = GetCalculateRandomPathState();
-			GetOwner()->GetComponent< AIPerceptionComponent>()->SetIsDisabled(false);
+			if (m_pAIPerceptionComponent != nullptr)
+				m_pAIPerceptionComponent->SetIsDisabled(true);
 		}
 	}
 }
 
-void Jotar::AIBehaviorComponent::OnNotify(const HealthEvent& healthEvent)
+void Jotar::AIBehaviorComponent::OnNotify(const Event& healthEvent)
 {
+
 	if (m_IsDamaged) return;
+
+
+	if (m_IsPlayerSeen)
+	{
+		if (typeid(healthEvent) == typeid(OnPlayerDeathEvent))
+		{
+			m_IsPlayerSeen = false;
+			m_pCurrentState = GetCalculateRandomPathState();
+
+			if (m_pAIPerceptionComponent != nullptr)
+				m_pAIPerceptionComponent->SetIsDisabled(false);
+		}
+
+	}
 
 	const DamageHealthEvent* damageEvent = dynamic_cast<const DamageHealthEvent*>(&healthEvent);
 	if (damageEvent)

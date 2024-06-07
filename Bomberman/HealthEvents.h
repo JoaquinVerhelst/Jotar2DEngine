@@ -33,12 +33,18 @@ namespace Jotar
 		GameObject* m_Attacker;
 	};
 
-	class OnDeathEvent final : public Event
+	class OnPlayerDeathEvent final : public Event
 	{
 	public:
-		OnDeathEvent() = default;
-		~OnDeathEvent() = default;
+		OnPlayerDeathEvent(GameObject* player)
+			: m_Player{ player } {}
 
+
+		~OnPlayerDeathEvent() = default;
+
+		GameObject* GetPlayer() const { return m_Player; }
+	private:
+		GameObject* m_Player;
 	};
 
 

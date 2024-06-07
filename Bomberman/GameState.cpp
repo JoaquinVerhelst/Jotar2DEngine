@@ -13,13 +13,11 @@
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
 	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
-	InputManager::GetInstance().ClearInputBindings();
+	InputManager::GetInstance().ClearPlayerInputBindings();
 
 
 	SceneManager::GetInstance().GetCurrentScene().MarkAllForDestroy();
 	gameManager->Reset();
-
-	InputManager::GetInstance().ClearInputBindings();
 
 	auto& scene = SceneManager::GetInstance().SetCurrentSceneByName("mainMenu");
 	scene.MarkAllForDestroy();
@@ -39,7 +37,7 @@ Jotar::GameState* Jotar::MainMenuState::OnHandle()
 void Jotar::MainMenuState::OnExit(GameManager* )
 {
 	auto& scene = SceneManager::GetInstance().GetCurrentScene();
-	InputManager::GetInstance().ClearInputBindings();
+	InputManager::GetInstance().ClearPlayerInputBindings();
 	scene.MarkAllForDestroy();
 }
 
@@ -108,7 +106,7 @@ Jotar::GameState* Jotar::GameLevelState::OnHandle()
 void Jotar::GameLevelState::OnExit(GameManager* )
 {
 
-	SceneManager::GetInstance().GetCurrentScene().MarkSceneForDestroy();
+	//SceneManager::GetInstance().GetCurrentScene().MarkSceneForDestroy();
 
 }
 
@@ -133,7 +131,7 @@ void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 
 	if (prevScene.GetName() != "mainMenu")
 	{
-		InputManager::GetInstance().ClearInputBindings();
+		InputManager::GetInstance().ClearPlayerInputBindings();
 		SceneManager::GetInstance().DestroyScene(prevScene);
 	}
 

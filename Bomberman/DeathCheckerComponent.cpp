@@ -8,9 +8,9 @@ Jotar::DeathCheckerComponent::DeathCheckerComponent(GameObject* owner)
 }
 
 
-void Jotar::DeathCheckerComponent::OnNotify(const OnDeathEvent& eventData)
+void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 {
-	if (typeid(eventData) == typeid(OnDeathEvent))
+	if (typeid(eventData) == typeid(OnPlayerDeathEvent))
 	{
 		++m_AmountOfDeathPlayers;
 
@@ -18,7 +18,6 @@ void Jotar::DeathCheckerComponent::OnNotify(const OnDeathEvent& eventData)
 		{
 			GameManager::GetInstance().LoadLevel(false);
 		}
-
 	}
 
 }

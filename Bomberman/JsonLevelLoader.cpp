@@ -103,16 +103,16 @@ bool Jotar::JsonLevelLoader::InitGame()
 
         auto & input = InputManager::GetInstance();
 
-        input.AddKeyBinding(KeyboardKey{ generalInput["skipLevel"] , InputType::Up }, std::make_unique<SkipLevelCommand>());
-        input.AddKeyBinding(KeyboardKey{ generalInput["mainMenu"] , InputType::Up }, std::make_unique<GoToMainMenuCommand>());
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["skipLevel"] , InputType::Up }, std::make_unique<SkipLevelCommand>());
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["mainMenu"] , InputType::Up }, std::make_unique<GoToMainMenuCommand>());
 
-        input.AddKeyBinding(KeyboardKey{ generalInput["mute"] , InputType::Up }, std::make_unique<MuteSoundCommand>());
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["mute"] , InputType::Up }, std::make_unique<MuteSoundCommand>());
 
-        input.AddKeyBinding(KeyboardKey{ generalInput["increaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(5));
-        input.AddKeyBinding(KeyboardKey{ generalInput["decreaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(-5));
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["increaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(5));
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["decreaseMusicVolume"] , InputType::Up }, std::make_unique<ChangeMusicVolume>(-5));
 
-        input.AddKeyBinding(KeyboardKey{ generalInput["increaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(5));
-        input.AddKeyBinding(KeyboardKey{ generalInput["decreaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(-5));
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["increaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(5));
+        input.AddGeneralKeyBinding(KeyboardKey{ generalInput["decreaseSoundEffectsVolume"] , InputType::Up }, std::make_unique<ChangeSoundEffectVolume>(-5));
 
         return true;
     }
@@ -289,7 +289,8 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
 
         for (auto& player : players)
         {
-            player->GetOwner()->GetComponent<PlayerDeathComponent>()->AddObserver(deatchCheckerComp);
+          
+            player->GetOwner()->GetComponent<PlayerHealthComponent>()->AddOnDeathObserver(deatchCheckerComp);
         }
 
 
@@ -573,15 +574,15 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(playerInfo["speed"], cellSize);
 
-    auto healthCompPlayer = playerObj->AddComponent<HealthComponent>(playerInfo["health"]);
+    auto healthCompPlayer = playerObj->AddComponent<PlayerHealthComponent>(playerInfo["health"], 2.f);
     healthCompPlayer->AddObserver(playerHealthDisplay);
 
     auto scoreCompPlayer = playerObj->AddComponent<ScoreComponent>();
     scoreCompPlayer->AddObserver(playerScoreDisplay);
 
 
-    auto deathComp = playerObj->AddComponent<PlayerDeathComponent>(2.f);
-    healthCompPlayer->AddObserver(deathComp);
+    //auto deathComp = playerObj->AddComponent<PlayerDeathComponent>(2.f);
+    //healthCompPlayer->AddObserver(deathComp);
 
 
     auto placeBombComp = playerObj->AddComponent<PlaceBombComponent>();
@@ -601,11 +602,11 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     const auto& keyboardKeys = playerInfo["keyboardKeys"][playerString];
 
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["forward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, -1}));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["backward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, 1}));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["left"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{-1, 0}));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["placeBomb"] , InputType::Up}, std::make_unique<PlaceBombCommand>(placeBombComp));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["forward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, -1}));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["backward"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{0, 1}));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["left"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{-1, 0}));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["placeBomb"] , InputType::Up}, std::make_unique<PlaceBombCommand>(placeBombComp));
 
 
     return playerObj;
@@ -670,10 +671,10 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBalloomPlayer(S
 
     const auto& keyboardKeys = playerInfo["keyboardKeys"][playerString];
 
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["forward"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, -1 }));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["backward"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, 1 }));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
-    input.AddKeyBinding(KeyboardKey{ keyboardKeys["left"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ -1, 0 }));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["forward"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, -1 }));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["backward"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 0, 1 }));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["left"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ -1, 0 }));
 
     return playerObj;
 }
@@ -703,6 +704,12 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
             {
                 auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget[0]);
                 perception->AddObserver(behavior);
+
+                auto players = GameManager::GetInstance().GetPlayers();
+                for (auto& player : players)
+                {
+                    player->GetOwner()->GetComponent<PlayerHealthComponent>()->AddOnDeathObserver(behavior);
+                }
             }
  
             enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
@@ -720,14 +727,16 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
 
 
             auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false, false);
-            auto damageComp = damageCollObj->AddComponent<AIDamageComponent>(1, enemyTarget);
+            auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
             auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
             damageCollComp->SetSize({ levelInfo.CellSize * 4/5, levelInfo.CellSize * 4 / 5 });
             damageCollComp->AddObserver(damageComp);
             damageCollComp->SetTag(enemyTag);
 
             behavior->AddObserver(exitComp);
-            damageComp->AddObserver(behavior);
+
+
+
 
 
             PlaceGameObjectRandomly(enemy, levelInfo);

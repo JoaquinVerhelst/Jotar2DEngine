@@ -8,7 +8,7 @@
 
 Jotar::CollisionManager::CollisionManager()
     :m_pSceneColliders{}
-    , m_threadPool{4}
+    , m_threadPool{1}
 {
 }
 
@@ -116,7 +116,7 @@ bool Jotar::CollisionManager::RayCastIsColliderInRange(glm::vec2 startpos, glm::
 
             if (RayBoxIntersection(startpos, direction, collisionRect, hitDistance))
             {
-                std::cout << "Close Enough" << '\n';
+                // target is close enough to check
                 return true;
             }
         }
@@ -139,7 +139,6 @@ Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 st
             glm::vec4 collisionRect = collider->GetCollisionRect();
             float hitDistance = distance;
             if (RayBoxIntersection(startpos, dir, collisionRect, hitDistance) && hitDistance <= distance && hitDistance < closestDistance) {
-                //std::cout << "Seen: " << collider->GetOwner()->GetName() << '\n';
                 closestDistance = hitDistance;
                 closestCollider = collider;
             }

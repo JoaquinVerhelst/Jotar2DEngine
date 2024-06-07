@@ -117,7 +117,7 @@ namespace Jotar
 		ColliderComponent* m_pTargetCollider;
 
 	};
-
+ 
 
 
 	class OnDamageAIState final : public AIState

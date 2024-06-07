@@ -8,7 +8,7 @@ namespace Jotar
 {
 	class GameObject;
 
-	class HealthComponent final : public Component   /*, public Subject<EventPlayerDamage>*/
+	class HealthComponent : public Component
 	{
 	public:
 
@@ -24,23 +24,23 @@ namespace Jotar
 
 
 		int GetHealth() const;
-		void TakeDamage(int damage = 1, GameObject* attacker = nullptr);
+		virtual void TakeDamage(int damage = 1, GameObject* attacker = nullptr);
 		void AddHealth(int health);
 
 
-		void AddObserver(Observer<HealthEvent>* pObserver)
+		void AddObserver(Observer<Event>* pObserver)
 		{
 			m_pSubject->AddObserver(pObserver);
 		}
-		void RemoveObserver(Observer<HealthEvent>* pObserver)
+		void RemoveObserver(Observer<Event>* pObserver)
 		{
 			m_pSubject->RemoveObserver(pObserver);
 		}
 
 
-	private:
+	protected:
 
-		std::unique_ptr<Subject<HealthEvent>> m_pSubject;
+		std::unique_ptr<Subject<Event>> m_pSubject;
 		int m_CurrentHealth;
 	};
 

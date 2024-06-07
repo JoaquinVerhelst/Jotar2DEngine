@@ -15,13 +15,13 @@ namespace Jotar
 {
 	class MovementComponent;
 	class AIAnimationControllerComponent;
+	class AIPerceptionComponent;
 
 
 
 
 
-
-	class AIBehaviorComponent final : public Component , public Observer<AIEvents>, public Observer<HealthEvent>
+	class AIBehaviorComponent final : public Component , public Observer<AIEvents>, public Observer<Event>
 	{
 	public:
 
@@ -39,7 +39,7 @@ namespace Jotar
 
 		bool GetIsPlayerSeen() const;
 		void OnNotify(const AIEvents& event) override;
-		void OnNotify(const HealthEvent& event) override;
+		void OnNotify(const Event& event) override;
 
 		IdleAIState* GetIdleState() const { return m_pIdleState.get(); }
 		GoToTargetAIState* GetGoToTargetState() const { return m_pGoToTargetState.get(); }
@@ -75,6 +75,7 @@ namespace Jotar
 
 
 		AIAnimationControllerComponent* m_pAIAnimationControllerComponent;
+		AIPerceptionComponent* m_pAIPerceptionComponent;
 
 		bool m_IsPlayerSeen;
 		bool m_IsDamaged;

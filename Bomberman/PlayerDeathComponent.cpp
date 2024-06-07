@@ -4,16 +4,16 @@
 #include "PlaceBombComponent.h"
 #include "GameManager.h"
 
-Jotar::PlayerDeathComponent::PlayerDeathComponent(GameObject* owner, float deathPauseTime)
-	:Component( owner )
+Jotar::PlayerHealthComponent::PlayerHealthComponent(GameObject* owner, int health, float deathPauseTime)
+	:HealthComponent( owner, health)
 	, m_DeathPauseTime{ deathPauseTime  }
 	, m_DeathTimer{ 0 }
 	, m_IsDeath{ false }
 {
-	m_pSubject = std::make_unique<Subject<OnDeathEvent>>();
+	m_pOnDeathSubject = std::make_unique<Subject<Event>>();
 }
 
-void Jotar::PlayerDeathComponent::Update()
+void Jotar::PlayerHealthComponent::Update()
 {
 	if (m_IsDeath)
 	{
@@ -22,36 +22,37 @@ void Jotar::PlayerDeathComponent::Update()
 		if (m_DeathTimer >= m_DeathPauseTime)
 		{
 			GetOwner()->GetTransform()->SetPosition(-200, -200);
+			OnPlayerDeathEvent deathEvent{ GetOwner() };
+			m_pOnDeathSubject->NotifyObservers(deathEvent);
 
-			OnDeathEvent deathEvent{};
-			m_pSubject->NotifyObservers(deathEvent);
 			m_DeathTimer = 0;
 			m_IsDeath = false;
 		}
 	}
 }
 
-void Jotar::PlayerDeathComponent::Reset()
+void Jotar::PlayerHealthComponent::Reset()
 {
 	m_DeathTimer = 0;
 	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(false);
 	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(false);
-	m_pSubject->RemoveAllObservers();
+	m_pOnDeathSubject->RemoveAllObservers();
 }
 
-void Jotar::PlayerDeathComponent::OnNotify(const HealthEvent& eventData)
+void Jotar::PlayerHealthComponent::TakeDamage(int damage, GameObject* attacker)
 {
-	if (typeid(eventData) == typeid(DamageHealthEvent))
-	{
-		// stop Input
-		GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
-		GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(true);
-		m_IsDeath = true;
+	HealthComponent::TakeDamage(damage, attacker);
+
+	// stop Input
+	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
+	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(true);
+	m_IsDeath = true;
 
 
-		if (eventData.GetHealth() > 0)
-		{
-			GameManager::GetInstance().LoadHighScoreMenu(true);
-		}
-	}
+
+	//if (eventData.GetHealth() > 0)
+	//{
+	//	GameManager::GetInstance().LoadHighScoreMenu(true);
+	//}
 }
+

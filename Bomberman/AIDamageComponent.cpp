@@ -10,5 +10,5 @@ void Jotar::AIDamageComponent::OnNotify(const CollisionEvent& collisionEvent)
 {
 	DamageComponent::OnNotify(collisionEvent);
 
-	m_pSubject->NotifyObservers(AIKilledTarget());
+	//m_pSubject->NotifyObservers(AIKilledTarget());
 }

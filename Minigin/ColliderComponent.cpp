@@ -140,17 +140,16 @@ void Jotar::ColliderComponent::OnTriggerBegin(TriggerBeginEvent& beginOverlap)
 
 void Jotar::ColliderComponent::OnTriggerCollision(TriggerEvent& triggerEvent)
 {
-	auto owner = GetOwner();
-	owner->GetName();
+	auto otherCollider = triggerEvent.GetOtherCollider();
 
-	if (!IsColliderAlreadyHit(triggerEvent.GetOtherCollider()))
+	m_pCollidingCollidersThisFrame.emplace_back(otherCollider);
+
+	if (!IsColliderAlreadyHit(otherCollider))
 	{
-		TriggerBeginEvent beginOverlap = TriggerBeginEvent{ triggerEvent.GetCollider(), triggerEvent.GetOtherCollider() };
-		m_pCollidingColliders.emplace_back(triggerEvent.GetOtherCollider());
+		TriggerBeginEvent beginOverlap = TriggerBeginEvent{ triggerEvent.GetCollider(), otherCollider };
+		m_pCollidingColliders.emplace_back(otherCollider);
 		OnTriggerBegin(beginOverlap);
 	}
-
-	m_pCollidingCollidersThisFrame.emplace_back(triggerEvent.GetOtherCollider());
 }
 
 void Jotar::ColliderComponent::OnTriggerEnd(TriggerEndEvent& endOverlap)

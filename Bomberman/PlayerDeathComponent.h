@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "HealthComponent.h"
 #include "Observer.h"
 #include "Subject.h"
 #include "HealthEvents.h"
@@ -8,36 +8,39 @@ namespace Jotar
 {
 	class GameObject;
 
-	class PlayerDeathComponent final : public Component, public Observer<HealthEvent>
+	class PlayerHealthComponent final : public HealthComponent
 	{
 	public:
 
-		PlayerDeathComponent(GameObject* owner, float deathPauseTime);
-		~PlayerDeathComponent() = default;
+		PlayerHealthComponent(GameObject* owner, int health, float deathPauseTime = 2.f);
+		~PlayerHealthComponent() = default;
 
 		void Update() override;
 		void Reset() override;
+		bool GetIsDeath() { return m_IsDeath; }
 
-		void OnNotify(const HealthEvent& eventData) override;
+		//void OnNotify(const HealthEvent& eventData) override;
+		void TakeDamage(int damage = 1, GameObject* attacker = nullptr) override;
 
-		PlayerDeathComponent(const PlayerDeathComponent& other) = delete;
-		PlayerDeathComponent(PlayerDeathComponent&& other) = delete;
-		PlayerDeathComponent& operator=(const PlayerDeathComponent& other) = delete;
-		PlayerDeathComponent& operator=(PlayerDeathComponent&& other) = delete;
 
-		void AddObserver(Observer<OnDeathEvent>* pObserver)
+		PlayerHealthComponent(const PlayerHealthComponent& other) = delete;
+		PlayerHealthComponent(PlayerHealthComponent&& other) = delete;
+		PlayerHealthComponent& operator=(const PlayerHealthComponent& other) = delete;
+		PlayerHealthComponent& operator=(PlayerHealthComponent&& other) = delete;
+
+		void AddOnDeathObserver(Observer<Event>* pObserver)
 		{
-			m_pSubject->AddObserver(pObserver);
+			m_pOnDeathSubject->AddObserver(pObserver);
 		}
-		void RemoveObserver(Observer<OnDeathEvent>* pObserver)
+		void RemoveOnDeathObserver(Observer<Event>* pObserver)
 		{
-			m_pSubject->RemoveObserver(pObserver);
+			m_pOnDeathSubject->RemoveObserver(pObserver);
 		}
 
 
 	private:
 
-		std::unique_ptr<Subject<OnDeathEvent>> m_pSubject;
+		std::unique_ptr<Subject<Event>> m_pOnDeathSubject;
 		bool m_IsDeath;
 		float m_DeathTimer;
 		float m_DeathPauseTime;

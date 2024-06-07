@@ -8,7 +8,7 @@
     
 namespace Jotar
 {
-    class HealthDisplayComponent final : public Component, public Observer<HealthEvent>
+    class HealthDisplayComponent final : public Component, public Observer<Event>
     {
     public:
 
@@ -20,7 +20,7 @@ namespace Jotar
         HealthDisplayComponent& operator=(const HealthDisplayComponent& other) = delete;
         HealthDisplayComponent& operator=(HealthDisplayComponent&& other) = delete;
 
-        void OnNotify(const HealthEvent& event) override;
+        void OnNotify(const Event& event) override;
 
     private:
 

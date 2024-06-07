@@ -8,7 +8,7 @@ namespace Jotar
 {
 	class GameObject;
 
-	class DeathCheckerComponent final : public Component, public Observer<OnDeathEvent>
+	class DeathCheckerComponent final : public Component, public Observer<Event>
 	{
 	public:
 
@@ -16,7 +16,7 @@ namespace Jotar
 		~DeathCheckerComponent() = default;
 
 
-		void OnNotify(const OnDeathEvent& eventData) override;
+		void OnNotify(const Event& eventData) override;
 
 		DeathCheckerComponent(const DeathCheckerComponent& other) = delete;
 		DeathCheckerComponent(DeathCheckerComponent&& other) = delete;

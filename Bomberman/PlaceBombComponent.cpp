@@ -13,19 +13,28 @@
 #include <iostream>
 
 
-Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner)
+Jotar::PlaceBombComponent::PlaceBombComponent(GameObject* owner, float bombTime, int startAmountOfBombs , int startAmountOfFlames)
 	: Component(owner)
-	, m_MaxAmountOfBombs{ 1 }
-	, m_AmountOfFlames{ 1 }
-	, m_BombTimer{ 5.f }
+	, m_StartAmountOfBombs{ startAmountOfBombs }
+	, m_StartAmountOfFlames{ startAmountOfFlames }
+	, m_MaxAmountOfBombs{ m_StartAmountOfBombs }
+	, m_AmountOfFlames{ m_StartAmountOfFlames }
+	, m_BombTimer{ bombTime }
 	, m_HasDetonator{ false }
 {
 }
 
 void Jotar::PlaceBombComponent::OnNotify(const ExplosionEvent&)
 {
-	//std::cout << "BombRemoved" << '\n';
 	m_BombsPlaced.erase(m_BombsPlaced.begin());
+}
+
+void Jotar::PlaceBombComponent::Reset()
+{
+	m_BombsPlaced.clear();
+	m_MaxAmountOfBombs = m_StartAmountOfBombs;
+	m_AmountOfFlames = m_StartAmountOfFlames;
+	m_HasDetonator = false;
 }
 
 void Jotar::PlaceBombComponent::UpgradeExplosionRange()

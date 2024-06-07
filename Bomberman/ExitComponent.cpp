@@ -10,6 +10,7 @@ Jotar::ExitComponent::ExitComponent(GameObject* owner, std::string exitTextureFi
 	, m_EnemiesRemaining{0}
 	, m_ExitTextureFilePath{ exitTextureFilePath }
 	, m_IsExitRevealed{ false }
+	, m_ShouldLoadNextLevel{ false }
 {
 
 }
@@ -18,6 +19,12 @@ void Jotar::ExitComponent::SetAmountOfEnemies(int totalEnemies)
 {
 	m_EnemiesRemaining = totalEnemies;
 }
+
+void Jotar::ExitComponent::OnDestroy()
+{
+	GameManager::GetInstance().LoadLevel(true);
+}
+
 
 void Jotar::ExitComponent::OnNotify(const AIDeathEvent& aiDeathEvent)
 {
@@ -44,7 +51,7 @@ void Jotar::ExitComponent::OnNotify(const CollisionEvent& triggerEvent)
 
 		if (otherCollider->CompareTag("Player"))
 		{
-			GameManager::GetInstance().LoadLevel();
+			GetOwner()->Destroy();
 		}
 	}
 }

@@ -17,6 +17,7 @@ namespace Jotar
 
 		void SetAmountOfEnemies(int totalEnemies);
 
+		void OnDestroy() override;
 
 		void OnNotify(const AIDeathEvent& aiDeathEvent) override;
 		void OnNotify(const CollisionEvent& triggerEvent) override;
@@ -32,5 +33,6 @@ namespace Jotar
 		int m_EnemiesRemaining;
 		std::string m_ExitTextureFilePath;
 		bool m_IsExitRevealed;
+		bool m_ShouldLoadNextLevel;
 	};
 }
