@@ -62,7 +62,7 @@ namespace Jotar
 
 	private:
 		bool m_IsSaving{false};
-		int m_PreviousSceneID{ 0 };
+		std::string m_PreviousSceneName{};
 	};
 }
 

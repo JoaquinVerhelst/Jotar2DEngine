@@ -108,6 +108,11 @@ void Jotar::SceneManager::DestroyScene(Scene& scene)
 }
 
 
+const std::string& Jotar::SceneManager::GetCurrentSceneName()
+{
+	return m_CurrentScene->GetName();
+}
+
 int Jotar::SceneManager::GetCurrentSceneID()
 {
 	return m_CurrentSceneIndex;

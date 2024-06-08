@@ -15,7 +15,7 @@ namespace Jotar
 		DeathCheckerComponent(GameObject* owner);
 		~DeathCheckerComponent() = default;
 
-
+		void Start() override;
 		void OnNotify(const Event& eventData) override;
 
 		DeathCheckerComponent(const DeathCheckerComponent& other) = delete;

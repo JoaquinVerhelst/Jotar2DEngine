@@ -30,7 +30,7 @@
 #include "ScoreComponent.h"
 #include "ScoreDisplayComponent.h"
 
-#include "PlaceBombCommand.h"
+#include "BombCommands.h"
 #include "PlaceBombComponent.h"
 
 #include "TempCommand.h"

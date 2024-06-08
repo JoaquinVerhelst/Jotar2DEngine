@@ -14,6 +14,8 @@ namespace Jotar
 	class GameObject;
 	class Font;
 	class ExitComponent;
+	class TransformComponent;
+	class WorldGrid;
 
 	class JsonLevelLoader final
 	{
@@ -57,11 +59,15 @@ namespace Jotar
 		std::shared_ptr<GameObject> CreateBreakableWall(Scene& scene);
 
 		bool CreateGameMode(Scene& scene, GeneralLevelInfo& levelInfo);
+		void SetUpCamera(Scene& scene, glm::ivec4 camRect, glm::ivec4 levelBounds, TransformComponent* target);
+		void UpdateGameMode(Scene& scene, const nlohmann::json& levelData, GeneralLevelInfo& levelInfo);
+		void PlacePlayer(WorldGrid* worldGrid, const nlohmann::json& levelData, int playerIndex, TransformComponent* player);
+
 
 		std::shared_ptr<GameObject> CreatePlayer(Scene& scene, const nlohmann::json& gameInfo, std::shared_ptr<GameObject> HUD, std::shared_ptr<Font> font, int cellSize, unsigned int playerIndex);
 		std::shared_ptr<GameObject> CreateBalloomPlayer(Scene& scene, const nlohmann::json& gameInfo, std::shared_ptr<GameObject> HUD, std::shared_ptr<Font> font, int cellSize, unsigned int playerIndex);
 
-		int CreateEnemies(Scene& scene, const nlohmann::json& EnemyTypeInfo, GeneralLevelInfo& levelInfo, ExitComponent* exitComp);
+		int CreateEnemies(Scene& scene, const nlohmann::json& enemyInfo, const nlohmann::json& levelEnemyInfo, GeneralLevelInfo& generalLevelInfo, ExitComponent* exitComp);
 
 
 		void CreatePickUpObject(GameObject* owner);

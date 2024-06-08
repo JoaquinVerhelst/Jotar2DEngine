@@ -53,6 +53,7 @@ void Jotar::CollisionManager::FixedUpdate()
             }
 
             if (pCollider == pOtherCollider) continue;
+            if (pOtherCollider->IsDisabled()) continue;
 
 
             if (pCollider->IsOverlapping(pOtherCollider->GetCollisionRect()))

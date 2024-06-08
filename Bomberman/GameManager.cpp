@@ -1,5 +1,4 @@
 #include "GameManager.h"
-#include "GameObject.h"
 #include "AIEvents.h"
 #include <iostream>
 
@@ -41,6 +40,16 @@ void Jotar::GameManager::AddPlayer(TransformComponent* ptr)
 std::vector<Jotar::TransformComponent*> Jotar::GameManager::GetPlayers() const
 {
     return m_Players;
+}
+
+void Jotar::GameManager::SetBalloomPlayer(GameObject* balloomPlayer)
+{
+    m_pBalloomPlayer = balloomPlayer;
+}
+
+Jotar::GameObject* Jotar::GameManager::GetBalloomPlayer()
+{
+    return m_pBalloomPlayer;
 }
 
 

@@ -18,7 +18,7 @@ namespace Jotar
 		void SetAmountOfEnemies(int totalEnemies);
 
 		void OnDestroy() override;
-
+		
 		void OnNotify(const AIDeathEvent& aiDeathEvent) override;
 		void OnNotify(const CollisionEvent& triggerEvent) override;
 		void RevealExit();

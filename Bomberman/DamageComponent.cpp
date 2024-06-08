@@ -28,10 +28,4 @@ void Jotar::DamageComponent::OnNotify(const CollisionEvent& triggerEvent)
             }
         }
     }
-
-    //else if (otherCollider->CompareTag("Bomb"))
-    //{
-    //    triggerEvent.GetOtherCollider()->GetOwner()->GetComponent<BombComponent>()->Explode();
-    //}
-
 }

@@ -20,6 +20,7 @@ void Jotar::ExitComponent::SetAmountOfEnemies(int totalEnemies)
 	m_EnemiesRemaining = totalEnemies;
 }
 
+
 void Jotar::ExitComponent::OnDestroy()
 {
 

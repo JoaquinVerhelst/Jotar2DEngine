@@ -11,6 +11,48 @@
                         "name2": " D",
                         "score1": 0,
                         "score2": 0
+                },
+                {
+                        "name1": "D",
+                        "name2": " ",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "DD",
+                        "name2": " DD",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "F",
+                        "name2": " F",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "D",
+                        "name2": " D",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "DAWD",
+                        "name2": " S",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "D",
+                        "name2": " W",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "RERER",
+                        "name2": " FEFE",
+                        "score1": 0,
+                        "score2": 0
                 }
         ],
         "singleplayer": [
@@ -48,6 +90,18 @@
                 },
                 {
                         "name": "E",
+                        "score": 0
+                },
+                {
+                        "name": "DDD",
+                        "score": 0
+                },
+                {
+                        "name": "DSS",
+                        "score": 0
+                },
+                {
+                        "name": "D",
                         "score": 0
                 }
         ]

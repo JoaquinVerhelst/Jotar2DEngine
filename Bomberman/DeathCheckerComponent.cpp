@@ -9,6 +9,22 @@ Jotar::DeathCheckerComponent::DeathCheckerComponent(GameObject* owner)
 }
 
 
+void Jotar::DeathCheckerComponent::Start()
+{
+	m_AmountOfDeathPlayers = 0;
+
+
+	auto players = GameManager::GetInstance().GetPlayers();
+	for (size_t i = 0; i < players.size(); i++)
+	{
+		if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
+		{
+			++m_AmountOfDeathPlayers;
+		}
+	}
+
+}
+
 void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 {
 	if (typeid(eventData) == typeid(OnPlayerDeathEvent))
@@ -23,14 +39,19 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 
 			for (size_t i = 0; i < players.size(); i++)
 			{
-				if (players[i]->GetOwner()->GetComponent< PlayerHealthComponent>()->GetHealth() < 0)
+				if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
 				{
 					++fullDeathPlayers;
 				}
 			}
 
 			if (fullDeathPlayers == players.size())
-				GameManager::GetInstance().LoadHighScoreMenu(true);
+			{
+				if (GameManager::GetInstance().GetGamemode() == GameMode::Versus)
+					GameManager::GetInstance().LoadMainMenu();
+				else
+					GameManager::GetInstance().LoadHighScoreMenu(true);
+			}
 			else
 				GameManager::GetInstance().LoadLevel(false);
 		}

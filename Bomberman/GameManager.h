@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include <vector>
 #include <string>
 #include <memory>
@@ -9,10 +7,10 @@
 #include "WorldGrid.h"
 #include "JsonLevelLoader.h"
 #include "GameState.h"
-#include "GameState.h"
 #include "Observer.h"
 #include "Event.h"
 #include "AIEvents.h"
+#include "GameObject.h"
 
 namespace Jotar
 {
@@ -38,6 +36,8 @@ namespace Jotar
 		void AddPlayer(TransformComponent* ptr);
 		std::vector<TransformComponent*> GetPlayers() const;
 
+		void SetBalloomPlayer(GameObject* balloomPlayer);
+		GameObject* GetBalloomPlayer(); 
 
 		void ResetAndInitializeWorldGrid(int rows, int columns, int size);
 
@@ -65,13 +65,17 @@ namespace Jotar
 		void ChangeState(GameState* newState);
 
 		std::vector<TransformComponent*> m_Players;
+
+		GameObject* m_pBalloomPlayer{ nullptr };
+
+
 		std::unique_ptr<WorldGrid> m_pWorldGrid;
 		GameMode m_GameMode{ GameMode::SinglePlayer };
 		JsonLevelLoader m_LevelLoader{};
 
-		int m_AmountOfLevelIDs;
-		int m_CurrentLevelID;
-		int m_CurrentTotalLevelsPlayed;
+		int m_AmountOfLevelIDs{};
+		int m_CurrentLevelID{};
+		int m_CurrentTotalLevelsPlayed{};
 
 		bool m_IsGameInit = false;
 		//STATE

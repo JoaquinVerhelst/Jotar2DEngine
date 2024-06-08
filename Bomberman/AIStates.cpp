@@ -327,6 +327,7 @@ void Jotar::OnDamageAIState::OnEnter()
 {
 	m_pAIBehaviorComp->GetAnimatorController()->SetDamageAnimation();
 	m_DeathTimer = 0;
+	m_pAIBehaviorComp->GetOwner()->GetChildAt(0)->GetComponent<ColliderComponent>()->SetIsDisabled(true);
 	m_pAIBehaviorComp->GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(true);
 
 }
@@ -339,18 +340,10 @@ Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
 
 	if (m_DeathTimer >= m_DeathWaitTime)
 	{
-		if (m_pAIBehaviorComp->GetOwner()->GetComponent<HealthComponent>()->GetHealth() <= 0)
-		{
-			m_IsDeath = true;
-			m_pAIBehaviorComp->GetAnimatorController()->SetDeathAnimation();
-			m_pAIBehaviorComp->GetAnimatorController()->SetDestroyOnLastFrame(true);
-			m_pAIBehaviorComp->GetSubject()->NotifyObservers(AIDeathEvent(m_Attacker));
-		}
-		else
-		{
-			m_pAIBehaviorComp->GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(false);
-			return m_pAIBehaviorComp->GetCalculateRandomPathState();
-		}
+		m_IsDeath = true;
+		m_pAIBehaviorComp->GetAnimatorController()->SetDeathAnimation();
+		m_pAIBehaviorComp->GetAnimatorController()->SetDestroyOnLastFrame(true);
+		m_pAIBehaviorComp->GetSubject()->NotifyObservers(AIDeathEvent(m_Attacker));
 	}
 
 	return nullptr;

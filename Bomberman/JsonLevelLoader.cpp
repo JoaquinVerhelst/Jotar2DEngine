@@ -34,7 +34,7 @@
 #include "InputManager.h"
 #include "Command.h"
 #include "MovementCommand.h"
-#include "PlaceBombCommand.h"
+#include "BombCommands.h"
 #include "MenuCommands.h"
 #include "Renderer.h"
 #include "PickUpComponent.h"
@@ -45,7 +45,7 @@
 #include "HighScoreMenuComponent.h"
 #include "HighScoreEntryComponent.h"
 #include "JsonHighScoreLoaderComponent.h"
-
+#include "BalloomPlayerHealthComponent.h"
 
 #include "Font.h"
 
@@ -220,54 +220,7 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
             RandomizeBreakableWalls(gridRows, gridColumns, scene, amount, spawnCells);
         }
 
-
-        // Set the players on the right position + cameras
-
-        auto players = GameManager::GetInstance().GetPlayers();
-        for (size_t i = 0; i < players.size(); i++)
-        {
-
-            if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
-            {
-                players[i]->SetPosition(-200, -200);
-                continue;
-            }
-            
-
-            //Position
-            const std::string playerPosIndexString = "playerPosIndex" + std::to_string(i);
-            glm::ivec2 playerPosIndex = { levelData[playerPosIndexString][0], levelData[playerPosIndexString][1] };
-            const auto& cell2 = worldGrid->GetGridCellByID(playerPosIndex);
-            players[i]->SetPosition(cell2.CenterCellPosition);
-
-
-            //Cameras
-            if (players.size() == 1)
-            {
-                glm::ivec4 camRect = { 0, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth };
-                glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
-
-                auto cameraObj = scene.CreateGameObject("Camera");
-                auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
-                scene.AddCamera(camera);
-                camera->SetTarget(players[i]);
-            }
-            else
-            {
-                glm::ivec4 camRect = { i * levelInfo.ScreenWidth / 2, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth / 2 };
-                glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
-
-                auto cameraObj = scene.CreateGameObject("Camera");
-                auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
-                scene.AddCamera(camera);
-                camera->SetTarget(players[i]);
-            }
-        }
-
-
-
-        // Exit
-
+        UpdateGameMode(scene, levelData, levelInfo);
 
         auto exit = scene.CreateGameObject("Exit Wall");
         auto collider = exit->AddComponent<ColliderComponent>(true);
@@ -286,23 +239,19 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
 
         PlaceGameObjectRandomly(exit, levelInfo, 8, true);
 
-
-
         // DeathCkecker
 
         auto deathCkeckerObj = scene.CreateGameObject("Death Ckecker");
         auto deatchCheckerComp = deathCkeckerObj->AddComponent<DeathCheckerComponent>();
 
-
+        auto players = GameManager::GetInstance().GetPlayers();
         for (auto& player : players)
         {
-          
             player->GetOwner()->GetComponent<PlayerHealthComponent>()->AddOnDeathObserver(deatchCheckerComp);
         }
 
-
         // Enemies
-        int totalEnemies = CreateEnemies(scene, levelData["enemyInfo"], levelInfo, exitComp);
+        int totalEnemies = CreateEnemies(scene, jsonData["gameInfo"]["enemyInfo"], levelData["enemyInfo"], levelInfo, exitComp);
         exitComp->SetAmountOfEnemies(totalEnemies);
 
         return true;
@@ -395,7 +344,7 @@ bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene, bool isSavingSc
         auto entryObj = scene.CreateGameObject("HighScore Menu", false);
         entryObj->AddComponent<HighScoreEntryComponent>(menuComponent);
         entryObj->AddComponent<TextComponent>("", scoreFont);
-        entryObj->AddComponent<HUDComponent>();
+        entryObj->AddComponent<HUDComponent>(HUDPosition::CenterDown, glm::vec2{-50, -100});
     }
 
     return true;
@@ -483,9 +432,6 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
         fpsCounter->AddComponent<Jotar::FPSComponent>();
 
 
-
-
-
         // Time Left
         auto TimeLeftObj = HUD->CreateChildGameObject("TimeLeft", true, false);
         textComp = TimeLeftObj->AddComponent<TextComponent>("TimeLeft: ", bombermanFont);
@@ -499,9 +445,6 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
         gameManager.AddPlayer(player0Obj->GetTransform());
 
 
-
-
-
         // gameMode
         if (gameManager.GetGamemode() == GameMode::Coop)
         {
@@ -513,7 +456,11 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
         }
         else if (gameManager.GetGamemode() == GameMode::Versus)
         {
+            // player 1
+            auto balloomPlayer = CreateBalloomPlayer(scene, gameInfo, HUD, bombermanFont, levelInfo.CellSize, 1);
+            balloomPlayer->SetDestroyOnLoad(false);
 
+            gameManager.SetBalloomPlayer(balloomPlayer.get());
         }
 
 
@@ -605,6 +552,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
     input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadRight }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
     input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::DPadLeft }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ -1, 0 }));
     input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::ButtonB , InputType::Up }, std::make_unique<PlaceBombCommand>(placeBombComp));
+    input.AddControllerBinding(ControllerKey{ playerIndex, Jotar::ControllerButton::ButtonA , InputType::Up }, std::make_unique<DetonateBombCommand>(placeBombComp));
 
 
     const auto& keyboardKeys = playerInfo["keyboardKeys"][playerString];
@@ -614,7 +562,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
     input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["right"] }, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{ 1, 0 }));
     input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["left"]}, std::make_unique<MovementCommand>(movementCompPlayer, glm::vec2{-1, 0}));
     input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["placeBomb"] , InputType::Up}, std::make_unique<PlaceBombCommand>(placeBombComp));
-
+    input.AddPlayerKeyBinding(KeyboardKey{ keyboardKeys["detonateBomb"] , InputType::Up }, std::make_unique<DetonateBombCommand>(placeBombComp));
 
     return playerObj;
 }
@@ -623,51 +571,51 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBalloomPlayer(S
 {
 
     const auto& playerInfo = gameInfo["playerInfo"];
-    const auto& UIInfo = gameInfo["UI"];
 
+    const auto& baloomInfo = gameInfo["enemyInfo"]["balloom"];
     // Player Text
 
-    std::string playerString = "Balloom Player" + std::to_string(playerIndex);
-
-    auto playerTextObj = HUD->CreateChildGameObject("PlayerText", true, false);
-    auto textComp = playerTextObj->AddComponent<TextComponent>(playerString + " : ", font);
-    textComp->SetLayer(11);
-    std::string playerbarPos = "playerInfoBarOffset" + std::to_string(playerIndex);
-    glm::vec2 textPos = { UIInfo[playerbarPos][0],  UIInfo[playerbarPos][1] };
-
-    playerTextObj->AddComponent<HUDComponent>(HUDPosition::CenterUp, textPos);
-
-    // Player Lives Display
-
-    auto playerHealthDisplayObj = playerTextObj->CreateChildGameObject("PlayerHealthDisplay" + std::to_string(playerIndex), false, false);
-    textComp = playerHealthDisplayObj->AddComponent<TextComponent>("Lives: ", font);
-    textComp->SetLayer(11);
-    auto playerHealthDisplay = playerHealthDisplayObj->AddComponent<HealthDisplayComponent>();
-
-    int xPos = playerTextObj->GetTransform()->GetSize().x + UIInfo["spacing"];
-
-    playerHealthDisplayObj->GetTransform()->Translate({ xPos, 0 });
-
-
+    std::string playerString = "player" + std::to_string(playerIndex);
 
     // Baloom Player OBJ
 
     auto playerObj = scene.CreateGameObject("BalloomPlayer" + std::to_string(playerIndex));
     playerObj->GetTransform()->SetSize({ cellSize,cellSize });
 
-    auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"]["playerSprite"]);
+    auto textureComp = playerObj->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Balloom"), 0 ,0);
+    textureComp->SetIsStatic(true);
     textureComp->SetLayer(10);
 
 
-    auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(playerInfo["speed"], cellSize);
+    auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(baloomInfo["speed"], cellSize);
 
-    auto healthCompPlayer = playerObj->AddComponent<HealthComponent>(playerInfo["health"]);
-    healthCompPlayer->AddObserver(playerHealthDisplay);
+    auto healthComp = playerObj->AddComponent<BalloomPlayerHealthComponent>(/*playerInfo["health"]*/ 0, 2.f);
 
-    auto colliderComp = playerObj->AddComponent<ColliderComponent>(false);
-    colliderComp->SetSize({ cellSize * 4 / 5, cellSize * 4 / 5 });
-    colliderComp->SetTag("Player");
+
+
+
+    auto colliderComp = playerObj->AddComponent<ColliderComponent>(false, false);
+    colliderComp->SetTag("Enemy");
     colliderComp->AddIgnoreCollisionTag("Enemy");
+    colliderComp->AddIgnoreCollisionTag("Player");
+    colliderComp->SetSize({ cellSize * 4 / 5, cellSize * 4 / 5 });
+
+
+    auto scoreComp = playerObj->AddComponent<AIScoreComponent>(1000);
+    healthComp->AddOnDeathObserver(scoreComp);
+
+
+    auto damageCollObj = playerObj->CreateChildGameObject("EnemyTriggerCollider", false, false);
+
+    std::vector<std::string> enemyTags = { "Player" };
+
+    auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTags);
+    auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
+    damageCollComp->SetSize({ cellSize * 4 / 5, cellSize * 4 / 5 });
+    damageCollComp->AddObserver(damageComp);
+    damageCollComp->SetTag("Enemy");
+
+
 
     auto& input = InputManager::GetInstance();
 
@@ -686,7 +634,74 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBalloomPlayer(S
     return playerObj;
 }
 
-int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& EnemyInfo, GeneralLevelInfo& levelInfo, ExitComponent* exitComp)
+void Jotar::JsonLevelLoader::SetUpCamera(Scene& scene, glm::ivec4 camRect, glm::ivec4 levelBounds, TransformComponent* target)
+{                                 
+    auto cameraObj = scene.CreateGameObject("Camera");
+    auto camera = cameraObj->AddComponent<CameraComponent>(camRect, levelBounds);
+    scene.AddCamera(camera);
+    camera->SetTarget(target);
+}
+
+void Jotar::JsonLevelLoader::UpdateGameMode(Scene& scene, const nlohmann::json& levelData, GeneralLevelInfo& levelInfo)
+{
+
+
+    auto& gameManager = GameManager::GetInstance();
+    auto* worldGrid = gameManager.GetWorldGrid();
+
+
+    glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
+    // Set the players on the right position + cameras
+
+    auto players = gameManager.GetPlayers();
+
+
+
+    if (gameManager.GetGamemode() == GameMode::SinglePlayer)
+    {
+        PlacePlayer(worldGrid, levelData, 0, players[0]);
+        glm::ivec4 camRect = { 0, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth };
+        SetUpCamera(scene, camRect, levelBounds, players[0]);
+    }
+    else if (gameManager.GetGamemode() == GameMode::Coop)
+    {
+        for (int i = 0; i < players.size(); i++)
+        {
+            if (players[i]->GetOwner()->GetComponent<HealthComponent>()->GetHealth() < 0)
+                players[i]->SetPosition(-200, -200);
+            else
+                PlacePlayer(worldGrid, levelData, i, players[i]);
+            
+
+            glm::ivec4 camRect = { i * levelInfo.ScreenWidth / 2, 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth / 2 };
+
+            SetUpCamera(scene, camRect, levelBounds, players[i]);
+        }
+    }
+    else if (gameManager.GetGamemode() == GameMode::Versus)
+    {
+
+        PlacePlayer(worldGrid, levelData, 0, players[0]);
+        glm::ivec4 camRect = { 0 , 0, levelInfo.ScreenHeight, levelInfo.ScreenWidth / 2 };
+        SetUpCamera(scene, camRect, levelBounds, players[0]);
+
+
+        PlaceGameObjectRandomly(gameManager.GetBalloomPlayer()->shared_from_this(), levelInfo, 15, false);
+        camRect.x = levelInfo.ScreenWidth / 2;
+        SetUpCamera(scene, camRect, levelBounds, gameManager.GetBalloomPlayer()->GetTransform());
+    }
+}
+
+void Jotar::JsonLevelLoader::PlacePlayer(WorldGrid* worldGrid, const nlohmann::json& levelData, int playerIndex, TransformComponent* player)
+{
+    const std::string playerPosIndexString = "playerPosIndex" + std::to_string(playerIndex);
+    glm::ivec2 playerPosIndex = { levelData[playerPosIndexString][0], levelData[playerPosIndexString][1] };
+    const auto& cell2 = worldGrid->GetGridCellByID(playerPosIndex);
+    player->SetPosition(cell2.CenterCellPosition);
+}
+
+
+int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& enemyInfo, const nlohmann::json& levelEnemyInfo, GeneralLevelInfo& generalLevelInfo, ExitComponent* exitComp)
 {
 
     std::vector <std::string> enemyTarget = { "Player" };
@@ -694,61 +709,65 @@ int Jotar::JsonLevelLoader::CreateEnemies(Scene& scene, const nlohmann::json& En
     std::string enemyTag = "Enemy";
     int totalEnemies{};
 
-    for (const auto& enemyTypeInfo : EnemyInfo.items())
+
+    for (const auto& enemyLevelTypeInfo : levelEnemyInfo.items())
     {
-        const auto& enemyData = enemyTypeInfo.value();
-        const auto& amount = enemyData["amount"];
+        const std::string& enemyName = enemyLevelTypeInfo.key();
+        const auto& enemyLevelData = enemyLevelTypeInfo.value();
 
-        for (size_t j = 0; j < amount; ++j)
+        if (enemyInfo.contains(enemyName))
         {
-            auto enemy = scene.CreateGameObject(enemyTag);
+            const auto& enemyData = enemyInfo.at(enemyName);
+            int amount = enemyLevelData.at("amount");
 
-            enemy->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet(enemyData["spriteSheetName"]), 0, 0);
-            enemy->AddComponent<MovementComponent>(enemyData["speed"], levelInfo.CellSize);
-            auto behavior = enemy->AddComponent<AIBehaviorComponent>();
-
-            if (enemyData["intelligence"]["level"] == 1)
+            for (int j = 0; j < amount; ++j)
             {
-                auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget[0]);
-                perception->AddObserver(behavior);
+                auto enemy = scene.CreateGameObject(enemyTag);
 
-                auto players = GameManager::GetInstance().GetPlayers();
-                for (auto& player : players)
+                enemy->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet(enemyData["spriteSheetName"]), 0, 0);
+                enemy->AddComponent<MovementComponent>(enemyData["speed"], generalLevelInfo.CellSize);
+                auto behavior = enemy->AddComponent<AIBehaviorComponent>();
+
+                if (enemyData["intelligence"]["level"] == 1)
                 {
-                    player->GetOwner()->GetComponent<PlayerHealthComponent>()->AddOnDeathObserver(behavior);
+                    auto perception = enemy->AddComponent<AIPerceptionComponent>(enemyData["intelligence"]["viewDistance"], enemyTarget[0]);
+                    perception->AddObserver(behavior);
+
+                    auto players = GameManager::GetInstance().GetPlayers();
+                    for (auto& player : players)
+                    {
+                        player->GetOwner()->GetComponent<PlayerHealthComponent>()->AddOnDeathObserver(behavior);
+                    }
                 }
+
+                enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
+                auto healthComp = enemy->AddComponent<HealthComponent>(1);
+                healthComp->AddObserver(behavior);
+
+                auto collEnemy = enemy->AddComponent<ColliderComponent>(false, false);
+                collEnemy->SetTag(enemyTag);
+                collEnemy->AddIgnoreCollisionTag(enemyTag);
+                collEnemy->AddIgnoreCollisionTag("Player");
+                collEnemy->SetSize({ generalLevelInfo.CellSize * 4 / 5, generalLevelInfo.CellSize * 4 / 5 });
+
+                auto scoreComp = enemy->AddComponent<AIScoreComponent>(enemyData["points"]);
+                behavior->AddObserver(scoreComp);
+
+
+                auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false, false);
+                auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
+                auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
+                damageCollComp->SetSize({ generalLevelInfo.CellSize * 4 / 5, generalLevelInfo.CellSize * 4 / 5 });
+                damageCollComp->AddObserver(damageComp);
+                damageCollComp->SetTag(enemyTag);
+
+                behavior->AddObserver(exitComp);
+
+                PlaceGameObjectRandomly(enemy, generalLevelInfo);
+
+                ++totalEnemies;
             }
- 
-            enemy->AddComponent<AIAnimationControllerComponent>(animationInfo);
-            auto healthComp = enemy->AddComponent<HealthComponent>(1);
-            healthComp->AddObserver(behavior);
-
-            auto collEnemy = enemy->AddComponent<ColliderComponent>(false, false);
-            collEnemy->SetTag(enemyTag);
-            collEnemy->AddIgnoreCollisionTag(enemyTag);
-            collEnemy->AddIgnoreCollisionTag("Player");
-            collEnemy->SetSize({ levelInfo.CellSize * 4 / 5, levelInfo.CellSize * 4 / 5 });
-
-            auto scoreComp = enemy->AddComponent<AIScoreComponent>(enemyData["points"]);
-            behavior->AddObserver(scoreComp);
-
-
-            auto damageCollObj = enemy->CreateChildGameObject("EnemyTriggerCollider", false, false);
-            auto damageComp = damageCollObj->AddComponent<DamageComponent>(1, enemyTarget);
-            auto damageCollComp = damageCollObj->AddComponent<ColliderComponent>(false, true);
-            damageCollComp->SetSize({ levelInfo.CellSize * 4/5, levelInfo.CellSize * 4 / 5 });
-            damageCollComp->AddObserver(damageComp);
-            damageCollComp->SetTag(enemyTag);
-
-            behavior->AddObserver(exitComp);
-
-
-
-
-
-            PlaceGameObjectRandomly(enemy, levelInfo);
-
-            ++totalEnemies;
+            
         }
     }
 

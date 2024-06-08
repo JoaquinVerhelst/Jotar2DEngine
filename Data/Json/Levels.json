@@ -90,7 +90,7 @@
 		"generalInput": {
 			"mute": 109,
 			"skipLevel": 1073741882,
-			"mainMenu" : 27,
+			"mainMenu": 27,
 
 			"increaseMusicVolume": 93,
 			"decreaseMusicVolume": 91,
@@ -122,14 +122,16 @@
 					"backward": 115,
 					"left": 97,
 					"right": 100,
-					"placeBomb": 101
+					"placeBomb": 101,
+					"detonateBomb": 113
 				},
 				"player1": {
 					"forward": 1073741906,
 					"backward": 1073741905,
 					"left": 1073741904,
 					"right": 1073741903,
-					"placeBomb": 108
+					"placeBomb": 108,
+					"detonateBomb": 107
 				}
 			}
 		},
@@ -138,6 +140,45 @@
 			"sprites": {
 				"enemySprite": "../Data/Sprites/Enemy.png"
 			}
+		},
+		"enemyInfo": {
+			"balloom": {
+				"spriteSheetName": "Balloom",
+				"speed": 60,
+				"intelligence": {
+					"level": 0,
+					"viewDistance": 200
+				},
+				"points": 100
+			},
+			"oneal": {
+				"spriteSheetName": "Oneal",
+				"speed": 120,
+				"intelligence": {
+					"level": 1,
+					"viewDistance": 200
+				},
+				"points": 200
+			},
+			"doll": {
+				"spriteSheetName": "Doll",
+				"speed": 120,
+				"intelligence": {
+					"level": 0,
+					"viewDistance": 400
+				},
+				"points": 200
+			},
+			"minvo": {
+				"spriteSheetName": "Minvo",
+				"speed": 120,
+				"intelligence": {
+					"level": 1,
+					"viewDistance": 200
+				},
+				"points": 800
+			}
+
 		},
 		"gameScenes": {
 			"mainMenu": {},
@@ -169,17 +210,8 @@
 					},
 					"enemyInfo": {
 						"balloom": {
-							"amount": 1,
-							"spriteSheetName": "Balloom",
-							"speed": 60,
-							"intelligence": {
-								"level": 0,
-								"viewDistance": 200
-							},
-							"points": 100
+							"amount": 1
 						}
-
-
 					}
 				},
 				"level2": {
@@ -209,24 +241,10 @@
 					},
 					"enemyInfo": {
 						"balloom": {
-							"amount": 4,
-							"spriteSheetName": "Balloom",
-							"speed": 60,
-							"intelligence": {
-								"level": 0,
-								"viewDistance": 200
-							},
-							"points": 100
+							"amount": 4
 						},
 						"oneal": {
-							"amount": 4,
-							"spriteSheetName": "Oneal",
-							"speed": 120,
-							"intelligence": {
-								"level": 1,
-								"viewDistance": 200
-							},
-							"points": 200
+							"amount": 4
 						}
 					}
 				},
@@ -257,48 +275,19 @@
 					},
 					"enemyInfo": {
 						"balloom": {
-							"amount": 2,
-							"spriteSheetName": "Balloom",
-							"speed": 60,
-							"intelligence": {
-								"level": 0,
-								"viewDistance": 200
-							},
-							"points": 100
+							"amount": 2
 						},
 						"oneal": {
-							"amount": 2,
-							"spriteSheetName": "Oneal",
-							"speed": 120,
-							"intelligence": {
-								"level": 1,
-								"viewDistance": 200
-							},
-							"points": 200
+							"amount": 2
 						},
 						"doll": {
-							"amount": 3,
-							"spriteSheetName": "Doll",
-							"speed": 120,
-							"intelligence": {
-								"level": 0,
-								"viewDistance": 400
-							},
-							"points": 200
+							"amount": 3
 						},
 						"minvo": {
-							"amount": 2,
-							"spriteSheetName": "Minvo",
-							"speed": 120,
-							"intelligence": {
-								"level": 1,
-								"viewDistance": 200
-							},
-							"points": 800
+							"amount": 2
 						}
 					}
 				}
-
 			}
 		}
 	}

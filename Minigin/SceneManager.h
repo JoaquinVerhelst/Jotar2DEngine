@@ -31,7 +31,7 @@ namespace Jotar
 
 		void DestroyScene(Scene& scene);
 
-
+		const std::string& GetCurrentSceneName();
 		int GetCurrentSceneID();
 
 	private:

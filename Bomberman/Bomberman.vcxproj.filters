@@ -68,7 +68,7 @@
     <ClCompile Include="EventAddScore.cpp">
       <Filter>GameFIles\Event</Filter>
     </ClCompile>
-    <ClCompile Include="PlaceBombCommand.cpp">
+    <ClCompile Include="BombCommands.cpp">
       <Filter>GameFIles\Commands</Filter>
     </ClCompile>
     <ClCompile Include="Bomberman.cpp">
@@ -131,6 +131,9 @@
     <ClCompile Include="MenuCommands.cpp">
       <Filter>GameFIles\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="BalloomPlayerHealthComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BombComponent.h">
@@ -172,7 +175,7 @@
     <ClInclude Include="HealthEvents.h">
       <Filter>GameFIles\Event</Filter>
     </ClInclude>
-    <ClInclude Include="PlaceBombCommand.h">
+    <ClInclude Include="BombCommands.h">
       <Filter>GameFIles\Commands</Filter>
     </ClInclude>
     <ClInclude Include="ExplosionEvent.h">
@@ -240,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="MenuCommands.h">
       <Filter>GameFIles\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="BalloomPlayerHealthComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
