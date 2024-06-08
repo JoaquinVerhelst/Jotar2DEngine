@@ -26,10 +26,16 @@ void Jotar::HighScoreMenuComponent::Start()
 
 void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 {
-	for (size_t i = 0; i < m_ScoreTextObjects.size(); i++)
+
+	auto children = GetOwner()->GetChildren();
+
+	for (size_t i = 0; i < children.size(); i++)
 	{
-		m_ScoreTextObjects[i]->Destroy();
+		children[i]->Destroy();
 	}
+
+	GetOwner()->CheckDestoryChildren();
+
 
 	auto highScoreCoop = m_pJsonHighScoreLoader->LoadHighscoresForCoop();
 	auto highScoreSinglePlayer = m_pJsonHighScoreLoader->LoadHighscoresForSinglePlayer();
@@ -51,33 +57,34 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 
 	for (size_t i = 0; i < highScoreSinglePlayer.size(); ++i)
 	{
-		auto go = GetOwner()->CreateChildGameObject("SinglePlayer ScoreText" + std::to_string(i), false, false);
-
 		std::string scoreText = std::to_string(highScoreSinglePlayer[i].score1) + "             " + highScoreSinglePlayer[i].name1;
-
-		go->AddComponent<HUDComponent>();
-
-		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
-		go->GetTransform()->Translate({ -m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i});
-
-		m_ScoreTextObjects.emplace_back(go.get());
+		glm::vec2 pos{ -m_WindowSize.x / 4.f,  -100.f + offset * i};
+		CreateScoreTextGameObject("Singleplayer", scoreText, pos);
 	}
 
 	for (size_t i = 0; i < highScoreCoop.size(); ++i)
 	{
-		auto go = GetOwner()->CreateChildGameObject("Coop ScoreText" + std::to_string(i), false, false);
-
 		std::string scoreText = std::to_string(highScoreCoop[i].score1) + ": " + highScoreCoop[i].name1 + "        "
 			+ std::to_string(highScoreCoop[i].score2) + ": " + highScoreCoop[i].name2;
 
-
-		go->AddComponent<HUDComponent>();
-
-		auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
-		go->GetTransform()->Translate({ m_WindowSize.x / 4.f - textComp->GetSize().x / 2,  -100.f + offset * i });
-
-		m_ScoreTextObjects.emplace_back(go.get());
+		glm::vec2 pos{ m_WindowSize.x / 4.f,  -100.f + offset * i };
+		CreateScoreTextGameObject("Coop", scoreText, pos);
 	}
+}
+
+Jotar::JsonHighScoreLoaderComponent* Jotar::HighScoreMenuComponent::GetHighScoreLoader() const
+{
+	return m_pJsonHighScoreLoader;
+}
+
+void Jotar::HighScoreMenuComponent::CreateScoreTextGameObject(std::string gameMode, std::string scoreText, glm::vec2 position)
+{
+	auto go = GetOwner()->CreateChildGameObject(gameMode + "coreText", false, false);
+	go->AddComponent<HUDComponent>();
+	auto textComp = go->AddComponent<TextComponent>(scoreText, m_Font);
+	go->GetTransform()->Translate({ position.x - textComp->GetSize().x / 2.f, position.y });
+	go->Start();
+
 }
 
 

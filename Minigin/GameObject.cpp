@@ -14,6 +14,7 @@ Jotar::GameObject::GameObject(Scene* pScene, const std::string& name, bool isMov
 	, m_pParent{nullptr}
 	, m_pChildren{}
 	, m_DestroyOnLoad{ true }
+	, m_pChildrenToDestroy{}
 {
 	m_pTransform = AddComponent<TransformComponent>(isMovingWithCamera);
 }
@@ -141,16 +142,20 @@ void Jotar::GameObject::CheckDestoryChildren()
 	{
 		if (pChild->IsDestroyed())
 		{
-			pChild->SetParent(nullptr, false);
-			//pChild->Destroy();
-
+			pChild->OnDestroy();
+			m_pChildrenToDestroy.push_back(pChild);
 		}
 		else
 		{
 			pChild->CheckDestoryChildren();
 		}
-
 	}
+
+	for (const auto& pChild : m_pChildrenToDestroy)
+	{
+		m_pChildren.erase(std::remove(m_pChildren.begin(), m_pChildren.end(), pChild), m_pChildren.end());
+	}
+	m_pChildrenToDestroy.clear();
 }
 
 
@@ -177,14 +182,17 @@ void Jotar::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 			return;
 	}
 
+
 	if (m_pParent)
 	{
+		GetTransform()->UpdateWorldPosition();
+
 		GetTransform()->SetPosition(GetTransform()->GetWorldPosition());
 
 		m_pParent->RemoveChild(shared_from_this());
 	}
 
-	GetTransform()->UpdateWorldPosition();
+
 
 
 	m_pParent = newParent;
@@ -197,7 +205,7 @@ void Jotar::GameObject::SetParent(GameObject* newParent, bool keepWorldPosition)
 
 	if (newParent == nullptr)
 	{
-		GetTransform()->SetPosition(GetTransform()->GetWorldPosition());
+		//GetTransform()->SetPosition(GetTransform()->GetWorldPosition());
 		m_pScene->Add(shared_from_this());
 	}
 	else

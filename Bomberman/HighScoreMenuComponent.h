@@ -22,6 +22,7 @@ namespace Jotar
 		void Start() override;
 
 		void UpdateHighScoreList();
+		JsonHighScoreLoaderComponent* GetHighScoreLoader() const;
 
 		HighScoreMenuComponent(const HighScoreMenuComponent& other) = delete;
 		HighScoreMenuComponent(HighScoreMenuComponent&& other) = delete;
@@ -30,6 +31,7 @@ namespace Jotar
 
 	private:
 
+		void CreateScoreTextGameObject(std::string gameMode, std::string scoreText, glm::vec2 position);
 
 		JsonHighScoreLoaderComponent* m_pJsonHighScoreLoader;
 

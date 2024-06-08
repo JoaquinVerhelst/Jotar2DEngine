@@ -1,150 +1,54 @@
 {
-    "coop": [
-        {
-            "name1": " ALEJ",
-            "name2": " JOAQ",
-            "score1": 1250,
-            "score2": 1325
-        },
-        {
-            "name1": " DAM",
-            "name2": " TEA",
-            "score1": 1250,
-            "score2": 1525
-        },
-        {
-            "name1": "TESTONE",
-            "name2": " TESTTWO",
-            "score1": 0,
-            "score2": 0
-        },
-        {
-            "name1": "PLAYO",
-            "name2": " PLAYT",
-            "score1": 0,
-            "score2": 0
-        }
-    ],
-    "singleplayer": [
-        {
-            "name": " JOEEDSLKKKKJJJJ",
-            "score": 0
-        },
-        {
-            "name": " SSSSSS",
-            "score": 50
-        },
-        {
-            "name": " MANP",
-            "score": 0
-        },
-        {
-            "name": " WHATT",
-            "score": 0
-        },
-        {
-            "name": "BOB",
-            "score": 650
-        },
-        {
-            "name": "SDSDSSDDDDD",
-            "score": 0
-        },
-        {
-            "name": "DDDDDDDDD",
-            "score": 0
-        },
-        {
-            "name": "IMI",
-            "score": 0
-        },
-        {
-            "name": "DDSDS",
-            "score": 0
-        },
-        {
-            "name": "TEST",
-            "score": 0
-        },
-        {
-            "name": "FDFD",
-            "score": 0
-        },
-        {
-            "name": "TEST",
-            "score": 0
-        },
-        {
-            "name": "HUH",
-            "score": 0
-        },
-        {
-            "name": "HUH",
-            "score": 0
-        },
-        {
-            "name": "SUICIDE",
-            "score": 0
-        },
-        {
-            "name": "LOL",
-            "score": 0
-        },
-        {
-            "name": "LOL",
-            "score": 0
-        },
-        {
-            "name": "LOL",
-            "score": 0
-        },
-        {
-            "name": "LOL",
-            "score": 0
-        },
-        {
-            "name": "LOL",
-            "score": 0
-        },
-        {
-            "name": "SMOKINGDADO",
-            "score": 0
-        },
-        {
-            "name": "SMOKINGDADO",
-            "score": 0
-        },
-        {
-            "name": "TEST",
-            "score": 0
-        },
-        {
-            "name": "BRUH",
-            "score": 0
-        },
-        {
-            "name": "TEST",
-            "score": 0
-        },
-        {
-            "name": "TEST",
-            "score": 0
-        },
-        {
-            "name": "EET",
-            "score": 0
-        },
-        {
-            "name": "TGTG",
-            "score": 0
-        },
-        {
-            "name": "YOUSUCK",
-            "score": 0
-        },
-        {
-            "name": "POPE",
-            "score": 0
-        }
-    ]
+        "coop": [
+                {
+                        "name1": "POP",
+                        "name2": " KOP",
+                        "score1": 0,
+                        "score2": 0
+                },
+                {
+                        "name1": "D",
+                        "name2": " D",
+                        "score1": 0,
+                        "score2": 0
+                }
+        ],
+        "singleplayer": [
+                {
+                        "name": "E",
+                        "score": 0
+                },
+                {
+                        "name": "E",
+                        "score": 0
+                },
+                {
+                        "name": "D",
+                        "score": 0
+                },
+                {
+                        "name": "DD",
+                        "score": 0
+                },
+                {
+                        "name": "TOT",
+                        "score": 0
+                },
+                {
+                        "name": "POP",
+                        "score": 0
+                },
+                {
+                        "name": "OP",
+                        "score": 0
+                },
+                {
+                        "name": "LOL",
+                        "score": 0
+                },
+                {
+                        "name": "E",
+                        "score": 0
+                }
+        ]
 }

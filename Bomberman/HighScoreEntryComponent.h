@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <string>
-#include "JsonHighScoreLoaderComponent.h"
+#include "HighScoreMenuComponent.h"
 
 
 
@@ -13,7 +13,7 @@ namespace Jotar
 	class HighScoreEntryComponent : public Component
 	{
 	public:
-		HighScoreEntryComponent(GameObject* owner, JsonHighScoreLoaderComponent* jsonHighScorLoader, int maxNameLemgth = 10);
+		HighScoreEntryComponent(GameObject* owner, HighScoreMenuComponent* highScoreMenuComp, int maxNameLemgth = 10);
 		~HighScoreEntryComponent() = default;
 
 		void Update() override;
@@ -34,7 +34,7 @@ namespace Jotar
 
 		void CheckInput();
 
-		JsonHighScoreLoaderComponent* m_pHighScoreLoader;
+		HighScoreMenuComponent* m_pHighScoreMenuComponent;
 		HighscoreInfo m_HighscoreEntry;
 		std::string m_NameText;
 		std::string m_DisplayText;

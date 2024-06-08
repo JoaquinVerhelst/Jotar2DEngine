@@ -6,15 +6,14 @@
 #include "ScoreComponent.h"
 #include "TransformComponent.h"
 
-#include "HighScoreMenuComponent.h"
 
-Jotar::HighScoreEntryComponent::HighScoreEntryComponent(GameObject* owner, JsonHighScoreLoaderComponent* jsonHighScorLoader, int maxNameLemgth)
+Jotar::HighScoreEntryComponent::HighScoreEntryComponent(GameObject* owner, HighScoreMenuComponent* jsonHighScorLoader, int maxNameLemgth)
 	:Component(owner)
 	, m_NameText{}
 	, m_DisplayText{}
 	, m_PlayersSaved{}
 	, m_pTextComponent{}
-	, m_pHighScoreLoader{ jsonHighScorLoader }
+	, m_pHighScoreMenuComponent{ jsonHighScorLoader }
 	, m_MaxNameLength{ maxNameLemgth}
 {
 
@@ -71,11 +70,14 @@ void Jotar::HighScoreEntryComponent::UploadHighScoreToJson(bool isCoop)
 	if (isCoop)
 	{
 		m_HighscoreEntry.score2 = players[1]->GetOwner()->GetComponent<ScoreComponent>()->GetScore();
-		m_pHighScoreLoader->SaveHighscoresToCoop(m_HighscoreEntry);
-		return;
+		m_pHighScoreMenuComponent->GetHighScoreLoader()->SaveHighscoresToCoop(m_HighscoreEntry);
+	}
+	else
+	{
+		m_pHighScoreMenuComponent->GetHighScoreLoader()->SaveHighscoresToSinglePlayer(m_HighscoreEntry);
 	}
 
-	m_pHighScoreLoader->SaveHighscoresToSinglePlayer(m_HighscoreEntry);
+	m_pHighScoreMenuComponent->UpdateHighScoreList();
 	GetOwner()->Destroy();
 }
 

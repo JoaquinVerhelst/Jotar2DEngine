@@ -112,10 +112,6 @@ void Jotar::Scene::FixedUpdate()
 	{
 		m_pObjects[i]->FixedUpdate();
 	}	
-	
-	
-
-
 }
 
 void Jotar::Scene::LateUpdate()
@@ -175,19 +171,25 @@ void Jotar::Scene::RemoveGameObjectFromRoot(GameObject* object)
 
 void Jotar::Scene::CleanUpDestroyedObjects()
 {
-	for (size_t i = 0; i < m_pObjects.size(); i++)
-	{
-		if (m_pObjects[i]->IsDestroyed())
-		{
-			m_pObjects[i]->OnDestroy();
-			Remove(m_pObjects[i]);
-		}
-		else
-		{
-			m_pObjects[i]->CheckDestoryChildren();
-		}
+    for (size_t i = 0; i < m_pObjects.size(); ++i)
+    {
+        if (m_pObjects[i]->IsDestroyed())
+        {
+            m_pObjects[i]->OnDestroy();
+			m_pObjectsToRemove.push_back(m_pObjects[i]);
+        }
+        else
+        {
+            m_pObjects[i]->CheckDestoryChildren();
+        }
+    }
 
-	}
+    for (const auto& pObject : m_pObjectsToRemove)
+    {
+        Remove(pObject);
+    }
+
+	m_pObjectsToRemove.clear();
 }
 
 CollisionManager& Jotar::Scene::GetCollisionManager()

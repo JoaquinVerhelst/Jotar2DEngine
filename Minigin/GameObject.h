@@ -92,6 +92,7 @@ namespace Jotar
 		Scene* m_pScene{};
 
 		std::vector<std::shared_ptr<GameObject>> m_pChildren;
+		std::vector<std::shared_ptr<GameObject>> m_pChildrenToDestroy;
 		GameObject* m_pParent;
 	};
 

@@ -64,6 +64,8 @@ namespace Jotar
 		std::string m_Name;
 		CollisionManager m_CollisionManager;
 		std::vector<std::shared_ptr<GameObject>> m_pObjects{};
+		std::vector<std::shared_ptr<GameObject>> m_pObjectsToRemove{};
+
 
 		std::vector<CameraComponent*> m_pCameras;
 		bool m_IsSceneDestroyed;
