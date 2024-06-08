@@ -13,7 +13,7 @@ namespace Jotar
 	class HighScoreEntryComponent : public Component
 	{
 	public:
-		HighScoreEntryComponent(GameObject* owner);
+		HighScoreEntryComponent(GameObject* owner, JsonHighScoreLoaderComponent* jsonHighScorLoader, int maxNameLemgth = 10);
 		~HighScoreEntryComponent() = default;
 
 		void Update() override;
@@ -34,10 +34,12 @@ namespace Jotar
 
 		void CheckInput();
 
+		JsonHighScoreLoaderComponent* m_pHighScoreLoader;
 		HighscoreInfo m_HighscoreEntry;
 		std::string m_NameText;
 		std::string m_DisplayText;
 		TextComponent* m_pTextComponent;
 		int m_PlayersSaved;
+		int m_MaxNameLength;
 	};
 }

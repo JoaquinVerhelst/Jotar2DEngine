@@ -8,12 +8,14 @@
 
 #include "HighScoreMenuComponent.h"
 
-Jotar::HighScoreEntryComponent::HighScoreEntryComponent(GameObject* owner)
+Jotar::HighScoreEntryComponent::HighScoreEntryComponent(GameObject* owner, JsonHighScoreLoaderComponent* jsonHighScorLoader, int maxNameLemgth)
 	:Component(owner)
 	, m_NameText{}
 	, m_DisplayText{}
 	, m_PlayersSaved{}
 	, m_pTextComponent{}
+	, m_pHighScoreLoader{ jsonHighScorLoader }
+	, m_MaxNameLength{ maxNameLemgth}
 {
 
 }
@@ -39,22 +41,25 @@ void Jotar::HighScoreEntryComponent::CheckInput()
 
 	if (!text.empty())
 	{
-		if (m_NameText.length() <= 5)
+		if (m_NameText.length() <= m_MaxNameLength)
 		{
 			m_NameText += text;
 			m_pTextComponent->SetText(m_DisplayText + m_NameText);
 		}
-		else if (input.IsKeyUp(KeyboardButton::Key_Return))
-			SaveName();
-		else if (input.IsKeyUp(KeyboardButton::Key_Backscpace))
+	}
+	else if (input.IsKeyUp(KeyboardButton::Key_Return))
+		SaveName();
+	else if (input.IsKeyUp(KeyboardButton::Key_Backscpace))
+	{
+		size_t length = m_NameText.length() - 1;
+
+		if (length >= 0)
 		{
-			size_t length = m_NameText.length() - 1;
 			m_NameText.erase(length);
 			m_pTextComponent->SetText(m_DisplayText + m_NameText);
 		}
 	}
 }
-
 
 void Jotar::HighScoreEntryComponent::UploadHighScoreToJson(bool isCoop)
 {
@@ -66,19 +71,16 @@ void Jotar::HighScoreEntryComponent::UploadHighScoreToJson(bool isCoop)
 	if (isCoop)
 	{
 		m_HighscoreEntry.score2 = players[1]->GetOwner()->GetComponent<ScoreComponent>()->GetScore();
-		GetOwner()->GetParent()->GetComponent<JsonHighScoreLoaderComponent>()->SaveHighscoresToCoop(m_HighscoreEntry);
+		m_pHighScoreLoader->SaveHighscoresToCoop(m_HighscoreEntry);
 		return;
 	}
 
-	GetOwner()->GetParent()->GetComponent<JsonHighScoreLoaderComponent>()->SaveHighscoresToSinglePlayer(m_HighscoreEntry);
-	GetOwner()->GetParent()->GetComponent<HighScoreMenuComponent>()->UpdateHighScoreList();
-
-	SetIsDisabled(true);
+	m_pHighScoreLoader->SaveHighscoresToSinglePlayer(m_HighscoreEntry);
+	GetOwner()->Destroy();
 }
 
 void Jotar::HighScoreEntryComponent::SaveName()
 {
-
 	if (GameManager::GetInstance().GetGamemode() == GameMode::Coop)
 	{
 		if (m_PlayersSaved == 0)

@@ -1,5 +1,6 @@
 #include "DeathCheckerComponent.h"
 #include "GameManager.h"
+#include "PlayerHealthComponent.h"
 
 Jotar::DeathCheckerComponent::DeathCheckerComponent(GameObject* owner)
 	: Component( owner )
@@ -14,9 +15,24 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 	{
 		++m_AmountOfDeathPlayers;
 
-		if (m_AmountOfDeathPlayers >= GameManager::GetInstance().GetPlayers().size())
+		auto players = GameManager::GetInstance().GetPlayers();
+
+		if (m_AmountOfDeathPlayers >= players.size())
 		{
-			GameManager::GetInstance().LoadLevel(false);
+			int fullDeathPlayers = 0;
+
+			for (size_t i = 0; i < players.size(); i++)
+			{
+				if (players[i]->GetOwner()->GetComponent< PlayerHealthComponent>()->GetHealth() < 0)
+				{
+					++fullDeathPlayers;
+				}
+			}
+
+			if (fullDeathPlayers == players.size())
+				GameManager::GetInstance().LoadHighScoreMenu(true);
+			else
+				GameManager::GetInstance().LoadLevel(false);
 		}
 	}
 

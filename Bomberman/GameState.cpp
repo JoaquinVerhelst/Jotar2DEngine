@@ -95,9 +95,6 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 	{
 		SceneManager::GetInstance().DestroyScene(prevScene);
 	}
-
-
-
 }
 
 Jotar::GameState* Jotar::GameLevelState::OnHandle()
@@ -123,23 +120,13 @@ void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
 	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
 
-	auto& prevScene = SceneManager::GetInstance().GetCurrentScene();
+	m_PreviousSceneID = SceneManager::GetInstance().GetCurrentSceneID();
 	auto& nextScene = SceneManager::GetInstance().GetSceneByName("highScoreMenu");
 
 	gameManager->GetLevelLoader().LoadHighScoreFromJson(nextScene, m_IsSaving);
 	m_IsSaving = false;
 
-	prevScene.MarkAllForDestroy();
-
-	if (prevScene.GetName() != "mainMenu")
-	{
-		InputManager::GetInstance().ClearPlayerInputBindings();
-		SceneManager::GetInstance().DestroyScene(prevScene);
-	}
-
-
 	SceneManager::GetInstance().SetCurrentSceneByScene(nextScene);
-
 	nextScene.Start();
 }
 
@@ -148,8 +135,21 @@ Jotar::GameState* Jotar::HighscoreState::OnHandle()
 	return nullptr;
 }
 
-void Jotar::HighscoreState::OnExit(GameManager* )
+void Jotar::HighscoreState::OnExit(GameManager*)
 {
+
+	auto& prevScene = SceneManager::GetInstance().GetSceneByID(m_PreviousSceneID);
+	prevScene.MarkAllForDestroy();
+
+	if (prevScene.GetName() != "mainMenu")
+	{
+		InputManager::GetInstance().ClearPlayerInputBindings();
+		prevScene.Reset();
+		SceneManager::GetInstance().DestroyScene(prevScene);
+
+		//gameManager->Reset();
+
+	}
 
 	auto& scene = SceneManager::GetInstance().GetCurrentScene();
 	scene.MarkAllForDestroy();

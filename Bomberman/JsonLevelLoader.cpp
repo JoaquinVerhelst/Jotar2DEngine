@@ -41,7 +41,7 @@
 #include "GameCommands.h"
 #include "ExitComponent.h"
 #include "DeathCheckerComponent.h"
-#include "PlayerDeathComponent.h"
+#include "PlayerHealthComponent.h"
 #include "HighScoreMenuComponent.h"
 #include "HighScoreEntryComponent.h"
 #include "JsonHighScoreLoaderComponent.h"
@@ -227,6 +227,14 @@ bool Jotar::JsonLevelLoader::LoadLevelFromJson(Scene& scene, int level, bool isG
         auto players = GameManager::GetInstance().GetPlayers();
         for (size_t i = 0; i < players.size(); i++)
         {
+
+            if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
+            {
+                players[i]->SetPosition(-200, -200);
+                continue;
+            }
+            
+
             //Position
             const std::string playerPosIndexString = "playerPosIndex" + std::to_string(i);
             glm::ivec2 playerPosIndex = { levelData[playerPosIndexString][0], levelData[playerPosIndexString][1] };
@@ -379,14 +387,14 @@ bool Jotar::JsonLevelLoader::LoadHighScoreFromJson(Scene& scene, bool isSavingSc
     // Setup HighScore Game Object
     auto menu = scene.CreateGameObject("HighScore Menu", false);
     menu->AddComponent<HighScoreMenuComponent>(scoreFont, glm::ivec2{windowWidth, windowHeight});
-    menu->AddComponent<JsonHighScoreLoaderComponent>("../Data/Json/HighScore.json");
+    auto highScoreLoader = menu->AddComponent<JsonHighScoreLoaderComponent>("../Data/Json/HighScore.json");
     menu->AddComponent<HUDComponent>(HUDPosition::Center);
 
     if (isSavingScore)
     {
         // make the HighScoreEntry
         auto entryObj = scene.CreateGameObject("HighScore Menu", false);
-        entryObj->AddComponent<HighScoreEntryComponent>();
+        entryObj->AddComponent<HighScoreEntryComponent>(highScoreLoader);
         entryObj->AddComponent<TextComponent>("", scoreFont);
         entryObj->AddComponent<HUDComponent>();
     }
@@ -574,7 +582,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
 
     auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(playerInfo["speed"], cellSize);
 
-    auto healthCompPlayer = playerObj->AddComponent<PlayerHealthComponent>(playerInfo["health"], 2.f);
+    auto healthCompPlayer = playerObj->AddComponent<PlayerHealthComponent>(/*playerInfo["health"]*/ 0 , 2.f);
     healthCompPlayer->AddObserver(playerHealthDisplay);
 
     auto scoreCompPlayer = playerObj->AddComponent<ScoreComponent>();

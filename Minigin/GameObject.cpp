@@ -135,6 +135,24 @@ void Jotar::GameObject::Destroy()
 	}
 }
 
+void Jotar::GameObject::CheckDestoryChildren()
+{
+	for (const auto& pChild : m_pChildren)
+	{
+		if (pChild->IsDestroyed())
+		{
+			pChild->SetParent(nullptr, false);
+			//pChild->Destroy();
+
+		}
+		else
+		{
+			pChild->CheckDestoryChildren();
+		}
+
+	}
+}
+
 
 std::shared_ptr<Jotar::GameObject> Jotar::GameObject::CreateChildGameObject(const std::string& name, bool keepWorldPosition, bool isMovingWithCamera)
 {

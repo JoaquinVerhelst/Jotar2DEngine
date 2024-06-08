@@ -1,4 +1,4 @@
-#include "PlayerDeathComponent.h"
+#include "PlayerHealthComponent.h"
 #include "MovementComponent.h"
 #include "WorldTimeManager.h"
 #include "PlaceBombComponent.h"
@@ -34,9 +34,13 @@ void Jotar::PlayerHealthComponent::Update()
 void Jotar::PlayerHealthComponent::Reset()
 {
 	m_DeathTimer = 0;
-	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(false);
-	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(false);
-	m_pOnDeathSubject->RemoveAllObservers();
+
+	if (m_CurrentHealth >= 0)
+	{
+		GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(false);
+		GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(false);
+		m_pOnDeathSubject->RemoveAllObservers();
+	}
 }
 
 void Jotar::PlayerHealthComponent::TakeDamage(int damage, GameObject* attacker)
@@ -47,12 +51,5 @@ void Jotar::PlayerHealthComponent::TakeDamage(int damage, GameObject* attacker)
 	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
 	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(true);
 	m_IsDeath = true;
-
-
-
-	//if (eventData.GetHealth() > 0)
-	//{
-	//	GameManager::GetInstance().LoadHighScoreMenu(true);
-	//}
 }
 

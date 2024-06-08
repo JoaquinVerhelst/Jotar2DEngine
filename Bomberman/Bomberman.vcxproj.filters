@@ -113,7 +113,7 @@
     <ClCompile Include="GameCommands.cpp">
       <Filter>GameFIles\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerDeathComponent.cpp">
+    <ClCompile Include="PlayerHealthComponent.cpp">
       <Filter>GameFIles\Components\Player</Filter>
     </ClCompile>
     <ClCompile Include="DeathCheckerComponent.cpp">
@@ -130,9 +130,6 @@
     </ClCompile>
     <ClCompile Include="MenuCommands.cpp">
       <Filter>GameFIles\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="AIDamageComponent.cpp">
-      <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +220,7 @@
     <ClInclude Include="GameCommands.h">
       <Filter>GameFIles\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerDeathComponent.h">
+    <ClInclude Include="PlayerHealthComponent.h">
       <Filter>GameFIles\Components\Player</Filter>
     </ClInclude>
     <ClInclude Include="DeathCheckerComponent.h">
@@ -243,9 +240,6 @@
     </ClInclude>
     <ClInclude Include="MenuCommands.h">
       <Filter>GameFIles\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="AIDamageComponent.h">
-      <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

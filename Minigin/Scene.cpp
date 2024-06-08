@@ -182,6 +182,11 @@ void Jotar::Scene::CleanUpDestroyedObjects()
 			m_pObjects[i]->OnDestroy();
 			Remove(m_pObjects[i]);
 		}
+		else
+		{
+			m_pObjects[i]->CheckDestoryChildren();
+		}
+
 	}
 }
 

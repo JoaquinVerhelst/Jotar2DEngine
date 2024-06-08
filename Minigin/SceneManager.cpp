@@ -138,7 +138,7 @@ void Jotar::SceneManager::SetCurrentSceneByScene(Scene& scene)
 
 	if (it != m_Scenes.end())
 	{
-				m_CurrentScene = it->get();
+		m_CurrentScene = it->get();
 		m_CurrentSceneIndex = static_cast<int>(std::distance(m_Scenes.begin(), it));
 	}
 	else {

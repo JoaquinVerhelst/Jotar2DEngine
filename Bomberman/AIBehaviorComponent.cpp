@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "CameraComponent.h"
 #include "AIAnimationControllerComponent.h"
-#include "PlayerDeathComponent.h"
+#include "PlayerHealthComponent.h"
 #include "AIPerceptionComponent.h"
 
 

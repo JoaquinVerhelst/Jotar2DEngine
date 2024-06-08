@@ -2,9 +2,7 @@
 #include "GameObject.h"
 #include <iostream>
 #include "set"
-// TODO remove
-#include "SDL.h"
-#include "Renderer.h"
+
 
 Jotar::CollisionManager::CollisionManager()
     :m_pSceneColliders{}

@@ -62,6 +62,7 @@ namespace Jotar
 
 	private:
 		bool m_IsSaving{false};
+		int m_PreviousSceneID{ 0 };
 	};
 }
 

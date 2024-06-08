@@ -23,7 +23,6 @@ namespace Jotar
 		void Render() const;
 		void OnDestroy();
 
-
 		GameObject(Scene* pScene, const std::string& name, bool isMovingWithCamera = true);
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
@@ -31,11 +30,9 @@ namespace Jotar
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
-
-
 		void Destroy();
 		bool IsDestroyed() { return m_IsDestroyed; }
-
+		void CheckDestoryChildren();
 
 		bool IsDestroyOnLoad() const { return m_DestroyOnLoad; }
 		void SetDestroyOnLoad(bool destroyIt) { m_DestroyOnLoad = destroyIt; }
