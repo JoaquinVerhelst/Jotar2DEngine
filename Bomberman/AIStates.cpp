@@ -22,6 +22,11 @@
 #include "AIEvents.h"
 
 
+
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
 // ------------------------------------------------------------------------------------- //
 //									IDLE STATE											 //
 // ------------------------------------------------------------------------------------- //
@@ -330,6 +335,7 @@ void Jotar::OnDamageAIState::OnEnter()
 	m_pAIBehaviorComp->GetOwner()->GetChildAt(0)->GetComponent<ColliderComponent>()->SetIsDisabled(true);
 	m_pAIBehaviorComp->GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(true);
 
+	SoundServiceLocator::GetSoundSystem().Play("EnemyDies");
 }
 
 Jotar::AIState* Jotar::OnDamageAIState::OnHandle()

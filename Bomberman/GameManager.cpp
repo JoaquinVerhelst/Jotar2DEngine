@@ -2,6 +2,11 @@
 #include "AIEvents.h"
 #include <iostream>
 
+
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
 void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 {
     m_LevelLoader.SetGameLevelsFilePath(gameLevelsFilePath);
@@ -18,8 +23,7 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
     m_pGameLevelState = std::make_unique<GameLevelState>();
     m_pHighScoreState = std::make_unique<HighscoreState>();
 
-
-    ChangeState(m_pMainMenuState.get());
+    LoadMainMenu();
 
 }
 
@@ -90,6 +94,7 @@ void Jotar::GameManager::SetGameInit(bool isGameInit)
 
 void Jotar::GameManager::StartAndSetGameMode(GameMode gameMode)
 {
+    SoundServiceLocator::GetSoundSystem().PlayMusic("LevelMusic");
     m_GameMode = gameMode;
     ChangeState(m_pGameLevelState.get());
 }
@@ -103,6 +108,8 @@ void Jotar::GameManager::LoadLevel(bool isNextLevel)
            m_CurrentLevelID = 1;
         
         ++m_CurrentTotalLevelsPlayed;
+
+        SoundServiceLocator::GetSoundSystem().Play("LevelStart");
     }
     ChangeState(m_pGameLevelState.get());
 }
@@ -116,6 +123,7 @@ void Jotar::GameManager::LoadHighScoreMenu(bool isSaving)
 void Jotar::GameManager::LoadMainMenu()
 {
     ChangeState(m_pMainMenuState.get());
+    SoundServiceLocator::GetSoundSystem().PlayMusic("MainMenuMusic");
 }
 
 Jotar::GameMode Jotar::GameManager::GetGamemode()

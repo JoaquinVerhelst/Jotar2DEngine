@@ -11,5 +11,5 @@ Jotar::ScoreDisplayComponent::ScoreDisplayComponent(GameObject* owner)
 
 void Jotar::ScoreDisplayComponent::OnNotify(const EventAddScore& event)
 {
-    m_pTextComponent->SetText("Score: " + std::to_string(event.GetScoreAdded()));
+    m_pTextComponent->SetText("Score " + std::to_string(event.GetScoreAdded()));
 }

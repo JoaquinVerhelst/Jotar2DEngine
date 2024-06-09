@@ -2,6 +2,11 @@
 #include "GameManager.h"
 #include "PlayerHealthComponent.h"
 
+
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
 Jotar::DeathCheckerComponent::DeathCheckerComponent(GameObject* owner)
 	: Component( owner )
 	, m_AmountOfDeathPlayers{ 0 }
@@ -50,10 +55,17 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 				if (GameManager::GetInstance().GetGamemode() == GameMode::Versus)
 					GameManager::GetInstance().LoadMainMenu();
 				else
+				{
+					SoundServiceLocator::GetSoundSystem().StopMusic();
+					SoundServiceLocator::GetSoundSystem().Play("GameOver");
 					GameManager::GetInstance().LoadHighScoreMenu(true);
+				}
 			}
 			else
+			{
 				GameManager::GetInstance().LoadLevel(false);
+			}
+
 		}
 	}
 

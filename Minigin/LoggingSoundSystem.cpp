@@ -25,21 +25,44 @@ namespace Jotar
         std::cout << "playing the sound took: " << elapsed << "ms\n";
     }
 
+    void LoggingSoundSystem::Play(const std::string& name, const int volume)
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        m_SoundSystem->Play(name, volume);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+        std::cout << "playing " << name << " at volume " << volume << '\n';
+        std::cout << "playing the sound took: " << elapsed << "ms\n";
+    }
+
     void LoggingSoundSystem::LoadSound(sound_id id)
     {
         std::cout << "Loading audio...\n";
         m_SoundSystem->LoadSound(id);
     }
 
-    void LoggingSoundSystem::AddSound(const char* path, sound_id id)
+    void LoggingSoundSystem::AddSound(const char* path, sound_id id, const std::string& name)
     {
-        m_SoundSystem->AddSound(path, id);
+        m_SoundSystem->AddSound(path, id, name);
     }
 
-    void LoggingSoundSystem::PlayMusic(const char* path)
+    void LoggingSoundSystem::AddMusic(const char* path, const std::string& name)
     {
-        std::cout << "Playing this background Music: " << path << "\n";
-        m_SoundSystem->PlayMusic(path);
+        m_SoundSystem->AddMusic(path, name);
+    }
+
+    void LoggingSoundSystem::PlayMusic(const std::string& name)
+    {
+        std::cout << "Playing this background Music: " << name << "\n";
+        m_SoundSystem->PlayMusic(name);
+    }
+
+    void LoggingSoundSystem::StopMusic()
+    {
+        m_SoundSystem->StopMusic();
     }
 
     void LoggingSoundSystem::SetMusicVolume(int volume)

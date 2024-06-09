@@ -96,7 +96,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 
 	bombObj->GetTransform()->SetPosition(cell.CenterCellPosition);
 	cell.ObjectOnCell = bombObj;
-	SoundServiceLocator::GetSoundSystem().Play(0);
+	SoundServiceLocator::GetSoundSystem().Play("PlaceBomb");
 
 
 	bombComp->AddObserver(this);

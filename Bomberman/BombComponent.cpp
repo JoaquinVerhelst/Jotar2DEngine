@@ -73,7 +73,7 @@ void Jotar::BombComponent::OnExplode(int range)
 {
     m_IsExploded = true;
 
-    SoundServiceLocator::GetSoundSystem().Play(1);
+    SoundServiceLocator::GetSoundSystem().Play("Explosion");
 
     ExplosionEvent explosionevent{};
     m_pSubject->NotifyObservers(explosionevent);

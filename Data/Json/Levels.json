@@ -107,7 +107,8 @@
 		"playerInfo": {
 			"speed": 120,
 			"sprites": {
-				"playerSprite": "../Data/Sprites/bomberman.png"
+				"player0Sprite": "../Data/Sprites/bomberman.png",
+				"player1Sprite": "../Data/Sprites/bomberman2.png"
 			},
 			"health": 3,
 			"score": {
@@ -133,12 +134,6 @@
 					"placeBomb": 108,
 					"detonateBomb": 107
 				}
-			}
-		},
-		"playerEnemy": {
-			"speed": 75,
-			"sprites": {
-				"enemySprite": "../Data/Sprites/Enemy.png"
 			}
 		},
 		"enemyInfo": {

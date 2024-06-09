@@ -47,6 +47,11 @@
 #include "JsonHighScoreLoaderComponent.h"
 #include "BalloomPlayerHealthComponent.h"
 
+
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
 #include "Font.h"
 
 using json = nlohmann::json;
@@ -96,6 +101,26 @@ bool Jotar::JsonLevelLoader::InitGame()
         }
 
 
+        //SOUNDS
+
+
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/PlaceBomb.wav", -1 ,"PlaceBomb");
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/BombExplodes.wav", -1, "Explosion");
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/ItemGet.wav", -1, "PickUp");
+
+
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/EnemyDies.wav", -1, "EnemyDies");
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/ExitOpens.wav", -1, "ExitOpens");
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/StageStart.wav", -1, "LevelStart");
+
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/PlayerDies.wav", -1, "PlayerDies");
+        SoundServiceLocator::GetSoundSystem().AddSound("../Data/Sound/GameOver.wav", -1, "GameOver");
+
+
+        SoundServiceLocator::GetSoundSystem().AddMusic("../Data/Sound/TitleScreen.wav", "MainMenuMusic");
+        SoundServiceLocator::GetSoundSystem().AddMusic("../Data/Sound/MainScreen.wav", "LevelMusic");
+
+        SoundServiceLocator::GetSoundSystem().SetMusicVolume(SoundServiceLocator::GetSoundSystem().GetMusicVolume() / 2);
         ///  Init Genral Input 
 
         const auto& generalInput = jsonData["gameInfo"]["generalInput"];
@@ -398,9 +423,6 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
         auto& gameManager = GameManager::GetInstance();
 
 
-
-
-
         const auto& gameInfo = jsonData["gameInfo"];
         const auto& fonts = gameInfo["fonts"];
 
@@ -430,13 +452,6 @@ bool Jotar::JsonLevelLoader::CreateGameMode(Scene& scene, GeneralLevelInfo& leve
 
         fpsCounter->AddComponent<HUDComponent>(HUDPosition::LeftUp);
         fpsCounter->AddComponent<Jotar::FPSComponent>();
-
-
-        // Time Left
-        auto TimeLeftObj = HUD->CreateChildGameObject("TimeLeft", true, false);
-        textComp = TimeLeftObj->AddComponent<TextComponent>("TimeLeft: ", bombermanFont);
-        textComp->SetLayer(10);
-        TimeLeftObj->AddComponent<HUDComponent>(HUDPosition::CenterLeft);
 
 
         // Player 0
@@ -510,33 +525,30 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreatePlayer(Scene& s
     textComp = playerScoreDisplayObj->AddComponent<TextComponent>("Score ", font);
     textComp->SetLayer(11);
     auto playerScoreDisplay = playerScoreDisplayObj->AddComponent<ScoreDisplayComponent>();
-
-    xPos += playerHealthDisplayObj->GetTransform()->GetSize().x + UIInfo["spacing"];
+    playerScoreDisplayObj->AddComponent<HUDComponent>();
+    xPos += playerHealthDisplayObj->GetTransform()->GetSize().x + UIInfo["spacing"] * 3;
 
     playerScoreDisplayObj->GetTransform()->Translate({ xPos, 0 });
 
-    playerScoreDisplayObj->AddComponent<HUDComponent>();
+
 
     // Player OBJ
 
     auto playerObj = scene.CreateGameObject("Bomberman" + std::to_string(playerIndex));
     playerObj->GetTransform()->SetSize({ cellSize,cellSize });
 
-    auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"]["playerSprite"]);
+    std::string spriteName = "player" + std::to_string(playerIndex) + "Sprite";
+    auto textureComp = playerObj->AddComponent<TextureComponent>(playerInfo["sprites"][spriteName]);
     textureComp->SetLayer(10);
 
 
     auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(playerInfo["speed"], cellSize);
 
-    auto healthCompPlayer = playerObj->AddComponent<PlayerHealthComponent>(/*playerInfo["health"]*/ 0 , 2.f);
+    auto healthCompPlayer = playerObj->AddComponent<PlayerHealthComponent>(playerInfo["health"] , 2.f);
     healthCompPlayer->AddObserver(playerHealthDisplay);
 
     auto scoreCompPlayer = playerObj->AddComponent<ScoreComponent>();
     scoreCompPlayer->AddObserver(playerScoreDisplay);
-
-
-    //auto deathComp = playerObj->AddComponent<PlayerDeathComponent>(2.f);
-    //healthCompPlayer->AddObserver(deathComp);
 
 
     auto placeBombComp = playerObj->AddComponent<PlaceBombComponent>();
@@ -589,7 +601,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::JsonLevelLoader::CreateBalloomPlayer(S
 
     auto movementCompPlayer = playerObj->AddComponent<MovementComponent>(baloomInfo["speed"], cellSize);
 
-    auto healthComp = playerObj->AddComponent<BalloomPlayerHealthComponent>(/*playerInfo["health"]*/ 0, 2.f);
+    auto healthComp = playerObj->AddComponent<BalloomPlayerHealthComponent>(0, 2.f);
 
 
 
@@ -644,18 +656,15 @@ void Jotar::JsonLevelLoader::SetUpCamera(Scene& scene, glm::ivec4 camRect, glm::
 
 void Jotar::JsonLevelLoader::UpdateGameMode(Scene& scene, const nlohmann::json& levelData, GeneralLevelInfo& levelInfo)
 {
-
-
     auto& gameManager = GameManager::GetInstance();
     auto* worldGrid = gameManager.GetWorldGrid();
 
-
     glm::ivec4 levelBounds = { 0, levelInfo.ScreenHeight * levelInfo.UIPercent , 1000, levelInfo.Rows * levelInfo.CellSize };
-    // Set the players on the right position + cameras
 
     auto players = gameManager.GetPlayers();
 
 
+    // Set the players on the right position + cameras
 
     if (gameManager.GetGamemode() == GameMode::SinglePlayer)
     {

@@ -24,7 +24,7 @@ void Jotar::PickUpComponent::OnNotify(const CollisionEvent& eventData)
 
         if (otherCollider->GetOwner()->HasComponent<PlaceBombComponent>())
         {
-            SoundServiceLocator::GetSoundSystem().Play(2);
+            SoundServiceLocator::GetSoundSystem().Play("PickUp");
 
             switch (m_PickUpType)
             {

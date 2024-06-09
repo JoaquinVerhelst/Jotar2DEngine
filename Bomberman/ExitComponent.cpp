@@ -5,6 +5,10 @@
 #include "GameManager.h"
 #include <iostream>
 
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
 Jotar::ExitComponent::ExitComponent(GameObject* owner, std::string exitTextureFilePath)
 	: Component(owner)
 	, m_EnemiesRemaining{0}
@@ -59,12 +63,12 @@ void Jotar::ExitComponent::OnNotify(const CollisionEvent& triggerEvent)
  
 void Jotar::ExitComponent::RevealExit()
 {
+	SoundServiceLocator::GetSoundSystem().Play("ExitOpens");
+
 	// set the texture
 	GetOwner()->GetComponent<TextureComponent>()->SetTexture(m_ExitTextureFilePath);
 
 	// ->Set it to trigger
 	GetOwner()->GetComponent<ColliderComponent>()->SetIsTrigger(true);
 	m_IsExitRevealed = true;
-
-	std::cout << "Won" << '\n';
 }

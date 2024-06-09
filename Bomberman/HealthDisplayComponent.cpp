@@ -17,18 +17,18 @@ void Jotar::HealthDisplayComponent::OnNotify(const Event& event)
 
         if (damageEvent.GetHealth() > 0)
         {
-            m_pTextComponent->SetText("Lives: " + std::to_string(damageEvent.GetHealth()));
+            m_pTextComponent->SetText("Lives " + std::to_string(damageEvent.GetHealth()));
         }
         else
         {
 
-            m_pTextComponent->SetText("Player Died!");
+            m_pTextComponent->SetText("Died");
         }
     }
     else if (typeid(event) == typeid(UpdateHealthEvent))
     {
         const UpdateHealthEvent& updateHealthEvent = static_cast<const UpdateHealthEvent&>(event);
 
-        m_pTextComponent->SetText("Lives: " + std::to_string(updateHealthEvent.GetHealth()));
+        m_pTextComponent->SetText("Lives " + std::to_string(updateHealthEvent.GetHealth()));
     }
 }

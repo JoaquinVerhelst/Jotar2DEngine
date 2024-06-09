@@ -23,7 +23,17 @@ namespace Jotar
             sound_id id;
             Mix_Chunk* audio;
             const char* pathFile;
+            std::string audioName;
         };
+
+        struct MusicAudio
+        {
+            sound_id id;
+            Mix_Music* audio;
+            const char* pathFile;
+            std::string audioName;
+        };
+
 
     public:
 
@@ -32,9 +42,12 @@ namespace Jotar
 
         void Update();
         void Play(const sound_id id, const int volume);
+        void Play(const std::string& name, const int volume = -1);
         void LoadSound(const sound_id id);
-        void AddSound(const char* path, const sound_id id = -1);
-        void PlayMusic(const char* path);
+        void AddSound(const char* path, const sound_id id = -1, const std::string& name = "");
+        void AddMusic(const char* path, const std::string& name = "");
+        void PlayMusic(const std::string& name);
+        void StopMusic();
         void SetMusicVolume(int volume);
         void SetSoundEffectsVolume(int volume);
 
@@ -57,7 +70,7 @@ namespace Jotar
 
         // Audio
         std::vector<AudioClip*> m_AudioClips;
-        Mix_Music* m_BackgroundMusic;
+        std::vector<MusicAudio*> m_BackgroundMusic;
 
         bool m_SoundMuted;
         int m_MusicVolume;
@@ -115,7 +128,10 @@ namespace Jotar
         }
 
         Mix_HaltMusic();
-        Mix_FreeMusic(m_BackgroundMusic);
+        for (auto* music : m_BackgroundMusic) {
+            Mix_FreeMusic(music->audio);
+            delete music;
+        }
         Mix_CloseAudio();
     }
 
@@ -192,6 +208,23 @@ namespace Jotar
         ++m_NumPending;
     }
 
+    void SDL_SoundSystem::SDL_SoundSystemImpl::Play(const std::string& name, const int volume)
+    {
+        auto it = std::find_if(m_AudioClips.begin(), m_AudioClips.end(), [&name](const AudioClip* ptr)
+            {
+                return ptr->audioName == name;
+            });
+
+        if (it != m_AudioClips.end())
+        {
+            Play((*it)->id, volume);
+        }
+        else
+        {
+            std::cout << "Audio clip with name " << name << " not found.\n";
+        }
+    }
+
     void SDL_SoundSystem::SDL_SoundSystemImpl::LoadAndPlaySound(AudioClip* audioClip, int volume)
     {
         LoadSound(audioClip->id);
@@ -200,7 +233,6 @@ namespace Jotar
 
     void SDL_SoundSystem::SDL_SoundSystemImpl::LoadSound(const sound_id id)
     {
-
         auto* audioclip = m_AudioClips[id];
 
         Mix_Chunk* sound = Mix_LoadWAV(audioclip->pathFile);
@@ -211,14 +243,10 @@ namespace Jotar
 
         std::lock_guard<std::mutex> lock(m_SoundMutex);
         audioclip->audio = sound;
-
-
     }
 
     void SDL_SoundSystem::SDL_SoundSystemImpl::PlaySound(AudioClip* audioClip, int volume)
     {
-
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
 
         std::lock_guard<std::mutex> lock(m_SoundMutex);
 
@@ -231,16 +259,16 @@ namespace Jotar
         }
     }
 
-    void SDL_SoundSystem::SDL_SoundSystemImpl::AddSound(const char* path, sound_id id)
+    void SDL_SoundSystem::SDL_SoundSystemImpl::AddSound(const char* path, sound_id id, const std::string& name)
     {
-
         AudioClip* audioClip = new AudioClip();
         audioClip->audio = nullptr;
         audioClip->pathFile = path;
+        audioClip->audioName = name;
 
         if (id == -1)
         {
-            audioClip->id = m_AudioClips.size();
+            audioClip->id = static_cast<int>(m_AudioClips.size());
             m_AudioClips.emplace_back(audioClip);
         }
         else if (id < m_AudioClips.size())
@@ -253,19 +281,55 @@ namespace Jotar
         {
             std::cout << "Failed to add audio to ID: " << id << "with the given path: " << path << '\n';
         }
+    }
 
+    void SDL_SoundSystem::SDL_SoundSystemImpl::AddMusic(const char* path, const std::string& name)
+    {
+        MusicAudio* musicAudio = new MusicAudio();
+        musicAudio->audio = nullptr;
+        musicAudio->pathFile = path;
+        musicAudio->audioName = name;
+
+        musicAudio->id = static_cast<int>(m_BackgroundMusic.size());
+
+        m_BackgroundMusic.emplace_back(musicAudio);
+        
     }
 
 
-    void SDL_SoundSystem::SDL_SoundSystemImpl::PlayMusic(const char* path)
+    void SDL_SoundSystem::SDL_SoundSystemImpl::PlayMusic(const std::string& name)
     {
-        m_BackgroundMusic = Mix_LoadMUS(path);
-        if (!m_BackgroundMusic) {
-            printf("Mix_LoadMUS failed: %s\n", Mix_GetError());
-            return;
-        }
 
-        Mix_PlayMusic(m_BackgroundMusic, -1); // loop the music indefinitely
+        auto it = std::find_if(m_BackgroundMusic.begin(), m_BackgroundMusic.end(), [&name](const MusicAudio* ptr)
+            {
+                return ptr->audioName == name;
+            });
+
+
+        if (it != m_BackgroundMusic.end())
+        {
+            int ID = (*it)->id;
+            if (m_BackgroundMusic[ID]->audio == nullptr)
+            {
+                m_BackgroundMusic[ID]->audio = Mix_LoadMUS(m_BackgroundMusic[ID]->pathFile);
+            }
+
+            if (!m_BackgroundMusic[ID]->audio) {
+                printf("Mix_LoadMUS failed: %s\n", Mix_GetError());
+                return;
+            }
+
+            Mix_PlayMusic(m_BackgroundMusic[ID]->audio, -1);
+        }
+        else
+        {
+            std::cout << "Music Adio with name " << name << " not found.\n";
+        }
+    }
+
+    void SDL_SoundSystem::SDL_SoundSystemImpl::StopMusic()
+    {
+        Mix_HaltMusic();
     }
 
     void SDL_SoundSystem::SDL_SoundSystemImpl::SetMusicVolume(int volume)
@@ -347,19 +411,30 @@ namespace Jotar
         pImpl->Play(id, volume);
     }
 
+    void SDL_SoundSystem::Play(const std::string& name, const int volume)
+    {
+        pImpl->Play(name, volume);
+    }
+
     void SDL_SoundSystem::LoadSound(sound_id id)
     {
         pImpl->LoadSound(id);
     }
 
-    void SDL_SoundSystem::AddSound(const char* path, sound_id id)
+
+    void SDL_SoundSystem::AddSound(const char* path, sound_id id, const std::string& name)
     {
-        pImpl->AddSound(path, id);
+        pImpl->AddSound(path, id, name);
     }
 
-    void SDL_SoundSystem::PlayMusic(const char* path)
+    void SDL_SoundSystem::AddMusic(const char* path, const std::string& name)
     {
-        pImpl->PlayMusic(path);
+        pImpl->AddMusic(path, name);
+    }
+
+    void SDL_SoundSystem::PlayMusic(const std::string& name)
+    {
+        pImpl->PlayMusic(name);
     }
 
     void SDL_SoundSystem::SetMusicVolume(int volume)
@@ -386,5 +461,9 @@ namespace Jotar
     int SDL_SoundSystem::GetSoundEffectsVolume() const
     {
        return pImpl->GetSoundEffectsVolume();
+    }
+    void SDL_SoundSystem::StopMusic()
+    {
+        pImpl->StopMusic();
     }
 }

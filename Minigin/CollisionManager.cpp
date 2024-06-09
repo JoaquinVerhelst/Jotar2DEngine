@@ -6,7 +6,7 @@
 
 Jotar::CollisionManager::CollisionManager()
     :m_pSceneColliders{}
-    , m_threadPool{1}
+    , m_threadPool{2}
 {
 }
 

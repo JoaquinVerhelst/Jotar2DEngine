@@ -4,6 +4,11 @@
 #include "PlaceBombComponent.h"
 #include "GameManager.h"
 
+#include "SoundServiceLocator.h"
+#include "SoundSystem.h"
+
+
+
 Jotar::PlayerHealthComponent::PlayerHealthComponent(GameObject* owner, int health, float deathPauseTime)
 	:HealthComponent( owner, health)
 	, m_DeathPauseTime{ deathPauseTime  }
@@ -46,6 +51,9 @@ void Jotar::PlayerHealthComponent::Reset()
 void Jotar::PlayerHealthComponent::TakeDamage(int damage, GameObject* attacker)
 {
 	HealthComponent::TakeDamage(damage, attacker);
+
+
+	SoundServiceLocator::GetSoundSystem().Play("PlayerDies");
 
 	// stop Input
 	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
