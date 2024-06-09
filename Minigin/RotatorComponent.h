@@ -13,8 +13,6 @@ namespace Jotar
 	{
 	public:
 		void Update() override;
-		void Render() const override;
-		void Init() override;
 
 		RotatorComponent(GameObject* owner, const glm::vec2& center, float radius, float speed);
 		~RotatorComponent() = default;

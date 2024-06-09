@@ -100,7 +100,5 @@ void Jotar::TransformComponent::UpdateWorldPosition()
 	}
 
 
-
-
 	m_IsPositionDirty = false;
 }

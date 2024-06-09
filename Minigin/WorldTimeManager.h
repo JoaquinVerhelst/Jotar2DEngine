@@ -23,15 +23,10 @@ namespace Jotar
         std::chrono::time_point<std::chrono::high_resolution_clock> m_LastFrameTime;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
 
-        float m_Time = 0; // The total time elapsed;
-        float m_DeltaTime = 0; // The time elapsed since the last frame
+        float m_Time = 0; 
+        float m_DeltaTime = 0; 
         float m_Fps = 0;
         int m_FrameCount = 0;
-
-        //// Not sure if this is necessary, since not all other singleton classes do this
-        ////TODO : look it up!
-        //Time() = default;
-        //~Time() = default;
     };
 
 

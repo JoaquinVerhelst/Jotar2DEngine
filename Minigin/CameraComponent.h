@@ -17,7 +17,6 @@ namespace Jotar
 	public:
 		explicit CameraComponent(GameObject* owner, glm::ivec4& cameraRect, glm::ivec4& levelBoundaries);
 
-		void Start() override;
 		void LateUpdate() override;
 		void SetTarget(TransformComponent* target);
 
@@ -27,16 +26,9 @@ namespace Jotar
 
 		glm::vec2 GetOffset();
 		
-
 	private:
-		glm::ivec4 CalculateBoundingBox();
-		float CalculateZoomFactor(const glm::ivec4& boundingBox);
-		void SetZoom(float zoomFactor);
-		void HandleWindowResize();
-
 
 		glm::vec2 m_Offset;
-
 		glm::ivec4 m_LevelBoundaries;
 		glm::ivec4 m_CameraRect;
 		TransformComponent* m_Target;

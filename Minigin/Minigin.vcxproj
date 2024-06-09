@@ -222,7 +222,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\*.dll" "$(OutputP
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="CollisionEvents.h" />
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="Coroutines.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Buffers.h" />
@@ -231,7 +230,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\*.dll" "$(OutputP
     <ClInclude Include="HUDComponent.h" />
     <ClInclude Include="SoundServiceLocator.h" />
     <ClInclude Include="SoundSystem.h" />
-    <ClInclude Include="TempCommand.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSComponent.h" />
@@ -279,7 +277,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\*.dll" "$(OutputP
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="Buffers.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Coroutines.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />

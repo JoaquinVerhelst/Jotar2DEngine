@@ -47,27 +47,6 @@ void Jotar::ColliderComponent::OnDestroy()
 	m_pSubject->RemoveAllObservers();
 }
 
-void Jotar::ColliderComponent::Render() const
-{
-
-	//SDL_Rect rect;
-	//rect.x = static_cast<int>(m_CollisionRect.x);
-	//rect.y = static_cast<int>(m_CollisionRect.y);
-	//rect.h = static_cast<int>(m_CollisionRect.z);
-	//rect.w = static_cast<int>(m_CollisionRect.w);
-
-	//// Set the color for the rectangle (e.g., red color)
-	//SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255); // RGBA
-
-	//// Render the rectangle
-	//SDL_RenderDrawRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
-	//// Optionally, fill the rectangle
-	//SDL_RenderFillRect(Renderer::GetInstance().GetSDLRenderer(), &rect);
-
-	//// Reset the color if necessary
-	//SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 0, 255); // RGBA (black)
-}
-
 void Jotar::ColliderComponent::AddObserver(Observer<CollisionEvent>* pObserver)
 {
 	m_pSubject->AddObserver(pObserver);
@@ -161,8 +140,6 @@ void Jotar::ColliderComponent::AddIgnoreCollisionTag(std::string tag)
 {
 	m_IgnoreCollisionTags.emplace_back(tag);
 }
-
-
 
 void Jotar::ColliderComponent::OnColliderCollision(CollideEvent& collideEvent)
 {

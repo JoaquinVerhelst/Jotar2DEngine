@@ -21,27 +21,17 @@ namespace Jotar
 	};
 }
 
-
-
 Jotar::HUDComponent::HUDComponent(GameObject* owner, HUDPosition position, glm::vec2 offset)
     : Component(owner)
-    //, m_pTextureComponent{}
     , m_Position{ position }
     , m_Offset{ offset }
 {
 	CalculateScreenPos();
 }
 
-Jotar::HUDComponent::~HUDComponent()
-{
-
-}
-
 void Jotar::HUDComponent::Start()
 {
-   // m_pTextureComponent = GetOwner()->GetComponent<TextureComponent>();
 	Renderer::GetInstance().AddObserver(this);
-
 }
 
 void Jotar::HUDComponent::OnNotify(const WindowResizeEvent& )
@@ -96,7 +86,6 @@ glm::vec2 Jotar::HUDComponent::CalculatePosition(HUDPosition position, glm::ivec
         glm::vec2 normalizedPos = it->second;
         glm::vec2 absolutePos = glm::vec2(normalizedPos.x * referenceSize.x, normalizedPos.y * referenceSize.y);
 
-        // Adjust the position to take into account the size of the HUD element
         absolutePos.x -= normalizedPos.x * size.x;
         absolutePos.y -= normalizedPos.y * size.y;
 

@@ -22,7 +22,8 @@ namespace Jotar
 		virtual void Init() {};
 		virtual void Render() const {};
 
-		// For objects that dont get destroyed on Load, so they go to next scene
+		// For objects that dont get destroyed on Load, so they go to next scene and reset
+		// For objects that are subscribed to collisionManager or Renderer
 		virtual void Reset() {};
 
 		bool IsDisabled() const { return m_IsDisabled; }

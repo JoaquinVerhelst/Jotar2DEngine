@@ -30,7 +30,7 @@ namespace Jotar
 	{
 	public:
 		HUDComponent(GameObject* owner, HUDPosition position = HUDPosition::Center, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
-		~HUDComponent();
+		~HUDComponent() = default;
 
 
 		void Start() override;
@@ -49,9 +49,6 @@ namespace Jotar
 		glm::vec2 CalculatePosition(HUDPosition position, glm::ivec2 size, glm::vec2 screenSize);
 
 		void CalculateScreenPos();
-
-
-		//TextureComponent* m_pTextureComponent;
 
 		HUDPosition m_Position;
 		glm::vec2 m_Offset;

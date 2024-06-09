@@ -23,9 +23,6 @@ namespace Jotar
 		void FixedUpdate() override;
 		void OnDestroy() override;
 
-		void Render() const override;
-
-
 
 		void AddObserver(Observer<CollisionEvent>* pObserver);
 		void RemoveObserver(Observer<CollisionEvent>* pObserver);

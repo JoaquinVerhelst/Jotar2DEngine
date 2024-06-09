@@ -18,14 +18,6 @@ void Jotar::RotatorComponent::Update()
     RotatorLogic();
 }
 
-void Jotar::RotatorComponent::Render() const
-{
-}
-
-void Jotar::RotatorComponent::Init()
-{
-}
-
 void Jotar::RotatorComponent::RotatorLogic()
 {
     m_Angle += m_Speed * WorldTimeManager::GetInstance().GetDeltaTime();
