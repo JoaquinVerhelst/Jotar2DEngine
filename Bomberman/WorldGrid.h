@@ -30,7 +30,6 @@ namespace std {
 namespace Jotar
 {
 
-
 	struct GridCell
 	{
 		GridCell()
@@ -55,8 +54,6 @@ namespace Jotar
 				(std::abs(cellIndex.y - Index.y) == 1 && cellIndex.x == Index.x);
 		}
 	};
-
-
 
 
 	class WorldGrid final

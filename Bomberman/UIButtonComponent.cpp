@@ -25,7 +25,6 @@ void Jotar::UIButtonComponent::Start()
 
 void Jotar::UIButtonComponent::PressButton()
 {
-
 	if (m_ButtonFunction)
 	{
 		m_ButtonFunction();

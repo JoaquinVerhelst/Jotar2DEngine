@@ -16,18 +16,7 @@ Jotar::DeathCheckerComponent::DeathCheckerComponent(GameObject* owner)
 
 void Jotar::DeathCheckerComponent::Start()
 {
-	m_AmountOfDeathPlayers = 0;
-
-
-	auto players = GameManager::GetInstance().GetPlayers();
-	for (size_t i = 0; i < players.size(); i++)
-	{
-		if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
-		{
-			++m_AmountOfDeathPlayers;
-		}
-	}
-
+	m_AmountOfDeathPlayers = CheckForFullyDeathPlayers();
 }
 
 void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
@@ -40,17 +29,7 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 
 		if (m_AmountOfDeathPlayers >= players.size())
 		{
-			int fullDeathPlayers = 0;
-
-			for (size_t i = 0; i < players.size(); i++)
-			{
-				if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
-				{
-					++fullDeathPlayers;
-				}
-			}
-
-			if (fullDeathPlayers == static_cast<int>(players.size()))
+			if (CheckForFullyDeathPlayers() == static_cast<int>(players.size()))
 			{
 				if (GameManager::GetInstance().GetGamemode() == GameMode::Versus)
 					GameManager::GetInstance().LoadMainMenu();
@@ -65,8 +44,22 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 			{
 				GameManager::GetInstance().LoadLevel(false);
 			}
+		}
+	}
+}
 
+int Jotar::DeathCheckerComponent::CheckForFullyDeathPlayers()
+{
+	auto players = GameManager::GetInstance().GetPlayers();
+	int fullDeathPlayers = 0;
+
+	for (size_t i = 0; i < players.size(); i++)
+	{
+		if (players[i]->GetOwner()->GetComponent<PlayerHealthComponent>()->GetHealth() < 0)
+		{
+			++fullDeathPlayers;
 		}
 	}
 
+	return fullDeathPlayers;
 }

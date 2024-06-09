@@ -25,6 +25,8 @@ namespace Jotar
 
 
 	private:
+		int CheckForFullyDeathPlayers();
+
 		size_t m_AmountOfDeathPlayers;
 	};
 

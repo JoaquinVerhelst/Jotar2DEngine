@@ -10,7 +10,6 @@ Jotar::MovementComponent::MovementComponent(GameObject* owner, float movementSpe
 	, m_CellSize{ cellsize}
 {
 	m_pTransformComponent = GetOwner()->GetTransform();
-    
 }
 
 void Jotar::MovementComponent::Move(const glm::ivec2& dir)
@@ -45,7 +44,7 @@ glm::vec2 Jotar::MovementComponent::Walk(glm::ivec2 direction, const glm::vec2& 
 
 	return { 0,0 };
 }
-//
+
 glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float axis )
 {
 	float deltaTime = WorldTimeManager::GetInstance().GetDeltaTime();
@@ -66,5 +65,4 @@ glm::vec2 Jotar::MovementComponent::CalculateWalk(int direction, float axis )
 	}
 
 	return newPos;
-
 }

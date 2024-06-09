@@ -11,19 +11,14 @@
 #include <iostream>
 
 
-Jotar::MenuComponent::MenuComponent(GameObject* owner, const  glm::ivec3& defaultColor, const  glm::ivec3& selectedColor)
+Jotar::MenuComponent::MenuComponent(GameObject* owner, const  glm::ivec3& defaultColor, const  glm::ivec3& selectedColor, float spacingButtons)
 	: Component(owner)
 	, m_pButtonChildren{}
 	, m_CurrentButtonIndex{ 0 }
 	, m_DefaultColor{ defaultColor }
 	, m_SelectedColor{ selectedColor }
+	, m_SpacingButtons{ spacingButtons}
 {
-}
-
-void Jotar::MenuComponent::Start()
-{
-
-
 }
 
 void Jotar::MenuComponent::Update() 
@@ -83,8 +78,7 @@ void Jotar::MenuComponent::UpdateButtonPositions()
 	auto amountOfButtons = m_pButtonChildren.size();
 	if (amountOfButtons == 0) return;
 
-	float spacing = 40.0f;
-	float totalHeight = (amountOfButtons - 1) * spacing;
+	float totalHeight = (amountOfButtons - 1) * m_SpacingButtons;
 	float startY = totalHeight / 2.0f;
 
 	for (size_t i = 0; i < amountOfButtons; ++i)
@@ -92,7 +86,7 @@ void Jotar::MenuComponent::UpdateButtonPositions()
 		auto transform = m_pButtonChildren[i]->GetOwner()->GetTransform();
 
 		auto size = transform->GetSize();
-		float posY = startY - i * -spacing;
+		float posY = startY - i * - m_SpacingButtons;
 		transform->SetPosition(static_cast<float>(-size.x) / 2.f, posY);
 	}
 }

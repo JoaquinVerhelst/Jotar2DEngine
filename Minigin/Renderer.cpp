@@ -37,10 +37,8 @@ void Jotar::Renderer::Init()
 
 void Jotar::Renderer::Render() const
 {
-	const auto& color = GetBackgroundColor();
-	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
-	SDL_RenderClear(m_Renderer);
 
+	BeginRender();
 
 	auto cameras = SceneManager::GetInstance().GetCurrentScene().GetCameras();
 
@@ -67,8 +65,7 @@ void Jotar::Renderer::Render() const
 		}
 	}
 
-
-	SDL_RenderPresent(m_Renderer);
+	EndRender();
 }
 
 void Jotar::Renderer::Destroy()
@@ -128,12 +125,14 @@ void Jotar::Renderer::Update()
 
 void Jotar::Renderer::BeginRender() const
 {
-	Clear();
+	const auto& color = GetBackgroundColor();
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderClear(m_Renderer);
 }
 
 void Jotar::Renderer::EndRender() const
 {
-	//SDL_GL_SwapWindow(m_GLSDLManager->GetWindow());
+	SDL_RenderPresent(m_Renderer);
 }
 
 
@@ -224,8 +223,6 @@ void Jotar::Renderer::RemoveTextureToRender(BaseTextureComponent* textureCompone
 	}
 }
 
-
-
 SDL_Renderer* Jotar::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
 Jotar::SDLManager* Jotar::Renderer::GetGlSDLManager()
@@ -233,9 +230,13 @@ Jotar::SDLManager* Jotar::Renderer::GetGlSDLManager()
 	return m_SDLManager.get();
 }
 
-
-void Jotar::Renderer::Clear() const
+void Jotar::Renderer::SetBackgroundColor(const glm::ivec4& color)
 {
-	//glClearColor(0.3f, 0.3f, 0.3f, 1.f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	SDL_Color newColor;
+	newColor.r = static_cast<Uint8>(color.x);
+	newColor.g = static_cast<Uint8>(color.y);
+	newColor.b = static_cast<Uint8>(color.z);
+	newColor.a = static_cast<Uint8>(color.w);
+
+	m_ClearColor = newColor;
 }

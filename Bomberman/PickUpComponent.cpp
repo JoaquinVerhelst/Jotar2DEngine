@@ -12,7 +12,6 @@
 Jotar::PickUpComponent::PickUpComponent(GameObject* owner)
 	:Component(owner)
 {
-    //m_pTextureComponent = GetOwner()->GetComponent<TextureComponent>();
     RandomizePickUpType();
 }
 
@@ -44,10 +43,6 @@ void Jotar::PickUpComponent::OnNotify(const CollisionEvent& eventData)
             GetOwner()->Destroy();
         }
     }
-}
-
-void Jotar::PickUpComponent::OnDestroy()
-{
 }
 
 

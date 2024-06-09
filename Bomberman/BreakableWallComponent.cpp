@@ -18,8 +18,3 @@ Jotar::BreakableWallComponent::BreakableWallComponent(GameObject* owner, const s
 	, m_OnWallBreak{ onWallBreak }
 {
 }
-
-void Jotar::BreakableWallComponent::OnDestroy()
-{
-
-}

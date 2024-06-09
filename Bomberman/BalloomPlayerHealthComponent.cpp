@@ -21,7 +21,8 @@ void Jotar::BalloomPlayerHealthComponent::Update()
 
 		if (m_DeathTimer >= m_DeathPauseTime)
 		{
-			GetOwner()->GetTransform()->SetPosition(-200, -200);
+			// Just a position outside the view, these numbers mean nothing
+			GetOwner()->GetTransform()->SetPosition(-1000, -1000);
 
 			m_DeathTimer = 0;
 			m_IsDeath = false;

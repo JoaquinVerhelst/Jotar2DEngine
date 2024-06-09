@@ -6,13 +6,19 @@
 #include "InputManager.h"
 #include "Scene.h"
 
+Jotar::GameState::GameState(const glm::ivec4& color)
+	:m_BackgroundColor(color)
+{
+}
+
+
 // ------------------------------------------------------------------------------------- //
 //									MAIN MENU STATE										 //
 // ------------------------------------------------------------------------------------- //
 
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
+	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
 	InputManager::GetInstance().ClearPlayerInputBindings();
 
 
@@ -28,11 +34,6 @@ void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 	scene.Start();
 }
 
-Jotar::GameState* Jotar::MainMenuState::OnHandle()
-{
-
-	return nullptr;
-}
 
 void Jotar::MainMenuState::OnExit(GameManager* )
 {
@@ -41,29 +42,6 @@ void Jotar::MainMenuState::OnExit(GameManager* )
 	scene.MarkAllForDestroy();
 }
 
-
-// ------------------------------------------------------------------------------------- //
-//								 TRANSITION  STATE										 //
-// ------------------------------------------------------------------------------------- //
-
-
-void Jotar::TransitionState::OnEnter(GameManager* )
-{
-
-}
-
-Jotar::GameState* Jotar::TransitionState::OnHandle()
-{
-	return nullptr;
-}
-
-void Jotar::TransitionState::OnExit(GameManager* )
-{
-}
-
-
-
-
 // ------------------------------------------------------------------------------------- //
 //									Game Level STATE									 //
 // ------------------------------------------------------------------------------------- //
@@ -71,7 +49,7 @@ void Jotar::TransitionState::OnExit(GameManager* )
 
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(SDL_Color(20, 180, 20, 255));
+	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
 
 	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
 
@@ -97,18 +75,6 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 	}
 }
 
-Jotar::GameState* Jotar::GameLevelState::OnHandle()
-{
-	return nullptr;
-}
-
-void Jotar::GameLevelState::OnExit(GameManager* )
-{
-
-	//SceneManager::GetInstance().GetCurrentScene().MarkSceneForDestroy();
-
-}
-
 
 // ------------------------------------------------------------------------------------- //
 //								 HIGHSCORE  STATE										 //
@@ -118,7 +84,7 @@ void Jotar::GameLevelState::OnExit(GameManager* )
 
 void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(SDL_Color(0, 0, 0, 255));
+	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
 
 	m_PreviousSceneName = SceneManager::GetInstance().GetCurrentSceneName();
 	auto& prevScene = SceneManager::GetInstance().GetSceneByName(m_PreviousSceneName);
@@ -133,10 +99,6 @@ void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 	nextScene.Start();
 }
 
-Jotar::GameState* Jotar::HighscoreState::OnHandle()
-{
-	return nullptr;
-}
 
 void Jotar::HighscoreState::OnExit(GameManager*)
 {
@@ -159,6 +121,5 @@ void Jotar::HighscoreState::SetIsSaving(bool isSaving)
 {
 	m_IsSaving = isSaving;
 }
-
 
 

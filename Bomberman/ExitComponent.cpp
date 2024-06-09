@@ -16,18 +16,11 @@ Jotar::ExitComponent::ExitComponent(GameObject* owner, std::string exitTextureFi
 	, m_IsExitRevealed{ false }
 	, m_ShouldLoadNextLevel{ false }
 {
-
 }
 
 void Jotar::ExitComponent::SetAmountOfEnemies(int totalEnemies)
 {
 	m_EnemiesRemaining = totalEnemies;
-}
-
-
-void Jotar::ExitComponent::OnDestroy()
-{
-
 }
 
 

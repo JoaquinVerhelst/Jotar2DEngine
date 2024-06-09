@@ -21,8 +21,6 @@ namespace Jotar
 
 	protected:
 
-
-
 		int m_Damage;
 		std::vector<std::string> m_TagsToHit;
 		GameObject* m_Attacker;

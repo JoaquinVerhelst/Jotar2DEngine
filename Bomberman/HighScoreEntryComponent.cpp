@@ -16,7 +16,6 @@ Jotar::HighScoreEntryComponent::HighScoreEntryComponent(GameObject* owner, HighS
 	, m_pHighScoreMenuComponent{ jsonHighScorLoader }
 	, m_MaxNameLength{ maxNameLemgth}
 {
-
 }
 
 void Jotar::HighScoreEntryComponent::Update()

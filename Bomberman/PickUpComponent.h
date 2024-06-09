@@ -26,7 +26,6 @@ namespace Jotar
 		virtual ~PickUpComponent() = default;
 
 		void OnNotify(const CollisionEvent& eventData) override;
-		void OnDestroy() override;
 
 		PickUpComponent(const PickUpComponent& other) = delete;
 		PickUpComponent(PickUpComponent&& other) = delete;

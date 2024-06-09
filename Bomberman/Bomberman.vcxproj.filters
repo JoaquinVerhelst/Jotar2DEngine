@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="GameFIles">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -30,41 +26,11 @@
     <Filter Include="GameFIles\Components\Player">
       <UniqueIdentifier>{4abe46c9-4627-4d1c-a63f-a4f56574e43b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFIles\Components\World">
+      <UniqueIdentifier>{5354c7d7-8687-4584-8640-5b028ec0e2e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JsonLevelLoader.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BombComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BreakableWallComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="DamageComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthDisplayComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="MovementComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PickUpComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PlaceBombComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreDisplayComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
     <ClCompile Include="EventAddScore.cpp">
       <Filter>GameFIles\Event</Filter>
     </ClCompile>
@@ -104,9 +70,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>GameFIles\GameState</Filter>
     </ClCompile>
-    <ClCompile Include="ExitComponent.cpp">
-      <Filter>GameFIles\Components</Filter>
-    </ClCompile>
     <ClCompile Include="AIScoreComponent.cpp">
       <Filter>GameFIles\Components\AI</Filter>
     </ClCompile>
@@ -134,43 +97,46 @@
     <ClCompile Include="BalloomPlayerHealthComponent.cpp">
       <Filter>GameFIles\Components\Player</Filter>
     </ClCompile>
+    <ClCompile Include="HealthDisplayComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreDisplayComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BombComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableWallComponent.cpp">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageComponent.cpp">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="ExitComponent.cpp">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="PickUpComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaceBombComponent.cpp">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonLevelLoader.cpp">
+      <Filter>GameFIles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BombComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BreakableWallComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="DamageComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
     <ClInclude Include="EventAddScore.h">
       <Filter>GameFIles\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthDisplayComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonLevelLoader.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PickUpComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PlaceBombComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreDisplayComponent.h">
-      <Filter>GameFIles\Components</Filter>
     </ClInclude>
     <ClInclude Include="HealthEvents.h">
       <Filter>GameFIles\Event</Filter>
@@ -214,9 +180,6 @@
     <ClInclude Include="GameState.h">
       <Filter>GameFIles\GameState</Filter>
     </ClInclude>
-    <ClInclude Include="ExitComponent.h">
-      <Filter>GameFIles\Components</Filter>
-    </ClInclude>
     <ClInclude Include="AIScoreComponent.h">
       <Filter>GameFIles\Components\AI</Filter>
     </ClInclude>
@@ -246,6 +209,42 @@
     </ClInclude>
     <ClInclude Include="BalloomPlayerHealthComponent.h">
       <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthDisplayComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreDisplayComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="BombComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableWallComponent.h">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageComponent.h">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitComponent.h">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaceBombComponent.h">
+      <Filter>GameFIles\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>GameFIles\Components\World</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonLevelLoader.h">
+      <Filter>GameFIles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

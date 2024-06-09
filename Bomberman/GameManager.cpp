@@ -6,7 +6,6 @@
 #include "SoundServiceLocator.h"
 #include "SoundSystem.h"
 
-
 void Jotar::GameManager::Init(std::string gameLevelsFilePath)
 {
     m_LevelLoader.SetGameLevelsFilePath(gameLevelsFilePath);
@@ -19,9 +18,9 @@ void Jotar::GameManager::Init(std::string gameLevelsFilePath)
     m_CurrentTotalLevelsPlayed = 0;
 
 
-    m_pMainMenuState = std::make_unique<MainMenuState>();
-    m_pGameLevelState = std::make_unique<GameLevelState>();
-    m_pHighScoreState = std::make_unique<HighscoreState>();
+    m_pMainMenuState = std::make_unique<MainMenuState>(glm::ivec4(0, 0, 0, 255));
+    m_pGameLevelState = std::make_unique<GameLevelState>(glm::ivec4(20, 180, 20, 255));
+    m_pHighScoreState = std::make_unique<HighscoreState>(glm::ivec4(0, 0, 0, 255));
 
     LoadMainMenu();
 

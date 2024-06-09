@@ -14,13 +14,15 @@
 
 #include "GameManager.h"
 
-Jotar::BombComponent::BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range)
+Jotar::BombComponent::BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range, int explosionSpeed, const std::vector<std::string>& tagsToKill)
 	: Component(owner)
 	, m_ExplodeTime{ explodeTime }
 	, m_IsExploded { false }
 	, m_TimeCounter { 0 }
     , m_Range{ range }
     , m_BombPlacer{ bombPlacer }
+    , m_ExplosionSpeed{ explosionSpeed }
+    , m_TagsToKill{tagsToKill}
 {
     m_pSubject = std::make_unique<Subject<ExplosionEvent>>();
 
@@ -80,7 +82,6 @@ void Jotar::BombComponent::OnExplode(int range)
 
     auto* worldGrid = GameManager::GetInstance().GetWorldGrid();
 
-
     auto pos = GetOwner()->GetTransform()->GetLocalPosition();
     auto& centerCell = worldGrid->GetGridCellByPosition(pos);
 
@@ -94,9 +95,7 @@ void Jotar::BombComponent::OnExplode(int range)
 
 
     auto gridSize = worldGrid->GetGridSize();
-    //int cellSize = worldGrid.GetCellSize();
     auto centerIndex = centerCell.Index;
-
 
     auto& scene = SceneManager::GetInstance().GetCurrentScene();
 
@@ -152,26 +151,25 @@ void Jotar::BombComponent::OnExplode(int range)
             }
         }
     }
-
-    //GetOwner()->GetComponent<ColliderComponent>()->RemoveThisColliderFromManager();
     GetOwner()->Destroy();
 }
 
 
 void Jotar::BombComponent::CreateChildExplosion(int explosionPosition,const glm::vec2& pos, Scene& scene)
 {
-    auto explosion = scene.CreateGameObject("Explosion");
+    std::string explosionTag = "Explosion";
 
+    auto explosion = scene.CreateGameObject(explosionTag);
 
-    auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet("Explosion"), explosionPosition);
+    auto texture = explosion->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedSpriteSheet(explosionTag), explosionPosition);
     texture->SetDestroyOnLastFrame(true);
-    texture->SetAnimationSpeedInNrOfFramesPerSecond(10);
+    texture->SetAnimationSpeedInNrOfFramesPerSecond(m_ExplosionSpeed);
     explosion->GetTransform()->SetPosition(pos);
     auto triggerCollider = explosion->AddComponent<ColliderComponent>(true, true);
-    triggerCollider->SetTag("Explosion");
+    triggerCollider->SetTag(explosionTag);
 
     int damage = 1;
-    auto damageComp = explosion->AddComponent<DamageComponent>(damage, std::vector<std::string>{"Killable", "Player", "Enemy"}, m_BombPlacer);
+    auto damageComp = explosion->AddComponent<DamageComponent>(damage, m_TagsToKill, m_BombPlacer);
 
     triggerCollider->AddObserver(damageComp);
 

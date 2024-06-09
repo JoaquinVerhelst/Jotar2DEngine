@@ -15,10 +15,9 @@ namespace Jotar
 	class HighScoreMenuComponent : public Component
 	{
 	public:
-		HighScoreMenuComponent(GameObject* owner, const std::shared_ptr<Font>& font, glm::ivec2 windowSize);
+		HighScoreMenuComponent(GameObject* owner, const std::shared_ptr<Font>& font, glm::ivec2 windowSize, float baseOffset = -100.f, float betweenOffset = 50.f);
 		~HighScoreMenuComponent() = default;
 
-		void Update() override;
 		void Start() override;
 
 		void UpdateHighScoreList();
@@ -37,6 +36,9 @@ namespace Jotar
 
 		std::vector<GameObject*> m_ScoreTextObjects;
 		std::shared_ptr<Font> m_Font;
+
+		float m_BaseOffset;
+		float m_BetweenOffset;
 
 		glm::ivec2 m_WindowSize;
 	};

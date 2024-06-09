@@ -117,7 +117,7 @@ Jotar::GridCell& Jotar::WorldGrid::GetGridCellByPosition(const glm::vec2& positi
 std::vector<Jotar::GridCell> Jotar::WorldGrid::GetConnectedCellsFromIndex(glm::ivec2 cellIndex) const
 {
     std::vector<GridCell> connectedCells;
-    // Define the offsets for the adjacent cells (excluding diagonals)
+    // Define the offsets for the adjacent cells (no diagonals)
     std::vector<glm::ivec2> offsets = { {0, -1}, {-1, 0}, {1, 0}, {0, 1} };
 
     for (const auto& offset : offsets)

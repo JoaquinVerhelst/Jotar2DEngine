@@ -43,16 +43,10 @@ namespace Jotar
 
 
 		int m_MaxAmountOfBombs;
-		//int m_CurrentPlacedBombs;
 		std::vector<BombComponent*> m_BombsPlaced;
 
 		bool m_HasDetonator;
 		int m_AmountOfFlames;
 		float m_BombTimer;
-
-
-		//std::shared_ptr<GameObject> m_BombToPlace;
-
-
 	};
 }

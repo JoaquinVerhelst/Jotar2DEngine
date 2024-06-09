@@ -16,7 +16,7 @@ namespace Jotar
 	{
 	public:
 
-		explicit BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range);
+		explicit BombComponent(GameObject* owner, GameObject* bombPlacer, float explodeTime, int range, int explosionSpeed = 10, const std::vector<std::string>& tagsToKill = { "Killable", "Player", "Enemy" });
 		virtual ~BombComponent() = default;
 
 
@@ -51,6 +51,10 @@ namespace Jotar
 		float m_ExplodeTime;
 		float m_TimeCounter;
 		bool m_IsExploded;
+		int m_ExplosionSpeed;
+		std::vector<std::string> m_TagsToKill;
+
+
 		GameObject* m_BombPlacer;
 	};
 }

@@ -62,7 +62,6 @@ void Jotar::PlaceBombComponent::PlaceBomb()
 	{
 		auto bomb = CreateBombGameObject(cell);
 	}
-
 }
 
 void Jotar::PlaceBombComponent::DetonateBomb()
@@ -81,14 +80,17 @@ void Jotar::PlaceBombComponent::DetonateBomb()
 
 std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObject(GridCell& cell)
 {
+	std::string bombTag = "Bomb";
+
+
 	Scene& scene = SceneManager::GetInstance().GetCurrentScene();
-	auto bombObj = scene.CreateGameObject("Bomb");
+	auto bombObj = scene.CreateGameObject(bombTag);
 	auto size = GameManager::GetInstance().GetWorldGrid()->GetCellSize();
 	glm::vec2 sizeVec = { size, size };
 
 	bombObj->GetTransform()->SetSize({ sizeVec });
 	auto colliderComp = bombObj->AddComponent<ColliderComponent>(true, true);
-	colliderComp->SetTag("Bomb");
+	colliderComp->SetTag(bombTag);
 
 	auto bombComp = bombObj->AddComponent<BombComponent>(GetOwner(), m_BombTimer, m_AmountOfFlames);
 
@@ -102,7 +104,7 @@ std::shared_ptr<Jotar::GameObject> Jotar::PlaceBombComponent::CreateBombGameObje
 	bombComp->AddObserver(this);
 	m_BombsPlaced.emplace_back(bombComp);
 
-	bombObj->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture("Bomb"));
+	bombObj->AddComponent<TextureComponent>(ResourceManager::GetInstance().GetSharedTexture(bombTag));
 
 
 	bombObj->Start();

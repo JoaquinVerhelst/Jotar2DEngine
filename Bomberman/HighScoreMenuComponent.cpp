@@ -5,24 +5,22 @@
 #include "HUDComponent.h"
 
 
-Jotar::HighScoreMenuComponent::HighScoreMenuComponent(GameObject* owner, const std::shared_ptr<Font>& font, glm::ivec2 windowSize)
+Jotar::HighScoreMenuComponent::HighScoreMenuComponent(GameObject* owner, const std::shared_ptr<Font>& font, glm::ivec2 windowSize, float baseOffset, float betweenOffset)
 	:Component(owner)
 	, m_Font{ font }
 	, m_WindowSize{ windowSize }
 	, m_pJsonHighScoreLoader{nullptr}
-{ 
-}
-
-void Jotar::HighScoreMenuComponent::Update()
+	, m_BaseOffset{baseOffset}
+	, m_BetweenOffset{betweenOffset}		
 {
 }
+
 
 void Jotar::HighScoreMenuComponent::Start()
 {
 	m_pJsonHighScoreLoader = GetOwner()->GetComponent<JsonHighScoreLoaderComponent>();
 	UpdateHighScoreList();
 }
-
 
 void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 {
@@ -53,12 +51,10 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 			return totalScore1 > totalScore2;
 		});
 
-	float offset = 50.f;
-
 	for (size_t i = 0; i < highScoreSinglePlayer.size(); ++i)
 	{
 		std::string scoreText = std::to_string(highScoreSinglePlayer[i].score1) + "             " + highScoreSinglePlayer[i].name1;
-		glm::vec2 pos{ -m_WindowSize.x / 4.f,  -100.f + offset * i};
+		glm::vec2 pos{ -m_WindowSize.x / 4.f,  m_BaseOffset + m_BetweenOffset * i};
 		CreateScoreTextGameObject("Singleplayer", scoreText, pos);
 	}
 
@@ -67,7 +63,7 @@ void Jotar::HighScoreMenuComponent::UpdateHighScoreList()
 		std::string scoreText = std::to_string(highScoreCoop[i].score1) + ": " + highScoreCoop[i].name1 + "        "
 			+ std::to_string(highScoreCoop[i].score2) + ": " + highScoreCoop[i].name2;
 
-		glm::vec2 pos{ m_WindowSize.x / 4.f,  -100.f + offset * i };
+		glm::vec2 pos{ m_WindowSize.x / 4.f,  m_BaseOffset + m_BetweenOffset * i };
 		CreateScoreTextGameObject("Coop", scoreText, pos);
 	}
 }
