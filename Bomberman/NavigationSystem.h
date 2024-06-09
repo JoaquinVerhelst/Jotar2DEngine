@@ -9,8 +9,6 @@ namespace Jotar
 
 	struct GridCell;
 
-
-
 	// This Navigation System is based on the A* algorithm framework we made in Gameplay Programming
 	class NavigationSystem final
 	{
@@ -36,13 +34,11 @@ namespace Jotar
 			{
 				return EstimatedTotalCost < other.EstimatedTotalCost;
 			};
-
 		};
 
 	public:
-		NavigationSystem();
+		NavigationSystem() = default;
 		~NavigationSystem() = default;
-
 
 		NavigationSystem(const NavigationSystem& other) = delete;
 		NavigationSystem(NavigationSystem&& other) = delete;
@@ -51,8 +47,6 @@ namespace Jotar
 
 
 		std::vector<glm::vec2> FindPath(const GridCell& startCell, const GridCell& endCell);
-
-
 	private:
 
 		float GetHeuristicCost(glm::vec2 startNodePos, glm::vec2 endNodePos);

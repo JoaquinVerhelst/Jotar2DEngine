@@ -38,17 +38,6 @@ namespace Jotar
 	};
 
 
-	class IdleAIState final : public AIState
-	{
-	public:
-		IdleAIState(AIBehaviorComponent* pAiComp);
-
-		virtual void OnEnter() override;
-		virtual AIState* OnHandle() override;
-		virtual void OnExit() override;
-	};
-
-
 	class GoToTargetAIState : public AIState
 	{
 	public:
@@ -112,25 +101,22 @@ namespace Jotar
 		virtual AIState* OnHandle() override;
 
 		void SetTarget(ColliderComponent* targetCollider);
+		const ColliderComponent* GetTarget() { return m_pTargetCollider; }
 
 	private:
 		ColliderComponent* m_pTargetCollider;
-
 	};
- 
 
 
 	class OnDamageAIState final : public AIState
 	{
 	public:
-		OnDamageAIState(AIBehaviorComponent* pAiComp);
+		OnDamageAIState(AIBehaviorComponent* pAiComp, float deathWaitTime);
 
 		virtual void OnEnter() override;
 		virtual AIState* OnHandle() override;
-		virtual void OnExit() override;
 
-
-		void Initialize(GameObject* attacker, float deathWaitTime = 2.0f);
+		void SetAttacker(GameObject* attacker);
 	private:
 
 		GameObject* m_Attacker;

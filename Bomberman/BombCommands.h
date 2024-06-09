@@ -2,7 +2,6 @@
 #include "Command.h"
 #include "PlaceBombComponent.h"
 
-
 namespace Jotar
 {
 	class PlaceBombCommand final : public Command

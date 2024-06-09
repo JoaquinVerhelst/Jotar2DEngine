@@ -9,6 +9,9 @@
 
 namespace Jotar
 {
+	class CollisionManager;
+
+
 	class AIPerceptionComponent final : public Component
 	{
 	public:
@@ -40,6 +43,7 @@ namespace Jotar
 	private:
 		TransformComponent* m_pTransformComponent;
 		AIBehaviorComponent* m_pAIBehaviorComponent;
+		CollisionManager* m_SceneCollisionManager;
 
 		std::unique_ptr<Subject<AIEvents>> m_pSubject;
 

@@ -6,9 +6,7 @@
 Jotar::AIScoreComponent::AIScoreComponent(GameObject* owner, int enemyScore)
 	:Component(owner)
 	, m_ScoreToAdd{enemyScore}
-{
-
-}
+{}
 
 void Jotar::AIScoreComponent::OnNotify(const AIDeathEvent& aiDeathEvent)
 {

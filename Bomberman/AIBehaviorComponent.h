@@ -6,7 +6,6 @@
 #include <memory>
 #include "Observer.h"
 #include "AIEvents.h"
-#include "HealthEvents.h"
 #include "Subject.h"
 #include "Event.h"
 
@@ -17,15 +16,11 @@ namespace Jotar
 	class AIAnimationControllerComponent;
 	class AIPerceptionComponent;
 
-
-
-
-
 	class AIBehaviorComponent final : public Component , public Observer<AIEvents>, public Observer<Event>
 	{
 	public:
 
-		explicit AIBehaviorComponent(GameObject* owner);
+		explicit AIBehaviorComponent(GameObject* owner, float chaseRecheckPathTime = 2.0f, int walkRange = 3, float deathWaitTime = 2.f);
 		~AIBehaviorComponent();
 
 		void Start() override;
@@ -41,7 +36,6 @@ namespace Jotar
 		void OnNotify(const AIEvents& event) override;
 		void OnNotify(const Event& event) override;
 
-		IdleAIState* GetIdleState() const { return m_pIdleState.get(); }
 		GoToTargetAIState* GetGoToTargetState() const { return m_pGoToTargetState.get(); }
 		CalculateRandomPathAIState* GetCalculateRandomPathState() const { return m_pCalculateRandomPathState.get(); }
 		ChaseTargetAIState* GetChaseTargetState() const { return m_pChaseTargetState.get(); }
@@ -66,7 +60,6 @@ namespace Jotar
 	private:
 
 		AIState* m_pCurrentState;
-		std::unique_ptr<IdleAIState> m_pIdleState;
 		std::unique_ptr<GoToTargetAIState> m_pGoToTargetState;
 		std::unique_ptr<CalculateRandomPathAIState> m_pCalculateRandomPathState;
 		std::unique_ptr<CalculatePathToPlayerAIState> m_pCalculatePathToPlayerState;

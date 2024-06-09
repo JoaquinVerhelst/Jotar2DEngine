@@ -133,6 +133,8 @@ Jotar::ColliderComponent* Jotar::CollisionManager::RayCastCollision(glm::vec2 st
 
     for (const auto& collider : m_pSceneColliders) {
 
+        if (collider->IsDisabled()) continue;
+
         if (!collider->CompareTag(tagToIgnore))
         {
             glm::vec4 collisionRect = collider->GetCollisionRect();

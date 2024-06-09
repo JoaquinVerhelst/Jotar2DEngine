@@ -16,6 +16,7 @@ Jotar::AIPerceptionComponent::AIPerceptionComponent(GameObject* owner, float vie
 	, m_ViewDistance{ viewDistance }
 	, m_TimeToCheck{0.2f}
 	, m_CheckTimer{0}
+	, m_SceneCollisionManager{nullptr}
 {
 	m_pSubject = std::make_unique<Subject<AIEvents>>();
 }
@@ -29,6 +30,7 @@ void Jotar::AIPerceptionComponent::Start()
 {
 	m_pTransformComponent = GetOwner()->GetComponent<TransformComponent>();
 	m_pAIBehaviorComponent = GetOwner()->GetComponent<AIBehaviorComponent>();
+	m_SceneCollisionManager = &SceneManager::GetInstance().GetCurrentScene().GetCollisionManager();
 }
 
 void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
@@ -36,11 +38,9 @@ void Jotar::AIPerceptionComponent::CheckIfPotentialTargetIsSeen()
 	auto dir = m_pAIBehaviorComponent->GetGoToTargetState()->GetCurrentDirection();
 	auto pos = m_pTransformComponent->GetWorldPosition();
 
-	auto& collsiionManager = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager();
-
-	if (collsiionManager.RayCastIsColliderInRange(pos, dir, m_ViewDistance, m_TargetTag))
+	if (m_SceneCollisionManager->RayCastIsColliderInRange(pos, dir, m_ViewDistance, m_TargetTag))
 	{
-		auto futureResult = SceneManager::GetInstance().GetCurrentScene().GetCollisionManager().RayCastCollisionAsync(pos, dir, m_ViewDistance, "Enemy");
+		auto futureResult = m_SceneCollisionManager->RayCastCollisionAsync(pos, dir, m_ViewDistance, "Enemy");
 
 		Jotar::ColliderComponent* closestCollider = futureResult.get();
 

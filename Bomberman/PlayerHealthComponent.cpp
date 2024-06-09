@@ -1,5 +1,6 @@
 #include "PlayerHealthComponent.h"
 #include "MovementComponent.h"
+#include "ColliderComponent.h"
 #include "WorldTimeManager.h"
 #include "PlaceBombComponent.h"
 #include "GameManager.h"
@@ -44,6 +45,7 @@ void Jotar::PlayerHealthComponent::Reset()
 	{
 		GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(false);
 		GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(false);
+		GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(false);
 		m_pOnDeathSubject->RemoveAllObservers();
 	}
 }
@@ -58,6 +60,7 @@ void Jotar::PlayerHealthComponent::TakeDamage(int damage, GameObject* attacker)
 	// stop Input
 	GetOwner()->GetComponent<MovementComponent>()->SetIsDisabled(true);
 	GetOwner()->GetComponent<PlaceBombComponent>()->SetIsDisabled(true);
+	GetOwner()->GetComponent<ColliderComponent>()->SetIsDisabled(true);
 	m_IsDeath = true;
 }
 

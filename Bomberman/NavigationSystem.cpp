@@ -6,11 +6,6 @@
 #include <iostream>
 
 
-Jotar::NavigationSystem::NavigationSystem()
-{
-}
-
-
 std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCell, const GridCell& endCell)
 {
 	std::vector<glm::vec2> path{};
@@ -132,6 +127,8 @@ std::vector<glm::vec2> Jotar::NavigationSystem::FindPath(const GridCell& startCe
 	path.emplace_back(startCell.CenterCellPosition);
 
 	std::reverse(path.begin(), path.end());
+
+	path.emplace_back(endCell.CenterCellPosition);
 
 	return path;
 }

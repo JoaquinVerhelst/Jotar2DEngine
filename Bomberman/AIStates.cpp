@@ -6,48 +6,21 @@
 #include "GameManager.h"
 #include <random>
 #include "AIBehaviorComponent.h"
-
 #include "SceneManager.h"
 #include "CameraComponent.h"
 #include "Scene.h"
+
+
 #include "WorldTimeManager.h"
 #include "AIAnimationControllerComponent.h"
 
-
 #include "Renderer.h"
-
-
-#include "ScoreComponent.h"
-#include "HealthComponent.h"
 #include "AIEvents.h"
-
-
 
 #include "SoundServiceLocator.h"
 #include "SoundSystem.h"
 
 
-// ------------------------------------------------------------------------------------- //
-//									IDLE STATE											 //
-// ------------------------------------------------------------------------------------- //
-
-Jotar::IdleAIState::IdleAIState(AIBehaviorComponent* pAiComp)
-	: AIState(pAiComp)
-{
-}
-
-void Jotar::IdleAIState::OnEnter()
-{
-}
-
-Jotar::AIState* Jotar::IdleAIState::OnHandle()
-{
-	return m_pAIBehaviorComp->GetCalculateRandomPathState();
-}
-
-void Jotar::IdleAIState::OnExit()
-{
-}
 
 // ------------------------------------------------------------------------------------- //
 //								GO TO TARGET STATE										 //
@@ -62,11 +35,9 @@ Jotar::GoToTargetAIState::GoToTargetAIState(AIBehaviorComponent* pAiComp)
 
 Jotar::AIState* Jotar::GoToTargetAIState::OnHandle()
 {
-
-	//if its the path end -> Go to Idle
 	if (m_Path.empty())
 	{
-		return m_pAIBehaviorComp->GetIdleState();
+		return m_pAIBehaviorComp->GetCalculateRandomPathState();
 	}
 
 	auto pos = m_pMovementComp->GetTransform()->GetWorldPosition();
@@ -115,11 +86,7 @@ void Jotar::GoToTargetAIState::MoveTowardsNextPoint(glm::vec2& pos, glm::vec2& p
 void Jotar::GoToTargetAIState::CalculateDirection(glm::vec2& pos, glm::vec2& pathPos)
 {
 	glm::vec2 dir = pathPos - pos;
-
-
 	dir = glm::normalize(dir);
-	
-
 	m_CurrentDirection = glm::ivec2(std::round(dir.x), std::round(dir.y));
 
 	CheckForAnimationUpdate();
@@ -132,7 +99,6 @@ bool Jotar::GoToTargetAIState::CheckDistanceToPoint(glm::vec2& pos, glm::vec2& p
 	if (distance * distance < 3)
 	{
 		m_Path.erase(m_Path.begin());
-		//m_CurrentDirection = glm::vec2{ 0,0 };
 		return true;
 	}
 
@@ -319,9 +285,9 @@ void Jotar::CalculatePathToPlayerAIState::SetTarget(ColliderComponent* targetCol
 //									DEAD STATE											 //
 // ------------------------------------------------------------------------------------- //
 
-Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp)
+Jotar::OnDamageAIState::OnDamageAIState(AIBehaviorComponent* pAiComp, float deathWaitTime)
 	: AIState(pAiComp)
-	, m_DeathWaitTime{ 0 }
+	, m_DeathWaitTime{ deathWaitTime }
 	, m_IsDeath{ false }
 	, m_DeathTimer{ 0 }
 	, m_Attacker{ nullptr }
@@ -355,13 +321,9 @@ Jotar::AIState* Jotar::OnDamageAIState::OnHandle()
 	return nullptr;
 }
 
-void Jotar::OnDamageAIState::OnExit()
-{
-}
 
-void Jotar::OnDamageAIState::Initialize(GameObject* attacker, float deathWaitTime)
+void Jotar::OnDamageAIState::SetAttacker(GameObject* attacker)
 {
 	m_Attacker = attacker;
-	m_DeathWaitTime = deathWaitTime;
 }
 

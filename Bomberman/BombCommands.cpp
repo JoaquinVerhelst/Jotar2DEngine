@@ -1,6 +1,5 @@
 #include "BombCommands.h"
 #include "GameObject.h"
-#include "BombCommands.h"
 
 
 Jotar::PlaceBombCommand::PlaceBombCommand(PlaceBombComponent* bomb)
