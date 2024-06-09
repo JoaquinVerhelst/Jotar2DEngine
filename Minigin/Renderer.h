@@ -49,7 +49,9 @@ namespace Jotar
 
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
-		void SetBackgroundColor(const glm::ivec4& color);
+
+
+		void SetBackgroundColorGLM(const glm::ivec4& color);
 
 
 		void EndRender() const;

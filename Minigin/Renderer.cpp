@@ -230,7 +230,7 @@ Jotar::SDLManager* Jotar::Renderer::GetGlSDLManager()
 	return m_SDLManager.get();
 }
 
-void Jotar::Renderer::SetBackgroundColor(const glm::ivec4& color)
+void Jotar::Renderer::SetBackgroundColorGLM(const glm::ivec4& color)
 {
 	SDL_Color newColor;
 	newColor.r = static_cast<Uint8>(color.x);

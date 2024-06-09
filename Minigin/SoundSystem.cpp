@@ -271,7 +271,7 @@ namespace Jotar
             audioClip->id = static_cast<int>(m_AudioClips.size());
             m_AudioClips.emplace_back(audioClip);
         }
-        else if (id < m_AudioClips.size())
+        else if (id < static_cast<int>(m_AudioClips.size()))
         {
             audioClip->id = id;
             delete m_AudioClips[id];

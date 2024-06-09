@@ -22,14 +22,29 @@ void load()
 	std::cout << '\n';
 	std::cout << '\n';
 
-	std::cout << "Player1 Controls: " << '\n';
+	std::cout << "General Controls: " << '\n';
+	std::cout << "Mute: M" << '\n';
+	std::cout << "SkipLevel: F1" << '\n';
+	std::cout << "mainMenu: Escape" << '\n';
+	std::cout << "increaseMusicVolume: ]" << '\n';
+	std::cout << "decreaseMusicVolume: [" << '\n';
+	std::cout << "increaseSoundEffectsVolume: +" << '\n';
+	std::cout << "decreaseSoundEffectsVolume: -" << '\n';
+
+
+	std::cout << '\n';
+	std::cout << '\n';
+
+
+
+	std::cout << "Player 0 Controls: " << '\n';
 	std::cout << "Movement: Controller 1 DPad and WASD" << '\n';
-	std::cout << "E or Button B to Place Bomb for sound" << '\n';
-
+	std::cout << "E or Button B to Place Bomb" << '\n';
+	std::cout << "Q or Button A to Detonate Bomb" << '\n';
 	std::cout << '\n';
 	std::cout << '\n';
 
-	std::cout << "Player2 Controls: " << '\n';
+	std::cout << "Player 1 Controls: " << '\n';
 	std::cout << "Movement: Controller 2 DPad and arrow keys" << '\n';
 	std::cout << "M or Button B to add Score" << '\n';
 

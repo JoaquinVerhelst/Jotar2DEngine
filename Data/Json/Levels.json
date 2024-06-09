@@ -205,7 +205,7 @@
 					},
 					"enemyInfo": {
 						"balloom": {
-							"amount": 1
+							"amount": 8
 						}
 					}
 				},
@@ -235,11 +235,8 @@
 						]
 					},
 					"enemyInfo": {
-						"balloom": {
-							"amount": 4
-						},
 						"oneal": {
-							"amount": 4
+							"amount": 5
 						}
 					}
 				},
@@ -269,17 +266,11 @@
 						]
 					},
 					"enemyInfo": {
-						"balloom": {
-							"amount": 2
-						},
-						"oneal": {
-							"amount": 2
-						},
 						"doll": {
-							"amount": 3
+							"amount": 4
 						},
 						"minvo": {
-							"amount": 2
+							"amount": 3
 						}
 					}
 				}

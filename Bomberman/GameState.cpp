@@ -18,7 +18,7 @@ Jotar::GameState::GameState(const glm::ivec4& color)
 
 void Jotar::MainMenuState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
+	Renderer::GetInstance().SetBackgroundColorGLM(m_BackgroundColor);
 	InputManager::GetInstance().ClearPlayerInputBindings();
 
 
@@ -49,7 +49,7 @@ void Jotar::MainMenuState::OnExit(GameManager* )
 
 void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
+	Renderer::GetInstance().SetBackgroundColorGLM(m_BackgroundColor);
 
 	std::string levelName = "level" + std::to_string(gameManager->GetCurrentTotalLevelsPlayed());
 
@@ -84,7 +84,7 @@ void Jotar::GameLevelState::OnEnter(GameManager* gameManager)
 
 void Jotar::HighscoreState::OnEnter(GameManager* gameManager)
 {
-	Renderer::GetInstance().SetBackgroundColor(m_BackgroundColor);
+	Renderer::GetInstance().SetBackgroundColorGLM(m_BackgroundColor);
 
 	m_PreviousSceneName = SceneManager::GetInstance().GetCurrentSceneName();
 	auto& prevScene = SceneManager::GetInstance().GetSceneByName(m_PreviousSceneName);
