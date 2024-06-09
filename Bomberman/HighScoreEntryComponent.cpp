@@ -40,7 +40,7 @@ void Jotar::HighScoreEntryComponent::CheckInput()
 
 	if (!text.empty())
 	{
-		if (m_NameText.length() <= m_MaxNameLength)
+		if (static_cast<int>(m_NameText.length()) <= m_MaxNameLength)
 		{
 			m_NameText += text;
 			m_pTextComponent->SetText(m_DisplayText + m_NameText);

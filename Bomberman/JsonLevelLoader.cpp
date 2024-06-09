@@ -665,7 +665,8 @@ void Jotar::JsonLevelLoader::UpdateGameMode(Scene& scene, const nlohmann::json& 
     }
     else if (gameManager.GetGamemode() == GameMode::Coop)
     {
-        for (int i = 0; i < players.size(); i++)
+        int playerSize = static_cast<int>(players.size());
+        for (int i = 0; i < playerSize; i++)
         {
             if (players[i]->GetOwner()->GetComponent<HealthComponent>()->GetHealth() < 0)
                 players[i]->SetPosition(-200, -200);

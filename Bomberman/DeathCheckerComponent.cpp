@@ -45,7 +45,7 @@ void Jotar::DeathCheckerComponent::OnNotify(const Event& eventData)
 				}
 			}
 
-			if (fullDeathPlayers == players.size())
+			if (fullDeathPlayers == static_cast<int>(players.size()))
 			{
 				if (GameManager::GetInstance().GetGamemode() == GameMode::Versus)
 					GameManager::GetInstance().LoadMainMenu();

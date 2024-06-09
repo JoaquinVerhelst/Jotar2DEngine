@@ -105,7 +105,7 @@ void Jotar::MenuComponent::CheckMouseInput()
 	{
 		if (m_pButtonChildren[i]->IsPointInRect(mousePos)) {
 
-			if (m_CurrentButtonIndex != i)
+			if (m_CurrentButtonIndex != static_cast<int>(i))
 			{
 				m_pButtonChildren[m_CurrentButtonIndex]->ChangeColor(m_DefaultColor);
 				SelectButton(static_cast<int>(i));

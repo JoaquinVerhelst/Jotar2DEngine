@@ -44,7 +44,7 @@ void Jotar::Renderer::Render() const
 
 	auto cameras = SceneManager::GetInstance().GetCurrentScene().GetCameras();
 
-	for (int i = 0; i < cameras.size(); i++)
+	for (int i = 0; i < static_cast<int>(cameras.size()); i++)
 	{
 		// This is for the positions of the GameObjecs for each camera
 		g_CurrentPlayerIndex = i;
